@@ -5,6 +5,7 @@ import com.LMS.userManagement.repository.TenantRepository;
 import jakarta.transaction.Transactional;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -38,19 +39,19 @@ public class TenantService {
              var tenantDtls=   tenantRepository.save(tenantDetails);
           if (tenantDtls!=null){
               initDatabase(tenantDetails.getTenantId());
-              return ResponseEntity.ok("registration success, Tenant-Id::"+tenantDetails.getTenantId());
+              return ResponseEntity.status(HttpStatus.CREATED).body(tenantDtls);
 
           }
         }
-        return ResponseEntity.ok("registration failed, Tenant-Id already exits");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("failed");
     }
 
     public ResponseEntity<?> tenantLogin(String email, String password) {
         Optional<TenantDetails> tenant=tenantRepository.findByEmail(email);
         if (tenant.isPresent() && tenant.get().getPassword().equals(password)){
-           return ResponseEntity.ok(tenant.get().getTenantId());
+           return ResponseEntity.status(HttpStatus.OK).body(tenant);
         }
-        return ResponseEntity.ok("User not found");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("failed");
     }
 
     public ResponseEntity<?> getAllTenants() {

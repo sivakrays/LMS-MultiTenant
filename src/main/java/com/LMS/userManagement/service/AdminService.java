@@ -19,17 +19,17 @@ public class AdminService {
     public ResponseEntity<?> adminRegistration(Admin admin) {
    var   adminDetails= adminRepository.findAllByEmail(admin.getEmail());
         if (adminDetails.isPresent()){
-            return ResponseEntity.ok("Admin registration Failed");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Failed");
 
         }
-                adminRepository.save(admin);
-        return ResponseEntity.ok("Admin registration success");
+             var savedAdmin=   adminRepository.save(admin);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
     }
 
     public ResponseEntity<?> adminLogin(String email, String password) {
        Optional<Admin> admin= adminRepository.findAllByEmail(email);
        if (admin.isPresent() && admin.get().getPassword().equals(password) ){
-           return ResponseEntity.status(HttpStatus.OK).body("success");
+           return ResponseEntity.status(HttpStatus.OK).body(admin);
        }
        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found");
     }

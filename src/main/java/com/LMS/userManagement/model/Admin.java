@@ -1,5 +1,6 @@
 package com.LMS.userManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class Admin {
     @Column(unique = true)
     private String email;
 
+    @JsonIgnore
     private String password;
 
     private Timestamp createdDate=new Timestamp(System.currentTimeMillis());
