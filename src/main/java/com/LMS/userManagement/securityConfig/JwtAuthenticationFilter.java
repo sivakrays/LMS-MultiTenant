@@ -1,14 +1,16 @@
 package com.LMS.userManagement.securityConfig;
 
-import com.LMS.userManagement.repository.TokenRepository;
 import com.LMS.userManagement.tenantConfigBySpringIO.TenantContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,21 +20,23 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 //commented for Handler exception
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter  extends OncePerRequestFilter {
 
-    @Autowired
-    private     JwtService jwtService;
-    @Autowired
-    private TokenRepository tokenRepository;
+    private  final    JwtService jwtService;
+
 
  //   private final HandlerExceptionResolver exceptionResolver;
 
 
 
-    @Autowired
-    private   UserDetailsService userDetailsService;
+    private  final UserDetailsService userDetailsService;
 
     /*public  JwtAuthenticationFilter(HandlerExceptionResolver exceptionResolver){
         this.exceptionResolver=exceptionResolver;

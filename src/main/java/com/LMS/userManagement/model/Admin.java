@@ -26,6 +26,8 @@ public class Admin {
     @JsonIgnore
     private String password;
 
-    private Timestamp createdDate=new Timestamp(System.currentTimeMillis());
+    private Timestamp createdDate;
+
+    private String role;
 
 }

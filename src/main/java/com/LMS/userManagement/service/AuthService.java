@@ -2,9 +2,9 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
+import com.LMS.userManagement.dto.UserDto;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.repository.QuizRankRepository;
-import com.LMS.userManagement.repository.TokenRepository;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.securityConfig.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,19 +38,23 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final TokenRepository tokenRepository;
-    public ResponseEntity<String> register(RegisterRequest request,String tenantId) {
+    public ResponseEntity<?> register(RegisterRequest request,String tenantId) {
 
         User user=User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .confirmPassword(passwordEncoder.encode(request.getConfirmPassword()))
-                .role("user")
+                .role(request.getRole().toLowerCase())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .build();
        var savedUser= userRepository.save(user);
-        return ResponseEntity.ok("Registered Successfully");
+       var userDto= UserDto.builder()
+                .email(savedUser.getEmail())
+                .createdDate(savedUser.createdDate)
+                .role(savedUser.role)
+                .name(savedUser.getName()).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
 
@@ -61,11 +66,12 @@ public class AuthService {
                         email,password
                 )
         );
-      var user =userRepository.findByEmail(email).orElseThrow();
-        int goldCount = quizRankRepository.countByUserIdAndBadge(user.getId(), 1);
-        int silverCount = quizRankRepository.countByUserIdAndBadge(user.getId(), 2);
-        int bronzeCount = quizRankRepository.countByUserIdAndBadge(user.getId(), 3);
-        Integer energyPoints = quizRankRepository.sumOfEnergyPoints(user.getId());
+      var user =userRepository.findByEmail(email);
+      long userId=user.getId();
+        int goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
+        int silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
+        int bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
+        Integer energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
         String jwtToken=jwtService.generateToken(user,tenantId);
        // revokeAllUserTokens(user);
        // saveUserToken(user, jwtToken);
@@ -100,7 +106,7 @@ public class AuthService {
         userEmail=jwtService.extractUsername(refreshToken);
         String tenantId=   jwtService.extractTenantId(refreshToken);
         if(userEmail!=null && tenantId!=null){
-            var user=this.userRepository.findByEmail(userEmail).orElseThrow();
+            var user=this.userRepository.findByEmail(userEmail);
             if(jwtService.isTokenValid(refreshToken,user)){
                 String accessToken=jwtService.generateToken(user,tenantId);
            //     revokeAllUserTokens(user);
@@ -115,7 +121,7 @@ public class AuthService {
         }
 
     }
-    private void saveUserToken(User user, String jwtToken) {
+    /*private void saveUserToken(User user, String jwtToken) {
         var token=Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -135,5 +141,5 @@ public class AuthService {
             t.setExpired(true);
         });
         tokenRepository.saveAll(validUserTokens);
-    }
+    }*/
 }

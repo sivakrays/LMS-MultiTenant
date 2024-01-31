@@ -1,5 +1,6 @@
 package com.LMS.userManagement.service;
 
+import com.LMS.userManagement.dto.AdminDto;
 import com.LMS.userManagement.model.Admin;
 import com.LMS.userManagement.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,18 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
 
-    public ResponseEntity<?> adminRegistration(Admin admin) {
-   var   adminDetails= adminRepository.findAllByEmail(admin.getEmail());
+    public ResponseEntity<?> adminRegistration(AdminDto adminDto) {
+   var   adminDetails= adminRepository.findAllByEmail(adminDto.getEmail());
         if (adminDetails.isPresent()){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Failed");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User already exists");
 
         }
+      var admin=  Admin.builder()
+                .role("owner")
+                .password(adminDto.getPassword())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .email(adminDto.getEmail())
+              .build();
              var savedAdmin=   adminRepository.save(admin);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
     }
@@ -29,7 +36,13 @@ public class AdminService {
     public ResponseEntity<?> adminLogin(String email, String password) {
        Optional<Admin> admin= adminRepository.findAllByEmail(email);
        if (admin.isPresent() && admin.get().getPassword().equals(password) ){
-           return ResponseEntity.status(HttpStatus.OK).body(admin);
+          var ad= admin.get();
+        var adminDto=  AdminDto.builder()
+                  .password(null)
+                  .email(ad.getEmail())
+                  .role(ad.getRole())
+                  .build();
+           return ResponseEntity.status(HttpStatus.OK).body(adminDto);
        }
        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found");
     }

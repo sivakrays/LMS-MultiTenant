@@ -1,35 +1,21 @@
 CREATE TABLE IF NOT EXISTS user_details
 (
-    created_date timestamp(6) without time zone,
-    id bigint NOT NULL,
-    confirm_password character varying(255)  NOT NULL,
-    email character varying(255)  NOT NULL,
-    name character varying(255)  NOT NULL,
-    password character varying(255)  NOT NULL,
-    role character varying(255) ,
-    city character varying ,
-    country character varying ,
-    school character varying ,
-    gender character varying ,
-    standard integer,
-    CONSTRAINT user_details_pkey PRIMARY KEY (id),
-    CONSTRAINT user_details_email_key UNIQUE (email)
+     id bigint NOT NULL,
+        city character varying(255) ,
+        confirm_password character varying(255)  NOT NULL,
+        country character varying(255) ,
+        created_date timestamp(6) without time zone,
+        email character varying(255)  NOT NULL,
+        gender character varying(255) ,
+        name character varying(255)  NOT NULL,
+        password character varying(255)  NOT NULL,
+        role character varying(255) ,
+        school character varying(255) ,
+        standard integer,
+        CONSTRAINT user_details_pkey PRIMARY KEY (id),
+        CONSTRAINT uk_4d9rdl7d52k8x3etihxlaujvh UNIQUE (email)
 );
-CREATE TABLE IF NOT EXISTS token
-(
-    id bigint NOT NULL,
-    expired boolean,
-    revoked boolean,
-    token character varying(255) ,
-    token_type character varying(255) ,
-    user_id bigint,
-    CONSTRAINT token_pkey PRIMARY KEY (id),
-    CONSTRAINT fk2ehp28v5t0dh408nkp0jnpsei FOREIGN KEY (user_id)
-        REFERENCES public.user_details (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT token_token_type_check CHECK (token_type::text = 'BEARER'::text)
-);
+
 -- Table: public.course
 CREATE TABLE IF NOT EXISTS course
 (

@@ -1,5 +1,7 @@
 package com.LMS.userManagement.service;
 
+import com.LMS.userManagement.dto.RegisterRequest;
+import com.LMS.userManagement.dto.TenantDto;
 import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.repository.TenantRepository;
 import jakarta.transaction.Transactional;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,9 @@ public class TenantService {
 
     @Autowired
     TenantRepository tenantRepository;
+
+    @Autowired
+    AuthService authService;
 
     @Autowired
     DataSource dataSource;
@@ -33,23 +39,45 @@ public class TenantService {
     }
 
     @Transactional
-    public ResponseEntity<?> registerTenant(TenantDetails tenantDetails) {
+    public ResponseEntity<?> registerTenant(TenantDto tenantDetails) {
         Optional<TenantDetails> tenant=tenantRepository.findByTenantId(tenantDetails.getTenantId());
         if(tenant.isEmpty()){
-             var tenantDtls=   tenantRepository.save(tenantDetails);
-          if (tenantDtls!=null){
+      var tenantDtls=      TenantDetails.builder()
+                    .tenantId(tenantDetails.getTenantId())
+                    .role("manager")
+                    .issuer(tenantDetails.getIssuer())
+                    .email(tenantDetails.getEmail())
+                    .password(tenantDetails.getPassword())
+              .createdDate(new Timestamp(System.currentTimeMillis())).build();
+             var savedTenant=   tenantRepository.save(tenantDtls);
+          if (savedTenant!=null){
               initDatabase(tenantDetails.getTenantId());
-              return ResponseEntity.status(HttpStatus.CREATED).body(tenantDtls);
+           var t=   TenantDto.builder()
+                      .role(savedTenant.getRole())
+                      .issuer(savedTenant.getIssuer())
+                      .tenantId(savedTenant.getTenantId())
+                      .email(savedTenant.getEmail()).build();
+
+              return ResponseEntity.status(HttpStatus.CREATED).body(t);
 
           }
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("failed");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tenant already exists");
     }
 
     public ResponseEntity<?> tenantLogin(String email, String password) {
         Optional<TenantDetails> tenant=tenantRepository.findByEmail(email);
         if (tenant.isPresent() && tenant.get().getPassword().equals(password)){
-           return ResponseEntity.status(HttpStatus.OK).body(tenant);
+          var t=  tenant.get();
+         var tenantDto =  TenantDto.builder()
+                    .email(t.getEmail())
+                    .role(t.getRole())
+                    .issuer(t.getIssuer())
+                    .tenantId(t.getTenantId())
+                    .build();
+
+
+           return ResponseEntity.status(HttpStatus.OK).body(tenantDto);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("failed");
     }
@@ -65,5 +93,13 @@ public class TenantService {
       }
 
       return ResponseEntity.ok("Tenant cannot be found");
+    }
+
+    public ResponseEntity<?> findAllTenants() {
+      List<TenantDetails> tenantList=  tenantRepository.findAll();
+      if(tenantList.isEmpty()){
+          return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tenants Not found");
+      }
+      return ResponseEntity.status(HttpStatus.OK).body(tenantList);
     }
 }
