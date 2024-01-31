@@ -44,10 +44,11 @@ public class SecurityConfiguration {
        http.cors(AbstractHttpConfigurer::disable)
                .csrf(csrf ->csrf.disable())
                         .authorizeHttpRequests(auth->
-                            auth.requestMatchers("/lms/api/auth/**").permitAll()
-                                    .requestMatchers("/lms/api/auth/refreshToken").authenticated()
+                            auth   .requestMatchers("/lms/api/auth/**").permitAll()
+                                    .requestMatchers("/lms/api/auth/refreshToken").permitAll()
                                     .requestMatchers("/lms/api/tenant/**").permitAll()
                                     .requestMatchers("/lms/api/admin/**").permitAll()
+                           //       .requestMatchers("/lms/api/user/getAllCourse").hasRole("user")
                                     .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                    /*.requestMatchers("/lms/api/auth/saveAndEditProfile").permitAll()
                                     .requestMatchers("/lms/api/user/saveSection").permitAll()

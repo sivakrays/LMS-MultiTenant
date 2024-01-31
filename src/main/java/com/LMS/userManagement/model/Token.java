@@ -1,3 +1,4 @@
+/*
 package com.LMS.userManagement.model;
 
 import com.LMS.userManagement.model.User;
@@ -31,3 +32,4 @@ public class Token {
     @JoinColumn(name = "user_id")
     private User user;
 }
+*/

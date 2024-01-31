@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Entity
 @Builder
 @Data
@@ -32,4 +34,8 @@ public class TenantDetails {
 
     @Column(nullable = false)
     private String issuer;
+
+    private Timestamp createdDate;
+
+    private String role;
 }

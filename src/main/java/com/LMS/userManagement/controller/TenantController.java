@@ -1,9 +1,11 @@
 package com.LMS.userManagement.controller;
 
+import com.LMS.userManagement.dto.TenantDto;
 import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.service.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,26 +14,33 @@ import org.springframework.web.bind.annotation.*;
 public class TenantController {
 
     @Autowired
-    private   TenantService tenantService;
+    private TenantService tenantService;
 
     @PostMapping("/registerTenant")
-    public ResponseEntity<?> registerTenant(@RequestBody TenantDetails tenantDetails){
-        return  tenantService.registerTenant(tenantDetails);
+    public ResponseEntity<?> registerTenant(@RequestBody TenantDto tenantDetails) {
+        return tenantService.registerTenant(tenantDetails);
     }
 
     @PostMapping("/tenantLogin")
+    //@PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> tenantLogin(@RequestHeader String email,
-                                         @RequestHeader String password){
-        return tenantService.tenantLogin(email,password);
+                                         @RequestHeader String password) {
+        return tenantService.tenantLogin(email, password);
     }
 
     @GetMapping("/getAllTenants")
-    public ResponseEntity<?> getAllTenants(){
+    public ResponseEntity<?> getAllTenants() {
         return tenantService.getAllTenants();
     }
 
     @GetMapping("/getTenantByIssuer")
-    public ResponseEntity<?> getTenantByIssuer(@RequestHeader String issuer){
+    public ResponseEntity<?> getTenantByIssuer(@RequestHeader String issuer) {
         return tenantService.getTenantByIssuer(issuer);
-   }
+    }
+
+    @GetMapping("/viewAllTenants")
+    public ResponseEntity<?> findAllTenants() {
+        return tenantService.findAllTenants();
+    }
+
 }

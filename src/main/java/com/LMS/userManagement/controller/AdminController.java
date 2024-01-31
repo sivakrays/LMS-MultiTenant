@@ -1,5 +1,6 @@
 package com.LMS.userManagement.controller;
 
+import com.LMS.userManagement.dto.AdminDto;
 import com.LMS.userManagement.model.Admin;
 import com.LMS.userManagement.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class AdminController {
 
     @PostMapping("/adminRegistration")
     //@PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> adminRegistration(@RequestBody Admin admin){
-     return    adminService.adminRegistration(admin);
+    public ResponseEntity<?> adminRegistration(@RequestBody AdminDto adminDto){
+     return    adminService.adminRegistration(adminDto);
     }
 
     @PostMapping("/adminLogin")

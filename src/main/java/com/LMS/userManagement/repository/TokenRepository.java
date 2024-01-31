@@ -1,3 +1,4 @@
+/*
 package com.LMS.userManagement.repository;
 
 import com.LMS.userManagement.model.Token;
@@ -19,3 +20,4 @@ public interface TokenRepository extends JpaRepository<Token,Long> {
 
     Optional<Token> findByToken(String token);
 }
+*/
