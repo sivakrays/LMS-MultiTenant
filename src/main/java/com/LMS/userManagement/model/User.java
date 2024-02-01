@@ -1,6 +1,8 @@
 package com.LMS.userManagement.model;
 
+import com.LMS.userManagement.util.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,52 +44,65 @@ public class User implements UserDetails {
     @Size(min = 6, message = "Password must have at least 6 characters")
     @JsonIgnore
     public String password;
+
     @Column(nullable = false)
     @JsonIgnore
     public String confirmPassword;
 
     public Timestamp createdDate;
+
     public String role;
 
+    @JsonView(Views.MyResponseViews.class)
     public String gender;
 
+    @JsonView(Views.MyResponseViews.class)
     public String school;
 
+    @JsonView(Views.MyResponseViews.class)
     public Integer standard;
 
+    @JsonView(Views.MyResponseViews.class)
     public String city;
 
+    @JsonView(Views.MyResponseViews.class)
     public String country;
 
   /* @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
     private List<Token> tokens;*/
 
     @Override
+  //  @JsonView(Views.MyResponseViews.class)
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override
+  //  @JsonView(Views.MyResponseViews.class)
     public String getUsername() {
         return email;
     }
 
     @Override
+   // @JsonView(Views.MyResponseViews.class)
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+ //   @JsonView(Views.MyResponseViews.class)
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+ //   @JsonView(Views.MyResponseViews.class)
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+   // @JsonView(Views.MyResponseViews.class)
     public boolean isEnabled() {
         return true;
     }

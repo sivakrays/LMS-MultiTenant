@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -120,6 +124,16 @@ public class AuthService {
             }
         }
 
+    }
+
+    public ResponseEntity<?> getAllUser(int pageNo,int pageSize) {
+        Pageable sortedByTime =
+                PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
+        Page<User> users=userRepository.findAll(sortedByTime);
+        if(users.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User details not found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
     /*private void saveUserToken(User user, String jwtToken) {
         var token=Token.builder()
