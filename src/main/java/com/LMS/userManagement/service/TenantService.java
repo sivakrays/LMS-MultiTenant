@@ -64,7 +64,7 @@ public class TenantService {
 
           }
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Tenant already exists");
+        return ResponseEntity.status(409).body("Tenant already exists");
     }
 
     public ResponseEntity<?> tenantLogin(String email, String password) {

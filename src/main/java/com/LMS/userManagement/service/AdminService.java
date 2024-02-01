@@ -20,7 +20,7 @@ public class AdminService {
     public ResponseEntity<?> adminRegistration(AdminDto adminDto) {
    var   adminDetails= adminRepository.findAllByEmail(adminDto.getEmail());
         if (adminDetails.isPresent()){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User already exists");
+            return ResponseEntity.status(409).body("User already exists");
 
         }
       var admin=  Admin.builder()
