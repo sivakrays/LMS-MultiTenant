@@ -26,7 +26,7 @@ public class CartService {
     public ResponseEntity<?> saveCart(Cart cart) {
         Cart cart1 = cartRepository.findByCourseId(cart.getCourseId());
         if (cart1 !=null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cart already exists");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Course already exists");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(cartRepository.save(cart));
     }
