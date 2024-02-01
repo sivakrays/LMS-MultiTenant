@@ -33,7 +33,7 @@ public class CourseService {
         if (sections != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(sectionRepository.saveAll(sections));
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("course already exists");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("course already exists");
     }
 
     public ResponseEntity<?> deleteCourseById(Integer courseId) {
@@ -61,28 +61,27 @@ public class CourseService {
     public ResponseEntity<?> saveCourse(Course course) {
         Course course1 = courseRepository.findCourseByCourseId(course.getCourseId());
         if(course1 != null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Course already exists");
-        }else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(courseRepository.save(course));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Course already exists");
         }
+            return ResponseEntity.status(HttpStatus.CREATED).body(courseRepository.save(course));
+
     }
 
     public ResponseEntity<?> searchCourseById(Integer courseId) {
         Course course = courseRepository.findCourseByCourseId(courseId);
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
-        }else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
         }
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
     }
 
     public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
         Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo,pageSize));
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
-        }else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
         }
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
+
     }
 
     public ResponseEntity<?> searchCourses(String search) {
