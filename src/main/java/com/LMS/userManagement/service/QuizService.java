@@ -4,6 +4,8 @@ import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,7 +17,7 @@ public class QuizService {
     QuizRankRepository quizRankRepository;
 
     @Transactional
-    public BadgeCounts saveBadge(QuizRank quizRank) {
+    public ResponseEntity<?> saveBadge(QuizRank quizRank) {
         Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSubSectionId(quizRank.getUserId(), quizRank.getSubSectionId());
         if (obj.isPresent()) {
             QuizRank quizRank1 = obj.get();
@@ -23,13 +25,14 @@ public class QuizService {
             quizRank1.setBadge(quizRank.getBadge());
             quizRankRepository.save(quizRank1);
             BadgeCounts data= getBadgeCountsForUser(quizRank1.getUserId(),quizRank1.getEnergyPoints());
-            return data;
+            return ResponseEntity.status(HttpStatus.OK).body(data);
 
         }else{
         quizRankRepository.save(quizRank);
             BadgeCounts data1= getBadgeCountsForUser(quizRank.getUserId(),quizRank.getEnergyPoints());
-            return data1;
+            return ResponseEntity.status(HttpStatus.CREATED).body(data1);
         }
+
 
     }
 

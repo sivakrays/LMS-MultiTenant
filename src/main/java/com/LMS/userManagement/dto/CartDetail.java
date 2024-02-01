@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartDetail {
 
+    public Long cartId;
     public Integer courseId;
     public String title;
     public String authorName;

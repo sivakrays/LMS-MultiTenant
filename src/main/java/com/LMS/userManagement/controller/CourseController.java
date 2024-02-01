@@ -24,43 +24,25 @@ public class CourseController {
     @PostMapping("/saveCourse")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> saveCourse(@RequestBody Course course){
-     Course courseDto = courseService.saveCourse(course);
-    if(courseDto != null){
-         return ResponseEntity.ok(courseDto);
-    }else {
-        return ResponseEntity.ok("Course already exists");
-    }
+     return courseService.saveCourse(course);
+
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<?> searchCourseById(@RequestHeader Integer courseId){
-        Course course = courseService.searchCourseById(courseId);
-        if(course != null){
-            return ResponseEntity.ok(course);
-        }else {
-            return ResponseEntity.ok("Course not found");
-        }
+    return courseService.searchCourseById(courseId);
+
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<?> getAllCourses(@RequestHeader int pageNo,@RequestHeader int pageSize){
-       Page<Course> course = courseService.getAllCourses(pageNo,pageSize);
-        if(course != null){
-            return ResponseEntity.ok(course);
-        }else {
-            return ResponseEntity.ok("Course not found");
-        }
+       return courseService.getAllCourses(pageNo,pageSize);
+
     }
     @GetMapping("/searchCourses")
     public ResponseEntity<?> searchCourses(@RequestParam("search") String search){
-        if (search.isEmpty()){
-            return ResponseEntity.ok(new ArrayList<>());
-        }
-        List<Course> courses =courseService.searchCourses(search);
-        if(courses.isEmpty()){
-            return ResponseEntity.ok(new ArrayList<>());
-        }
-       return ResponseEntity.ok(courses);
+        return courseService.searchCourses(search);
+
     }
     @PostMapping("/saveSection")
     @PreAuthorize("hasAuthority('admin')")

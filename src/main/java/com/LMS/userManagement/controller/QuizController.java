@@ -15,10 +15,7 @@ public class QuizController {
     QuizService quizService;
     @PostMapping("/saveBadge")
     public ResponseEntity<?> saveBadge(@RequestBody QuizRank quizRank) {
-        BadgeCounts updatedBadgeCounts = quizService.saveBadge(quizRank);
-    if (updatedBadgeCounts != null){
-        return ResponseEntity.ok(updatedBadgeCounts);
+        return quizService.saveBadge(quizRank);
     }
-    return ResponseEntity.ok("Badge not found");
-    }
+
 }
