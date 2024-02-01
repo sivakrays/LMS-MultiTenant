@@ -33,7 +33,7 @@ public class CourseService {
         if (sections != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(sectionRepository.saveAll(sections));
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("course already exists");
+        return ResponseEntity.status(409).body("course already exists");
     }
 
     public ResponseEntity<?> deleteCourseById(Integer courseId) {
@@ -61,7 +61,7 @@ public class CourseService {
     public ResponseEntity<?> saveCourse(Course course) {
         Course course1 = courseRepository.findCourseByCourseId(course.getCourseId());
         if(course1 != null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Course already exists");
+            return ResponseEntity.status(409).body("Course already exists");
         }
             return ResponseEntity.status(HttpStatus.CREATED).body(courseRepository.save(course));
 
