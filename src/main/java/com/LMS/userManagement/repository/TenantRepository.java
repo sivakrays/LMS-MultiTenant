@@ -14,8 +14,5 @@ public interface TenantRepository extends JpaRepository<TenantDetails,Long> {
 
     Optional<TenantDetails> findByEmail(String email);
 
-    @Query(value = "SELECT issuer FROM tenant_details",nativeQuery = true)
-    List<String> findAllIssuer();
 
-    Optional<TenantDetails> findByIssuer(String issuer);
 }

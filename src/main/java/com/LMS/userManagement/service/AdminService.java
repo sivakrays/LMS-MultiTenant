@@ -44,6 +44,6 @@ public class AdminService {
                   .build();
            return ResponseEntity.status(HttpStatus.OK).body(adminDto);
        }
-       return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found");
+       return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User not found");
     }
 }

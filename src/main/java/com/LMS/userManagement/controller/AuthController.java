@@ -3,6 +3,8 @@ package com.LMS.userManagement.controller;
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.service.AuthService;
+import com.LMS.userManagement.util.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +55,12 @@ public class AuthController {
         authService.refreshToken(request,response);
     }
 
+    @GetMapping("/getAllUser")
+    //@JsonView(Views.MyResponseViews.class)
+    private ResponseEntity<?> getAllUser(@RequestHeader int pageNo,
+                                         @RequestHeader int pageSize){
+      return   authService.getAllUser(pageNo,pageSize);
+    }
 
 
 

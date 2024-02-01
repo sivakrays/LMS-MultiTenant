@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -79,26 +81,28 @@ public class TenantService {
 
            return ResponseEntity.status(HttpStatus.OK).body(tenantDto);
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("failed");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("user not found");
     }
 
     public ResponseEntity<?> getAllTenants() {
-       return ResponseEntity.ok(tenantRepository.findAllIssuer());
-       //return ResponseEntity.ok(tenantRepository.findAll());
-    }
-    public ResponseEntity<?> getTenantByIssuer(String issuer) {
-      Optional<TenantDetails> tenant=  tenantRepository.findByIssuer(issuer);
-      if (tenant.isPresent()){
-         return ResponseEntity.ok(tenant.get().getTenantId());
-      }
+     List<TenantDetails> tenantList=   tenantRepository.findAll();
+     if(tenantList.isEmpty()){
+         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("tenant Details not found");
+     }
+        Map<String,String> tenantIdMap=new HashMap<>();
+     tenantList.forEach(n->{
+         tenantIdMap.put(n.getIssuer(),n.getTenantId());
+     });
 
-      return ResponseEntity.ok("Tenant cannot be found");
+        return ResponseEntity.status(HttpStatus.OK).body(tenantIdMap);
     }
+
+
 
     public ResponseEntity<?> findAllTenants() {
       List<TenantDetails> tenantList=  tenantRepository.findAll();
       if(tenantList.isEmpty()){
-          return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tenants Not found");
+          return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Tenants Not found");
       }
       return ResponseEntity.status(HttpStatus.OK).body(tenantList);
     }

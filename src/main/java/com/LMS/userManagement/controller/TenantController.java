@@ -33,10 +33,7 @@ public class TenantController {
         return tenantService.getAllTenants();
     }
 
-    @GetMapping("/getTenantByIssuer")
-    public ResponseEntity<?> getTenantByIssuer(@RequestHeader String issuer) {
-        return tenantService.getTenantByIssuer(issuer);
-    }
+
 
     @GetMapping("/viewAllTenants")
     public ResponseEntity<?> findAllTenants() {
