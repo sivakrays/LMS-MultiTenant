@@ -10,10 +10,13 @@ import com.LMS.userManagement.repository.SubSectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -26,51 +29,70 @@ public class CourseService {
     @Autowired
     QuizRepository quizRepository;
 
-
-    public Course searchCourseById(Integer courseId) {
-        return courseRepository.findCourseByCourseId(courseId);
-    }
-
-
-    public Course saveCourse(Course course) {
-        return courseRepository.save(course);
-    }
-
-
-    public List<Course> searchCourses(String search) {
-        return courseRepository.searchAllCourse(search);
-    }
-
-    public Page<Course> getAllCourses(int pageNo, int pageSize) {
-        return courseRepository.findAll(PageRequest.of(pageNo,pageSize));
-    }
-
     public ResponseEntity<?> saveSection(List<Section> sections) {
         if (sections != null) {
-            return ResponseEntity.ok(sectionRepository.saveAll(sections));
+            return ResponseEntity.status(HttpStatus.CREATED).body(sectionRepository.saveAll(sections));
         }
-        return ResponseEntity.ok("Failure");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("course already exists");
     }
 
     public ResponseEntity<?> deleteCourseById(Integer courseId) {
         if (courseRepository.existsById(courseId)){
             courseRepository.deleteById(courseId);
-            return ResponseEntity.ok("Success");
+            return ResponseEntity.status(HttpStatus.OK).body("Success");
         }
-        return ResponseEntity.ok("Course not found");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
     }
     public ResponseEntity<?> updateCourse(Course course) {
-        return ResponseEntity.ok(courseRepository.save(course));
+        return ResponseEntity.status(HttpStatus.OK).body(courseRepository.save(course));
     }
     public ResponseEntity<?> updateSection(Section section) {
-        return ResponseEntity.ok(sectionRepository.save(section));
+        return ResponseEntity.status(HttpStatus.OK).body(sectionRepository.save(section));
     }
     public ResponseEntity<?> updateSubSection(SubSection subSection) {
-        return ResponseEntity.ok(subSectionRepository.save(subSection));
+        return ResponseEntity.status(HttpStatus.OK).body(subSectionRepository.save(subSection));
     }
     public ResponseEntity<?> updateQuiz(Quiz quiz) {
-        return ResponseEntity.ok(quizRepository.save(quiz));
+
+        return ResponseEntity.status(HttpStatus.OK).body(quizRepository.save(quiz));
     }
 
 
+    public ResponseEntity<?> saveCourse(Course course) {
+        Course course1 = courseRepository.findCourseByCourseId(course.getCourseId());
+        if(course1 != null){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Course already exists");
+        }else {
+            return ResponseEntity.status(HttpStatus.CREATED).body(courseRepository.save(course));
+        }
+    }
+
+    public ResponseEntity<?> searchCourseById(Integer courseId) {
+        Course course = courseRepository.findCourseByCourseId(courseId);
+        if(course != null){
+            return ResponseEntity.status(HttpStatus.OK).body(course);
+        }else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
+        }
+    }
+
+    public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
+        Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo,pageSize));
+        if(course != null){
+            return ResponseEntity.status(HttpStatus.OK).body(course);
+        }else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
+        }
+    }
+
+    public ResponseEntity<?> searchCourses(String search) {
+        if (search.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>());
+        }
+        List<Course> courses =courseRepository.searchAllCourse(search);
+        if(courses.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(courses);
+    }
 }

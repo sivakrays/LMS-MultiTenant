@@ -6,11 +6,13 @@ import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
@@ -21,17 +23,23 @@ public class CartService {
     CartRepository cartRepository;
 
 
-    public Cart saveCart(Cart cart) {
-        return cartRepository.save(cart);
+    public ResponseEntity<?> saveCart(Cart cart) {
+        Cart cart1 = cartRepository.findByCourseId(cart.getCourseId());
+        if (cart1 !=null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cart already exists");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartRepository.save(cart));
     }
 
     public ResponseEntity<?> getCartDetailByUserId(Long userId) {
         List<CartDetail> cartDetails = new ArrayList<>();
       List<Cart> cart= cartRepository.findByUserId(userId);
+      if(cart != null){
       for(Cart cart1 : cart) {
           Course course = courseRepository.findCourseByCourseId(cart1.getCourseId());
 
           CartDetail cartDetail = new CartDetail();
+          cartDetail.setCartId(cart1.getCartId());
           cartDetail.setCourseId(course.getCourseId());
           cartDetail.setTitle(course.getTitle());
           cartDetail.setCategory(course.getCategory());
@@ -42,7 +50,9 @@ public class CartService {
           cartDetails.add(cartDetail);
       }
 
-       return ResponseEntity.ok(cartDetails);
+       return ResponseEntity.status(HttpStatus.OK).body(cartDetails);
+      }
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User not found");
 
 
     }
@@ -51,8 +61,8 @@ public class CartService {
     public ResponseEntity<?> deleteCartById(Long cartId) {
         if (cartRepository.existsById(cartId)){
             cartRepository.deleteById(cartId);
-            return ResponseEntity.ok("success");
+            return ResponseEntity.status(HttpStatus.OK).body("success");
         }
-        return ResponseEntity.ok("Cart not found");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cart not found");
     }
 }
