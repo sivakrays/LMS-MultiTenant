@@ -102,5 +102,4 @@ public class CourseService {
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
     }
-
 }

@@ -6,15 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Section {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "section_id")
-    private Integer sectionId;
+    private UUID sectionId;
     private Integer course_id;
     private Integer key;
     private String title;

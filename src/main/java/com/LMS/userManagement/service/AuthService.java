@@ -135,6 +135,14 @@ public class AuthService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
+
+    public ResponseEntity<?> deleteUserById(Long userId) {
+        if (userRepository.existsById(userId)){
+            userRepository.deleteById(userId);
+            return ResponseEntity.status(HttpStatus.OK).body("Success");
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User not found");
+    }
     /*private void saveUserToken(User user, String jwtToken) {
         var token=Token.builder()
                 .user(user)

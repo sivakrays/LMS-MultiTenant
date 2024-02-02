@@ -42,23 +42,25 @@ public class CartService {
     public ResponseEntity<?> getCartDetailByUserId(Long userId) {
         List<CartDetail> cartDetails = new ArrayList<>();
       List<Cart> cart= cartRepository.findByUserId(userId);
-      if(cart != null){
+      if(cart != null && !cart.isEmpty()){
       for(Cart cart1 : cart) {
-          Course course = courseRepository.findCourseByCourseId(cart1.getCourseId());
+          Integer courseId = cart1.getCourseId();
+          Course course = courseRepository.findCourseByCourseId(courseId);
+        if(course != null) {
+            CartDetail cartDetail = new CartDetail();
+            cartDetail.setCartId(cart1.getCartId());
+            cartDetail.setCourseId(course.getCourseId());
+            cartDetail.setTitle(course.getTitle());
+            cartDetail.setCategory(course.getCategory());
+            cartDetail.setAuthorName(course.getAuthorName());
+            cartDetail.setThumbNail(course.getThumbNail());
+            cartDetail.setPrice(course.getPrice());
 
-          CartDetail cartDetail = new CartDetail();
-          cartDetail.setCartId(cart1.getCartId());
-          cartDetail.setCourseId(course.getCourseId());
-          cartDetail.setTitle(course.getTitle());
-          cartDetail.setCategory(course.getCategory());
-          cartDetail.setAuthorName(course.getAuthorName());
-          cartDetail.setThumbNail(course.getThumbNail());
-          cartDetail.setPrice(course.getPrice());
+            cartDetails.add(cartDetail);
+            return ResponseEntity.status(HttpStatus.OK).body(cartDetails);
 
-          cartDetails.add(cartDetail);
+        }
       }
-
-       return ResponseEntity.status(HttpStatus.OK).body(cartDetails);
       }
       return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User not found");
 

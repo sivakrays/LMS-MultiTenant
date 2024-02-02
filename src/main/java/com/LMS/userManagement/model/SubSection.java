@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -14,8 +15,8 @@ import java.util.List;
 public class SubSection {
     @Id
     @Column(name = "sub_section_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer subSectionId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID subSectionId;
     private Integer key;
     private String title;
     @Column(columnDefinition = "text")

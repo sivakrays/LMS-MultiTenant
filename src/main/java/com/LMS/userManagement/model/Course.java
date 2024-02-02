@@ -17,6 +17,7 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "course_id")
     private Integer courseId;
+    @Column(nullable = false)
     private Long userId;
     private String title;
     private String authorName;
