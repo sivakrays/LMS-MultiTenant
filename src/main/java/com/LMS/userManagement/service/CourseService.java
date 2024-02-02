@@ -67,7 +67,7 @@ public class CourseService {
 
     }
 
-    public ResponseEntity<?> searchCourseById(Integer courseId) {
+    public ResponseEntity<?> getCourseById(Integer courseId) {
         Course course = courseRepository.findCourseByCourseId(courseId);
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
@@ -94,4 +94,13 @@ public class CourseService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
+
+    public ResponseEntity<?> getCourseByUserId(Long userId) {
+        List<Course> courses =courseRepository.findCourseByUserId(userId);
+        if(!courses.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body(courses);
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
+    }
+
 }

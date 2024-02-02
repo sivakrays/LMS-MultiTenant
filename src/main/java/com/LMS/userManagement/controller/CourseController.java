@@ -29,8 +29,8 @@ public class CourseController {
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> searchCourseById(@RequestHeader Integer courseId){
-    return courseService.searchCourseById(courseId);
+    public ResponseEntity<?> getCourseById(@RequestHeader Integer courseId){
+    return courseService.getCourseById(courseId);
 
     }
    @GetMapping("/getAllCourse")
@@ -74,4 +74,9 @@ public class CourseController {
     public  ResponseEntity<?> updateQuiz(@RequestBody Quiz quiz){
         return courseService.updateQuiz(quiz);
     }
+    @GetMapping("/getCourseByUserId")
+    public ResponseEntity<?> getCourseByUserId(@RequestHeader Long userId){
+        return courseService.getCourseByUserId(userId);
+    }
 }
+
