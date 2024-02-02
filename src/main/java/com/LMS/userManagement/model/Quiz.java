@@ -16,6 +16,7 @@ public class Quiz {
     private Integer quizId;
     private String title;
     private Integer key;
+    @Column(columnDefinition = "TEXT")
     private String question;
     private List<String> options;
     private  int answer;
