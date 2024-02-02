@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class CourseService {
@@ -103,4 +105,62 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
     }
 
+    public ResponseEntity<?> getCourseCompletion(int courseId) {
+        var courseResponse=   getCourseById(courseId);
+      if (courseResponse.getStatusCode().value()!=200){
+          return null;
+      }
+      Course course= (Course) courseResponse.getBody();
+
+      //logic to find over course content
+    List<Section> sectionList=  course.getSections();
+        List<Long> countList = sectionList.stream()
+                .flatMap(section -> Stream.of((long) section.getSubSections().size(),
+                        section.getSubSections()
+                                .stream()
+                                .flatMap(subSection -> subSection.getQuizList().stream())
+                                .count()))
+                .collect(Collectors.toList());
+
+//sum of over all course content
+        int sum1 = countList.stream().mapToInt(Long::intValue).sum();
+
+        //logic to find the viewed course content
+       /* List<Integer> count = sectionList.stream()
+                .flatMap(section -> section.getSubSections().stream())
+                .map(SubSection::getWatched)
+                .filter(watched -> watched == 1)
+                .collect(Collectors.toList());
+
+        sectionList.stream()
+                .flatMap(section -> section.getSubSections().stream())
+                .flatMap(subSection -> subSection.getQuizList().stream())
+                .map(Quiz::getWatched)
+                .filter(watched -> watched == 1)
+                .forEach(count::add);
+*/
+        List<Integer> count=new ArrayList<>();
+        sectionList.forEach(section->{
+            section.getSubSections().forEach(subSec ->{
+               int watched= subSec.getWatched();
+                if (watched==1){
+                    count.add(watched);
+                }
+                subSec.getQuizList().forEach(quiz->{
+                  int qWatched=  quiz.getWatched();
+                  if(watched==1){
+                      count.add(qWatched);
+                  }
+                });
+
+
+            });
+        });
+
+        int sum2 = count.stream().mapToInt(Integer::intValue).sum();
+
+   int courseViewed=(sum2/sum1)*100;
+
+        return ResponseEntity.ok(courseViewed);
+    }
 }

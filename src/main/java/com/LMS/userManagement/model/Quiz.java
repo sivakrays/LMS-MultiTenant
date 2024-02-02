@@ -18,6 +18,8 @@ public class Quiz {
     private Integer key;
     private String question;
     private List<String> options;
+    @Column(columnDefinition = "int default 0")
+    private int watched;
     private  int answer;
 
 
