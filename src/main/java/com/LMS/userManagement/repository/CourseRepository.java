@@ -18,6 +18,8 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
             "OR c.category iLIKE CONCAT ('%', :search, '%')",nativeQuery = true)
     List<Course> searchAllCourse( @Param("search")String search);
 
+   List<Course> findCourseByUserId(Long userId);
+
 
 
 

@@ -24,11 +24,19 @@ public class CartService {
 
 
     public ResponseEntity<?> saveCart(Cart cart) {
-        Cart cart1 = cartRepository.findByCourseId(cart.getCourseId());
-        if (cart1 !=null) {
+        long userId = cart.getUserId();
+        Integer courseId = cart.getCourseId();
+    List<Cart> cartList = cartRepository.findByUserId(userId);
+    if(cartList !=null && !cartList.isEmpty()) {
+        Cart cart1 = cartRepository.findByCourseIdAndUserId(courseId,userId);
+        if (cart1 != null) {
             return ResponseEntity.status(409).body("Course already exists");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartRepository.save(cart));
+    }
+                cartRepository.save(cart);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartRepository.findByUserId(userId));
+
+
     }
 
     public ResponseEntity<?> getCartDetailByUserId(Long userId) {
