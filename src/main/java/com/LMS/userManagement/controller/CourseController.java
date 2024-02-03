@@ -78,5 +78,10 @@ public class CourseController {
     public ResponseEntity<?> getCourseByUserId(@RequestHeader Long userId){
         return courseService.getCourseByUserId(userId);
     }
+
+    @GetMapping("/getCourseCompletion")
+    public ResponseEntity<?> getCourseCompletion(@RequestHeader int courseId){
+        return courseService.getCourseCompletion(courseId);
+    }
 }
 
