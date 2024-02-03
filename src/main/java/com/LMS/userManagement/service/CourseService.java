@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,7 +38,7 @@ public class CourseService {
         return ResponseEntity.status(409).body("course already exists");
     }
 
-    public ResponseEntity<?> deleteCourseById(UUID courseId) {
+    public ResponseEntity<?> deleteCourseById(Integer courseId) {
         if (courseRepository.existsById(courseId)){
             courseRepository.deleteById(courseId);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
@@ -70,7 +69,7 @@ public class CourseService {
 
     }
 
-    public ResponseEntity<?> getCourseById(UUID courseId) {
+    public ResponseEntity<?> getCourseById(Integer courseId) {
         Course course = courseRepository.findCourseByCourseId(courseId);
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
@@ -105,8 +104,8 @@ public class CourseService {
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
     }
-
-    public ResponseEntity<?> getCourseCompletion(UUID courseId) {
+/*
+    public ResponseEntity<?> getCourseCompletion(int courseId) {
         var courseResponse=   getCourseById(courseId);
       if (courseResponse.getStatusCode().value()!=200){
           return null;
@@ -127,7 +126,7 @@ public class CourseService {
         int sum1 = countList.stream().mapToInt(Long::intValue).sum();
 
         //logic to find the viewed course content
-       /* List<Integer> count = sectionList.stream()
+       *//* List<Integer> count = sectionList.stream()
                 .flatMap(section -> section.getSubSections().stream())
                 .map(SubSection::getWatched)
                 .filter(watched -> watched == 1)
@@ -139,7 +138,7 @@ public class CourseService {
                 .map(Quiz::getWatched)
                 .filter(watched -> watched == 1)
                 .forEach(count::add);
-*/
+*//*
         List<Integer> count=new ArrayList<>();
         sectionList.forEach(section->{
             section.getSubSections().forEach(subSec ->{
@@ -163,5 +162,5 @@ public class CourseService {
    int courseViewed=(sum2/sum1)*100;
 
         return ResponseEntity.ok(courseViewed);
-    }
+    }*/
 }
