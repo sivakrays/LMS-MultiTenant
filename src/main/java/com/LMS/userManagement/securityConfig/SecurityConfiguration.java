@@ -25,19 +25,19 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    /*@Autowired
+    @Autowired
     @Qualifier("handlerExceptionResolver")
-   private HandlerExceptionResolver handlerExceptionResolver;*/
+   private  HandlerExceptionResolver handlerExceptionResolver;
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+  //  private final JwtAuthenticationFilter jwtAuthFilter;
     private final   AuthenticationProvider authenticationProvider;
 
   //  private final LogoutHandler logoutHandler;
 
- /*@Bean
+ @Bean
  public JwtAuthenticationFilter jwtAuthFilter(){
         return new JwtAuthenticationFilter(handlerExceptionResolver);
-    }*/
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -61,7 +61,7 @@ public class SecurityConfiguration {
                 .sessionManagement(sess->sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter(),UsernamePasswordAuthenticationFilter.class)
              // .logout(logout -> logout.logoutUrl("lms/api/auth/logout")
               //         .addLogoutHandler(logoutHandler)
                //       .logoutSuccessHandler(((request, response, authentication) ->

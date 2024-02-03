@@ -61,7 +61,10 @@ public class AuthController {
                                          @RequestHeader int pageSize){
       return   authService.getAllUser(pageNo,pageSize);
     }
-
+    @DeleteMapping("/deleteUserById")
+    public ResponseEntity<?> deleteUserById(@RequestHeader Long userId){
+        return authService.deleteUserById(userId);
+    }
 
 
 }

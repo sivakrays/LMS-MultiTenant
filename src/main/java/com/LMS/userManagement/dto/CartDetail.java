@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDetail {
 
-    public Long cartId;
-    public Integer courseId;
+    public UUID cartId;
+    public UUID courseId;
     public String title;
     public String authorName;
     public String thumbNail;

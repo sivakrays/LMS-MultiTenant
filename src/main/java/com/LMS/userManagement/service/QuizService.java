@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -18,18 +19,21 @@ public class QuizService {
 
     @Transactional
     public ResponseEntity<?> saveBadge(QuizRank quizRank) {
-        Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSubSectionId(quizRank.getUserId(), quizRank.getSubSectionId());
+        Long userId = quizRank.getUserId();
+        UUID subSectionId = quizRank.getSubSectionId();
+        Integer energyPoints = quizRank.getEnergyPoints();
+        Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSubSectionId(userId, subSectionId);
         if (obj.isPresent()) {
             QuizRank quizRank1 = obj.get();
-            quizRank1.setEnergyPoints(quizRank.getEnergyPoints());
+            quizRank1.setEnergyPoints(energyPoints);
             quizRank1.setBadge(quizRank.getBadge());
             quizRankRepository.save(quizRank1);
-            BadgeCounts data= getBadgeCountsForUser(quizRank1.getUserId(),quizRank1.getEnergyPoints());
+            BadgeCounts data= getBadgeCountsForUser(userId,energyPoints);
             return ResponseEntity.status(HttpStatus.OK).body(data);
 
         }else{
         quizRankRepository.save(quizRank);
-            BadgeCounts data1= getBadgeCountsForUser(quizRank.getUserId(),quizRank.getEnergyPoints());
+            BadgeCounts data1= getBadgeCountsForUser(userId,energyPoints);
             return ResponseEntity.status(HttpStatus.CREATED).body(data1);
         }
 
