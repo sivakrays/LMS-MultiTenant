@@ -79,9 +79,9 @@ public class CourseController {
         return courseService.getCourseByUserId(userId);
     }
 
-    @GetMapping("/getCourseCompletion")
+   /* @GetMapping("/getCourseCompletion")
     public ResponseEntity<?> getCourseCompletion(@RequestHeader int courseId){
         return courseService.getCourseCompletion(courseId);
-    }
+    }*/
 }
 

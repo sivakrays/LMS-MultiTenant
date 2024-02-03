@@ -104,7 +104,7 @@ public class CourseService {
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
     }
-
+/*
     public ResponseEntity<?> getCourseCompletion(int courseId) {
         var courseResponse=   getCourseById(courseId);
       if (courseResponse.getStatusCode().value()!=200){
@@ -126,7 +126,7 @@ public class CourseService {
         int sum1 = countList.stream().mapToInt(Long::intValue).sum();
 
         //logic to find the viewed course content
-       /* List<Integer> count = sectionList.stream()
+       *//* List<Integer> count = sectionList.stream()
                 .flatMap(section -> section.getSubSections().stream())
                 .map(SubSection::getWatched)
                 .filter(watched -> watched == 1)
@@ -138,7 +138,7 @@ public class CourseService {
                 .map(Quiz::getWatched)
                 .filter(watched -> watched == 1)
                 .forEach(count::add);
-*/
+*//*
         List<Integer> count=new ArrayList<>();
         sectionList.forEach(section->{
             section.getSubSections().forEach(subSec ->{
@@ -162,5 +162,5 @@ public class CourseService {
    int courseViewed=(sum2/sum1)*100;
 
         return ResponseEntity.ok(courseViewed);
-    }
+    }*/
 }
