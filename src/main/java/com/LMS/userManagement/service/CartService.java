@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CartService {
@@ -24,8 +25,8 @@ public class CartService {
 
 
     public ResponseEntity<?> saveCart(Cart cart) {
-        long userId = cart.getUserId();
-        Integer courseId = cart.getCourseId();
+        Long userId = cart.getUserId();
+        UUID courseId = cart.getCourseId();
     List<Cart> cartList = cartRepository.findByUserId(userId);
     if(cartList !=null && !cartList.isEmpty()) {
         Cart cart1 = cartRepository.findByCourseIdAndUserId(courseId,userId);
@@ -44,7 +45,7 @@ public class CartService {
       List<Cart> cart= cartRepository.findByUserId(userId);
       if(cart != null && !cart.isEmpty()){
       for(Cart cart1 : cart) {
-          Integer courseId = cart1.getCourseId();
+          UUID courseId = cart1.getCourseId();
           Course course = courseRepository.findCourseByCourseId(courseId);
         if(course != null) {
             CartDetail cartDetail = new CartDetail();
@@ -68,7 +69,7 @@ public class CartService {
     }
 
 
-    public ResponseEntity<?> deleteCartById(Long cartId) {
+    public ResponseEntity<?> deleteCartById(UUID cartId) {
         if (cartRepository.existsById(cartId)){
             cartRepository.deleteById(cartId);
             return ResponseEntity.status(HttpStatus.OK).body("success");

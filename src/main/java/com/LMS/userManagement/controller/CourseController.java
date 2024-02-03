@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -29,7 +30,7 @@ public class CourseController {
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getCourseById(@RequestHeader Integer courseId){
+    public ResponseEntity<?> getCourseById(@RequestHeader UUID courseId){
     return courseService.getCourseById(courseId);
 
     }
@@ -51,7 +52,7 @@ public class CourseController {
     }
     @DeleteMapping("/deleteCourseById")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> deleteCourseById(@RequestHeader Integer courseId){
+    public ResponseEntity<?> deleteCourseById(@RequestHeader UUID courseId){
         return courseService.deleteCourseById(courseId);
     }
     @PutMapping("/updateCourse")
@@ -80,7 +81,7 @@ public class CourseController {
     }
 
     @GetMapping("/getCourseCompletion")
-    public ResponseEntity<?> getCourseCompletion(@RequestHeader int courseId){
+    public ResponseEntity<?> getCourseCompletion(@RequestHeader UUID courseId){
         return courseService.getCourseCompletion(courseId);
     }
 }

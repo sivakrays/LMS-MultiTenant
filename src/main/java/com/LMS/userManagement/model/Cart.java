@@ -20,7 +20,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID cartId;
-    private Integer courseId;
+    private UUID courseId;
     private Long userId;
     @CurrentTimestamp
     private Timestamp createDate;

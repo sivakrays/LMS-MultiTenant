@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,7 +39,7 @@ public class CourseService {
         return ResponseEntity.status(409).body("course already exists");
     }
 
-    public ResponseEntity<?> deleteCourseById(Integer courseId) {
+    public ResponseEntity<?> deleteCourseById(UUID courseId) {
         if (courseRepository.existsById(courseId)){
             courseRepository.deleteById(courseId);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
@@ -69,7 +70,7 @@ public class CourseService {
 
     }
 
-    public ResponseEntity<?> getCourseById(Integer courseId) {
+    public ResponseEntity<?> getCourseById(UUID courseId) {
         Course course = courseRepository.findCourseByCourseId(courseId);
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
@@ -105,7 +106,7 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
     }
 
-    public ResponseEntity<?> getCourseCompletion(int courseId) {
+    public ResponseEntity<?> getCourseCompletion(UUID courseId) {
         var courseResponse=   getCourseById(courseId);
       if (courseResponse.getStatusCode().value()!=200){
           return null;
