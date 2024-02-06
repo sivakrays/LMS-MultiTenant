@@ -21,7 +21,7 @@ public class CartController {
         return cartService.saveCart(cart);
     }
 
-    @GetMapping("/getCartDetailByUserId")
+    @GetMapping("/getCartByUserId")
     public ResponseEntity<?> getCartDetailByUserId(@RequestHeader Long userId){
         return cartService.getCartDetailByUserId(userId);
     }

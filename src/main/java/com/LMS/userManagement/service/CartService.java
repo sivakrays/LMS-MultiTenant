@@ -63,7 +63,7 @@ public class CartService {
         }
       }
       }
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User not found");
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(cartDetails);
 
 
     }

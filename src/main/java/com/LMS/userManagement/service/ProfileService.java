@@ -35,6 +35,6 @@ public class ProfileService {
         if (!user.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(user);
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User does not found");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
     }
 }
