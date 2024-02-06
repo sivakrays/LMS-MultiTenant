@@ -33,7 +33,7 @@ public class CourseService {
     QuizRepository quizRepository;
 
     public ResponseEntity<?> saveSection(List<Section> sections) {
-        if (sections != null) {
+        if (!sections.isEmpty()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(sectionRepository.saveAll(sections));
         }
         return ResponseEntity.status(409).body("course already exists");
@@ -75,7 +75,7 @@ public class CourseService {
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
         }
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
+            return ResponseEntity.status(HttpStatus.OK).body(course);
     }
 
     public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
@@ -83,7 +83,7 @@ public class CourseService {
         if(!course.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(course);
         }
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(course);
+            return ResponseEntity.status(HttpStatus.OK).body(course);
 
     }
 
