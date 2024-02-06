@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS user_details
 );
 
 -- Table: public.course
-CREATE TABLE IF NOT EXISTS public.course
+CREATE TABLE IF NOT EXISTS course
 (
     price integer,
     ratings integer,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.course
     CONSTRAINT course_pkey PRIMARY KEY (course_id)
 );
 -- Table: public.section
-CREATE TABLE IF NOT EXISTS public.section
+CREATE TABLE IF NOT EXISTS section
 (
     key integer,
     course_id uuid,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS public.section
         ON DELETE NO ACTION
 );
 -- Table: public.sub_section
-CREATE TABLE IF NOT EXISTS public.sub_section
+CREATE TABLE IF NOT EXISTS sub_section
 (
     key integer,
     section_id uuid,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS public.sub_section
 );
 
 -- Table: public.quiz
-CREATE TABLE IF NOT EXISTS public.quiz
+CREATE TABLE IF NOT EXISTS quiz
 (
     answer integer NOT NULL,
     key integer,
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS public.quiz
         ON DELETE NO ACTION
 );
 -- Table: public.quiz_rank
-CREATE TABLE IF NOT EXISTS public.quiz_rank
+CREATE TABLE IF NOT EXISTS quiz_rank
 (
     badge integer NOT NULL,
     energy_points integer,
@@ -89,10 +89,9 @@ CREATE TABLE IF NOT EXISTS public.quiz_rank
     rank_id uuid NOT NULL,
     sub_section_id uuid,
     CONSTRAINT quiz_rank_pkey PRIMARY KEY (rank_id)
-)
-;
+);
 -- Table: public.cart
-CREATE TABLE IF NOT EXISTS public.cart
+CREATE TABLE IF NOT EXISTS cart
 (
     create_date timestamp(6) without time zone,
     user_id bigint,
