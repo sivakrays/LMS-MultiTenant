@@ -80,7 +80,7 @@ public class CourseService {
 
     public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
         Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo,pageSize));
-        if(course != null){
+        if(!course.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(course);
         }
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(course);
