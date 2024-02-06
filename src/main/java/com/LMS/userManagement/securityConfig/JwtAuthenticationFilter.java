@@ -20,25 +20,25 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import java.io.IOException;
 
 //commented for Handler exception
-//@Component
-//@RequiredArgsConstructor
+@Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter  extends OncePerRequestFilter {
 
-    @Autowired
-    private  JwtService jwtService;
+
+    private final JwtService jwtService;
 
 
-   private  HandlerExceptionResolver exceptionResolver;
+  // private  HandlerExceptionResolver exceptionResolver;
 
 
-    @Autowired
-    private   UserDetailsService userDetailsService;
+
+    private final  UserDetailsService userDetailsService;
 
 
-    @Autowired
+   /* @Autowired
     public  JwtAuthenticationFilter(HandlerExceptionResolver exceptionResolver){
         this.exceptionResolver=exceptionResolver;
-    }
+    }*/
 
 
     @Override
@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
         final String authHeader=request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-try {
+//try {
 
 
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -92,8 +92,8 @@ try {
 
 
 
-}catch (Exception ex){
+/*}catch (Exception ex){
     exceptionResolver.resolveException(request,response,null,ex);
-}
+}*/
     }
 }
