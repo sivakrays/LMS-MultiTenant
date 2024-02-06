@@ -145,7 +145,7 @@ try {
                 PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
         Page<User> users=userRepository.findAll(sortedByTime);
         if(users.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User details not found");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(users);
         }
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }

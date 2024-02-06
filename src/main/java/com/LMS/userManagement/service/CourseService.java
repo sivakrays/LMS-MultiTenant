@@ -83,7 +83,7 @@ public class CourseService {
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
         }
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(course);
 
     }
 
@@ -103,7 +103,7 @@ public class CourseService {
         if(!courses.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(courses);
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(courses);
     }
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {
