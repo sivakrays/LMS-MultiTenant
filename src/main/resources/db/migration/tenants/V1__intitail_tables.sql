@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS section
     title character varying(255) ,
     CONSTRAINT section_pkey PRIMARY KEY (section_id),
     CONSTRAINT fkoy8uc0ftpivwopwf5ptwdtar0 FOREIGN KEY (course_id)
-        REFERENCES public.course (course_id) MATCH SIMPLE
+        REFERENCES course (course_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS sub_section
     title character varying(255) ,
     CONSTRAINT sub_section_pkey PRIMARY KEY (sub_section_id),
     CONSTRAINT fk6qmlkrayugejciehhvnyoohut FOREIGN KEY (section_id)
-        REFERENCES public.section (section_id) MATCH SIMPLE
+        REFERENCES section (section_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS quiz
     options character varying(255)[] ,
     CONSTRAINT quiz_pkey PRIMARY KEY (quiz_id),
     CONSTRAINT fkbq87nt5wprr78k7d6mqwrenjf FOREIGN KEY (sub_section_id)
-        REFERENCES public.sub_section (sub_section_id) MATCH SIMPLE
+        REFERENCES sub_section (sub_section_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );

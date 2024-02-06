@@ -4,6 +4,7 @@ import com.LMS.userManagement.dto.AdminDto;
 import com.LMS.userManagement.model.Admin;
 import com.LMS.userManagement.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,35 @@ public class AdminController {
         return    adminService.adminLogin(email,password);
     }
 
+    @DeleteMapping("/deleteTenantById")
+    public ResponseEntity<?> deleteTenantById(@RequestHeader long id){
+        try {
+        return adminService.deleteTenant(id);
+    }catch (Exception e){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+    }
 
 
+    @GetMapping("/getAllTenants")
+    public ResponseEntity<?> getAllTenants() {
+        return adminService.getAllTenants();
+    }
 
+
+    @GetMapping("/viewAllTenants")
+    public ResponseEntity<?> findAllTenants() {
+        return adminService.findAllTenants();
+    }
+
+    @PutMapping("/updateSchemaByTenant")
+    public ResponseEntity<?> updateSchemaByTenant(@RequestHeader String email){
+        try {
+            return adminService.updateSchemaByTenant(email);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
 
     //Testing APIs

@@ -84,26 +84,6 @@ public class TenantService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("user not found");
     }
 
-    public ResponseEntity<?> getAllTenants() {
-     List<TenantDetails> tenantList=   tenantRepository.findAll();
-     if(tenantList.isEmpty()){
-         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("tenant Details not found");
-     }
-        Map<String,String> tenantIdMap=new HashMap<>();
-     tenantList.forEach(n->{
-         tenantIdMap.put(n.getIssuer(),n.getTenantId());
-     });
-
-        return ResponseEntity.status(HttpStatus.OK).body(tenantIdMap);
-    }
 
 
-
-    public ResponseEntity<?> findAllTenants() {
-      List<TenantDetails> tenantList=  tenantRepository.findAll();
-      if(tenantList.isEmpty()){
-          return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Tenants Not found");
-      }
-      return ResponseEntity.status(HttpStatus.OK).body(tenantList);
-    }
 }

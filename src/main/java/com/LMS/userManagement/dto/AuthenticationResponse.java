@@ -31,7 +31,7 @@ public class AuthenticationResponse {
 
     private Integer energyPoints;
 
-    private String refreshToken;
+ //   private String refreshToken;
 
 
 }

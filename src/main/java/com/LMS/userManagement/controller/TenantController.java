@@ -4,6 +4,7 @@ import com.LMS.userManagement.dto.TenantDto;
 import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.service.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,11 @@ public class TenantController {
 
     @PostMapping("/registerTenant")
     public ResponseEntity<?> registerTenant(@RequestBody TenantDto tenantDetails) {
+        try {
         return tenantService.registerTenant(tenantDetails);
+    }catch (Exception e){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
     }
 
     @PostMapping("/tenantLogin")
@@ -28,16 +33,7 @@ public class TenantController {
         return tenantService.tenantLogin(email, password);
     }
 
-    @GetMapping("/getAllTenants")
-    public ResponseEntity<?> getAllTenants() {
-        return tenantService.getAllTenants();
-    }
 
 
-
-    @GetMapping("/viewAllTenants")
-    public ResponseEntity<?> findAllTenants() {
-        return tenantService.findAllTenants();
-    }
 
 }

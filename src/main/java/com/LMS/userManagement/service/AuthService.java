@@ -63,25 +63,37 @@ public class AuthService {
 
 
 
-    public AuthenticationResponse authentication(String email, String password,String tenantId) {
+    public ResponseEntity<?> authentication(String email, String password,String tenantId) {
+try {
+    authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                    email,password
+            )
+    );
+}catch (Exception e){
+    return ResponseEntity.status(401).body("Bad Credential");
+}
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        email,password
-                )
-        );
       var user =userRepository.findByEmail(email);
       long userId=user.getId();
-        int goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
-        int silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
-        int bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
-        Integer energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
+        int goldCount ;
+        int silverCount ;
+        int bronzeCount;
+        Integer energyPoints;
+        try {
+           goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
+           silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
+           bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
+           energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
+      }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+      }
         String jwtToken=jwtService.generateToken(user,tenantId);
        // revokeAllUserTokens(user);
        // saveUserToken(user, jwtToken);
 
-        String refreshToken=jwtService.generateRefreshToken(user,tenantId);
-        return AuthenticationResponse.builder()
+       // String refreshToken=jwtService.generateRefreshToken(user,tenantId);
+        var auth=  AuthenticationResponse.builder()
                 .token(jwtToken)
                 .role(user.getRole())
                 .userId(user.getId())
@@ -91,8 +103,10 @@ public class AuthService {
                 .silver(silverCount)
                 .bronze(bronzeCount)
                 .energyPoints(energyPoints)
-                .refreshToken(refreshToken)
+             //   .refreshToken(refreshToken)
                 .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(auth);
     }
 
 
@@ -117,7 +131,7 @@ public class AuthService {
             //    saveUserToken(user,accessToken);
                var authResponse= AuthenticationResponse.builder()
                         .token(accessToken)
-                        .refreshToken(refreshToken)
+                        //.refreshToken(refreshToken)
                         .build();
 
                 new ObjectMapper().writeValue(response.getOutputStream(),authResponse);

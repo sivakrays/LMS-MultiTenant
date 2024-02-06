@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,19 +34,21 @@ public class AuthController {
     public ResponseEntity<?> register (
                             @RequestBody RegisterRequest request,
                             @RequestHeader String tenantId){
-
+try {
     return authService.register(request,tenantId);
+}catch (Exception e){
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+}
 }
 
     @PostMapping("/login")
    // @PreAuthorize("hasAuthority('user')")
-    public ResponseEntity<AuthenticationResponse> authentication (
+    public ResponseEntity<?> authentication (
             @RequestHeader String email,
             @RequestHeader String password,
             @RequestHeader String tenantId) {
-        AuthenticationResponse authenticationResponse
-                =authService.authentication(email, password,tenantId);
-        return ResponseEntity.ok(authenticationResponse);
+        return authService.authentication(email, password,tenantId);
+
     }
 
   
