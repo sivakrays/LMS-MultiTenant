@@ -75,7 +75,7 @@ public class CourseService {
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
         }
-            return ResponseEntity.status(HttpStatus.OK).body(course);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(course);
     }
 
     public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
