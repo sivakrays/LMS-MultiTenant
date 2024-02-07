@@ -81,7 +81,7 @@ public class TenantService {
 
            return ResponseEntity.status(HttpStatus.OK).body(tenantDto);
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("user not found");
+        return ResponseEntity.status(403).body("user not found");
     }
 
 

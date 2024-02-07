@@ -9,6 +9,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -60,7 +62,7 @@ public class AdminService {
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(adminDto);
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User not found");
+        return ResponseEntity.status(403).body("User not found");
     }
 
     @Transactional
@@ -77,8 +79,8 @@ public class AdminService {
     }
 
 
-    public ResponseEntity<?> getAllTenants() {
-        List<TenantDetails> tenantList = tenantRepository.findAll();
+    public ResponseEntity<?> getAllTenants(int pageNo,int pageSize) {
+        Page<TenantDetails> tenantList = tenantRepository.findAll(PageRequest.of(pageNo, pageSize));
         if (tenantList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("tenant Details not found");
         }
@@ -91,8 +93,8 @@ public class AdminService {
     }
 
 
-    public ResponseEntity<?> findAllTenants() {
-        List<TenantDetails> tenantList = tenantRepository.findAll();
+    public ResponseEntity<?> findAllTenants(int pageNo,int pageSize) {
+        Page<TenantDetails> tenantList = tenantRepository.findAll(PageRequest.of(pageNo, pageSize));
         if (tenantList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Tenants Not found");
         }
