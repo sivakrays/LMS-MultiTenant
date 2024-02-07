@@ -76,8 +76,8 @@ public class CourseController {
         return courseService.updateQuiz(quiz);
     }
     @GetMapping("/getCourseByUserId")
-    public ResponseEntity<?> getCourseByUserId(@RequestHeader Long userId){
-        return courseService.getCourseByUserId(userId);
+    public ResponseEntity<?> getCourseByUserId(@RequestHeader Long userId,@RequestHeader int pageNo,@RequestHeader int pageSize){
+        return courseService.getCourseByUserId(userId,pageNo,pageSize);
     }
 
    /* @GetMapping("/getCourseCompletion")
