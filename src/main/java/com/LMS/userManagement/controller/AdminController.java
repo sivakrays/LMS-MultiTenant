@@ -43,14 +43,14 @@ public class AdminController {
 
 
     @GetMapping("/getAllTenants")
-    public ResponseEntity<?> getAllTenants() {
-        return adminService.getAllTenants();
+    public ResponseEntity<?> getAllTenants(@RequestHeader int pageNo,@RequestHeader int pageSize) {
+        return adminService.getAllTenants(pageNo,pageSize);
     }
 
 
     @GetMapping("/viewAllTenants")
-    public ResponseEntity<?> findAllTenants() {
-        return adminService.findAllTenants();
+    public ResponseEntity<?> findAllTenants(@RequestHeader int pageNo,@RequestHeader int pageSize) {
+        return adminService.findAllTenants(pageNo,pageSize);
     }
 
     @PutMapping("/updateSchemaByTenant")
