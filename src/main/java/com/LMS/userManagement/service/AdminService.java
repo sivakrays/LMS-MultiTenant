@@ -79,8 +79,8 @@ public class AdminService {
     }
 
 
-    public ResponseEntity<?> getAllTenants(int pageNo,int pageSize) {
-        Page<TenantDetails> tenantList = tenantRepository.findAll(PageRequest.of(pageNo, pageSize));
+    public ResponseEntity<?> getAllTenants() {
+        List<TenantDetails> tenantList = tenantRepository.findAll();
         if (tenantList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("tenant Details not found");
         }

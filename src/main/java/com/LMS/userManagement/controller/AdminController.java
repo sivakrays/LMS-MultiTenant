@@ -43,8 +43,8 @@ public class AdminController {
 
 
     @GetMapping("/getAllTenants")
-    public ResponseEntity<?> getAllTenants(@RequestHeader int pageNo,@RequestHeader int pageSize) {
-        return adminService.getAllTenants(pageNo,pageSize);
+    public ResponseEntity<?> getAllTenants() {
+        return adminService.getAllTenants();
     }
 
 
