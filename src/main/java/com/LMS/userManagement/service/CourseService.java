@@ -98,8 +98,8 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
 
-    public ResponseEntity<?> getCourseByUserId(Long userId) {
-        List<Course> courses =courseRepository.findCourseByUserId(userId);
+    public ResponseEntity<?> getCourseByUserId(Long userId,int pageNo, int pageSize) {
+        Page<Course> courses =courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo, pageSize));
         if(!courses.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(courses);
         }

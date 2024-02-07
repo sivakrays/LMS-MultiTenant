@@ -1,6 +1,8 @@
 package com.LMS.userManagement.repository;
 
 import com.LMS.userManagement.model.Course;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +20,7 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
             "OR c.category iLIKE CONCAT ('%', :search, '%')",nativeQuery = true)
     List<Course> searchAllCourse( @Param("search")String search);
 
-   List<Course> findCourseByUserId(Long userId);
+   Page<Course> findCourseByUserId(Long userId, PageRequest of);
 
 
 
