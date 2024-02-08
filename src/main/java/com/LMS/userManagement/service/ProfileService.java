@@ -25,7 +25,8 @@ public class ProfileService {
             user1.setStandard(profileRequest.getStandard());
             user1.setCity(profileRequest.getCity());
             user1.setCountry(profileRequest.getCountry());
-            return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(user1)) ;
+            User user2 = userRepository.save(user1);
+            return ResponseEntity.status(HttpStatus.OK).body(user2) ;
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User does not found");
     }

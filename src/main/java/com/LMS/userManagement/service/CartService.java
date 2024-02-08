@@ -58,10 +58,10 @@ public class CartService {
             cartDetail.setPrice(course.getPrice());
 
             cartDetails.add(cartDetail);
-            return ResponseEntity.status(HttpStatus.OK).body(cartDetails);
-
         }
+
       }
+          return ResponseEntity.status(HttpStatus.OK).body(cartDetails);
       }
       return ResponseEntity.status(HttpStatus.NO_CONTENT).body(cartDetails);
 
