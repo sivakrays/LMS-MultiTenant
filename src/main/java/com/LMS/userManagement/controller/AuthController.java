@@ -32,12 +32,11 @@ public class AuthController {
     @PostMapping("/register")
   //  @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> register (
-                            @RequestBody RegisterRequest request,
-                            @RequestHeader String tenantId){
+                            @RequestBody RegisterRequest request){
 try {
-    return authService.register(request,tenantId);
+    return authService.register(request);
 }catch (Exception e){
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User already exists");
 }
 }
 

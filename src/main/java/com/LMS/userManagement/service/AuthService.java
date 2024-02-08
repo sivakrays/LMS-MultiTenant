@@ -42,7 +42,7 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    public ResponseEntity<?> register(RegisterRequest request,String tenantId) {
+    public ResponseEntity<?> register(RegisterRequest request) {
 
         User user=User.builder()
                 .name(request.getName())
