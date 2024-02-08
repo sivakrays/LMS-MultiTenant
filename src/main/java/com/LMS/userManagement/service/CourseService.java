@@ -34,7 +34,8 @@ public class CourseService {
 
     public ResponseEntity<?> saveSection(List<Section> sections) {
         if (!sections.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(sectionRepository.saveAll(sections));
+            List<Section> sectionList = sectionRepository.saveAll(sections);
+            return ResponseEntity.status(HttpStatus.CREATED).body(sectionList);
         }
         return ResponseEntity.status(409).body("course already exists");
     }
@@ -47,17 +48,20 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
     }
     public ResponseEntity<?> updateCourse(Course course) {
-        return ResponseEntity.status(HttpStatus.OK).body(courseRepository.save(course));
+        Course course1 = courseRepository.save(course);
+        return ResponseEntity.status(HttpStatus.OK).body(course1);
     }
     public ResponseEntity<?> updateSection(Section section) {
-        return ResponseEntity.status(HttpStatus.OK).body(sectionRepository.save(section));
+        Section section1 = sectionRepository.save(section);
+        return ResponseEntity.status(HttpStatus.OK).body(section1);
     }
     public ResponseEntity<?> updateSubSection(SubSection subSection) {
-        return ResponseEntity.status(HttpStatus.OK).body(subSectionRepository.save(subSection));
+        SubSection subSection1 =subSectionRepository.save(subSection);
+        return ResponseEntity.status(HttpStatus.OK).body(subSection1);
     }
     public ResponseEntity<?> updateQuiz(Quiz quiz) {
-
-        return ResponseEntity.status(HttpStatus.OK).body(quizRepository.save(quiz));
+        Quiz quiz1 =quizRepository.save(quiz);
+        return ResponseEntity.status(HttpStatus.OK).body(quiz1);
     }
 
 
@@ -66,7 +70,8 @@ public class CourseService {
         if(course1 != null){
             return ResponseEntity.status(409).body("Course already exists");
         }
-            return ResponseEntity.status(HttpStatus.CREATED).body(courseRepository.save(course));
+            Course course2 = courseRepository.save(course);
+            return ResponseEntity.status(HttpStatus.CREATED).body(course2);
 
     }
 
