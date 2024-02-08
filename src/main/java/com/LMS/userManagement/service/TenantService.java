@@ -60,11 +60,11 @@ public class TenantService {
                       .tenantId(savedTenant.getTenantId())
                       .email(savedTenant.getEmail()).build();
 
-              return ResponseEntity.status(HttpStatus.CREATED).body(t);
+              return ResponseEntity.status(HttpStatus.OK).body(t);
 
           }
         }
-        return ResponseEntity.status(409).body("Tenant already exists");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tenant already exists");
     }
 
     public ResponseEntity<?> tenantLogin(String email, String password) {

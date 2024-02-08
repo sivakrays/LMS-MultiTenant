@@ -58,7 +58,7 @@ public class AuthService {
                 .createdDate(savedUser.createdDate)
                 .role(savedUser.role)
                 .name(savedUser.getName()).build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
 
@@ -145,7 +145,7 @@ try {
                 PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
         Page<User> users=userRepository.findAll(sortedByTime);
         if(users.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(users);
+            return ResponseEntity.status(HttpStatus.OK).body(users);
         }
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
@@ -155,7 +155,7 @@ try {
             userRepository.deleteById(userId);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User not found");
+        return ResponseEntity.status(HttpStatus.OK).body("User not found");
     }
     /*private void saveUserToken(User user, String jwtToken) {
         var token=Token.builder()

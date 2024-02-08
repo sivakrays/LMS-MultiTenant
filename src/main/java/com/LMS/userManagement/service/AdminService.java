@@ -38,7 +38,7 @@ public class AdminService {
     public ResponseEntity<?> adminRegistration(AdminDto adminDto) {
         var adminDetails = adminRepository.findAllByEmail(adminDto.getEmail());
         if (adminDetails.isPresent()) {
-            return ResponseEntity.status(409).body("User already exists");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User already exists");
 
         }
         var admin = Admin.builder()
@@ -48,7 +48,7 @@ public class AdminService {
                 .email(adminDto.getEmail())
                 .build();
         var savedAdmin = adminRepository.save(admin);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
+        return ResponseEntity.status(HttpStatus.OK).body(savedAdmin);
     }
 
     public ResponseEntity<?> adminLogin(String email, String password) {
@@ -69,7 +69,7 @@ public class AdminService {
     public ResponseEntity<?> deleteTenant(long id) {
         Optional<TenantDetails> tenant = tenantRepository.findById(id);
         if (tenant.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User Not found");
+            return ResponseEntity.status(HttpStatus.OK).body("User Not found");
         }
         var tenantDtls = tenant.get();
         String schemaName = tenantDtls.getTenantId();
@@ -82,7 +82,7 @@ public class AdminService {
     public ResponseEntity<?> getAllTenants() {
         List<TenantDetails> tenantList = tenantRepository.findAll();
         if (tenantList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("tenant Details not found");
+            return ResponseEntity.status(HttpStatus.OK).body(tenantList);
         }
         Map<String, String> tenantIdMap = new HashMap<>();
         tenantList.forEach(n -> {
@@ -96,7 +96,7 @@ public class AdminService {
     public ResponseEntity<?> findAllTenants(int pageNo,int pageSize) {
         Page<TenantDetails> tenantList = tenantRepository.findAll(PageRequest.of(pageNo, pageSize));
         if (tenantList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Tenants Not found");
+            return ResponseEntity.status(HttpStatus.OK).body(tenantList);
         }
         return ResponseEntity.status(HttpStatus.OK).body(tenantList);
     }
@@ -106,7 +106,7 @@ public class AdminService {
         Optional<TenantDetails> tenantDetails =
                 tenantRepository.findByEmail(email);
         if (tenantDetails.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Tenants Not found");
+            return ResponseEntity.status(HttpStatus.OK).body(tenantDetails);
         }
         tenantService.initDatabase(tenantDetails.get().getTenantId());
         return ResponseEntity.status(HttpStatus.OK).body("Schema updated successfully");

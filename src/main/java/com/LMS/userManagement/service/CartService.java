@@ -31,11 +31,12 @@ public class CartService {
     if(cartList !=null && !cartList.isEmpty()) {
         Cart cart1 = cartRepository.findByCourseIdAndUserId(courseId,userId);
         if (cart1 != null) {
-            return ResponseEntity.status(409).body("Course already exists");
+            return ResponseEntity.status(HttpStatus.OK).body("Course already exists");
         }
     }
                 cartRepository.save(cart);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartRepository.findByUserId(userId));
+    List<Cart> carts =cartRepository.findByUserId(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(carts);
 
 
     }
@@ -63,7 +64,7 @@ public class CartService {
       }
           return ResponseEntity.status(HttpStatus.OK).body(cartDetails);
       }
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(cartDetails);
+      return ResponseEntity.status(HttpStatus.OK).body(cartDetails);
 
 
     }
@@ -74,6 +75,6 @@ public class CartService {
             cartRepository.deleteById(cartId);
             return ResponseEntity.status(HttpStatus.OK).body("success");
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cart not found");
+        return ResponseEntity.status(HttpStatus.OK).body("Cart not found");
     }
 }
