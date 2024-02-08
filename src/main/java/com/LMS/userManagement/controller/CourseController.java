@@ -23,7 +23,7 @@ public class CourseController {
     @Autowired
     CourseService courseService;
     @PostMapping("/saveCourse")
-   // @PreAuthorize("hasAuthority('admin')")
+  //  @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> saveCourse(@RequestBody Course course){
      return courseService.saveCourse(course);
 
@@ -36,8 +36,8 @@ public class CourseController {
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getAllCourses(@RequestHeader int pageNo,@RequestHeader int pageSize){
-       return courseService.getAllCourses(pageNo,pageSize);
+    public ResponseEntity<?> getAllCourses(@RequestHeader int pageNo,@RequestHeader int pageSize) throws InterruptedException {
+        return courseService.getAllCourses(pageNo,pageSize);
 
     }
     @GetMapping("/searchCourses")
