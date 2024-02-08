@@ -23,7 +23,7 @@ public class CourseController {
     @Autowired
     CourseService courseService;
     @PostMapping("/saveCourse")
-    @PreAuthorize("hasAuthority('admin')")
+   // @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> saveCourse(@RequestBody Course course){
      return courseService.saveCourse(course);
 
