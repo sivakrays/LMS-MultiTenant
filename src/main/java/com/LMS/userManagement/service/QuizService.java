@@ -34,7 +34,7 @@ public class QuizService {
         }else{
         quizRankRepository.save(quizRank);
             BadgeCounts data1= getBadgeCountsForUser(userId,energyPoints);
-            return ResponseEntity.status(HttpStatus.CREATED).body(data1);
+            return ResponseEntity.status(HttpStatus.OK).body(data1);
         }
 
 

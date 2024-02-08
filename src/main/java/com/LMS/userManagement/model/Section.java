@@ -1,5 +1,6 @@
 package com.LMS.userManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class Section {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "section_id")
     private UUID sectionId;
+    @JsonProperty(value = "courseId")
     private UUID course_id;
     private Integer key;
     private String title;

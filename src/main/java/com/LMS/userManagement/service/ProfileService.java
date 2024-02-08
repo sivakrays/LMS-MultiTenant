@@ -28,7 +28,7 @@ public class ProfileService {
             User user2 = userRepository.save(user1);
             return ResponseEntity.status(HttpStatus.OK).body(user2) ;
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User does not found");
+        return ResponseEntity.status(HttpStatus.OK).body("User does not found");
     }
 
     public ResponseEntity<?> getProfileById(Long id) {
@@ -36,6 +36,6 @@ public class ProfileService {
         if (!user.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(user);
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }

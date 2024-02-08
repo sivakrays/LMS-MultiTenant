@@ -33,11 +33,8 @@ public class CourseService {
     QuizRepository quizRepository;
 
     public ResponseEntity<?> saveSection(List<Section> sections) {
-        if (!sections.isEmpty()) {
-            List<Section> sectionList = sectionRepository.saveAll(sections);
-            return ResponseEntity.status(HttpStatus.CREATED).body(sectionList);
-        }
-        return ResponseEntity.status(409).body("course already exists");
+        List<Section> sectionList = sectionRepository.saveAll(sections);
+        return ResponseEntity.status(HttpStatus.OK).body(sectionList);
     }
 
     public ResponseEntity<?> deleteCourseById(UUID courseId) {
@@ -45,7 +42,7 @@ public class CourseService {
             courseRepository.deleteById(courseId);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Course not found");
+        return ResponseEntity.status(HttpStatus.OK).body("Course not found");
     }
     public ResponseEntity<?> updateCourse(Course course) {
         Course course1 = courseRepository.save(course);
@@ -66,12 +63,8 @@ public class CourseService {
 
 
     public ResponseEntity<?> saveCourse(Course course) {
-        Course course1 = courseRepository.findCourseByCourseId(course.getCourseId());
-        if(course1 != null){
-            return ResponseEntity.status(409).body("Course already exists");
-        }
-            Course course2 = courseRepository.save(course);
-            return ResponseEntity.status(HttpStatus.CREATED).body(course2);
+        Course course1 = courseRepository.save(course);
+        return ResponseEntity.status(HttpStatus.OK).body(course1);
 
     }
 
@@ -80,7 +73,7 @@ public class CourseService {
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
         }
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(course);
+            return ResponseEntity.status(HttpStatus.OK).body(course);
     }
 
     public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
@@ -108,7 +101,7 @@ public class CourseService {
         if(!courses.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(courses);
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(courses);
+        return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {
