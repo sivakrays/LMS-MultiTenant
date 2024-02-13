@@ -71,12 +71,35 @@ public class CartService {
 
 
     public ResponseEntity<?> deleteCartById(UUID cartId) {
+        List<CartDetail> cartDetails = new ArrayList<>();
         if (cartRepository.existsById(cartId)){
        Optional<Cart> cart = cartRepository.findById(cartId);
         Long userId = cart.get().getUserId();
         cartRepository.deleteById(cartId);
         List<Cart> cartList = cartRepository.findByUserId(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(cartList);
+            if(!cartList.isEmpty()) {
+                for (Cart cart1 : cartList) {
+                    UUID courseId = cart1.getCourseId();
+                    Course course = courseRepository.findCourseByCourseId(courseId);
+                    if (course != null) {
+                        CartDetail cartDetail = new CartDetail();
+                        cartDetail.setCartId(cart1.getCartId());
+                        cartDetail.setCourseId(course.getCourseId());
+                        cartDetail.setTitle(course.getTitle());
+                        cartDetail.setCategory(course.getCategory());
+                        cartDetail.setAuthorName(course.getAuthorName());
+                        cartDetail.setThumbNail(course.getThumbNail());
+                        cartDetail.setPrice(course.getPrice());
+
+                        cartDetails.add(cartDetail);
+                    }
+
+                }
+
+                return ResponseEntity.status(HttpStatus.OK).body(cartDetails);
+            }else {
+                return ResponseEntity.status(HttpStatus.OK).body(cartList);
+            }
         }
         return ResponseEntity.status(HttpStatus.OK).body("Cart not found");
     }
