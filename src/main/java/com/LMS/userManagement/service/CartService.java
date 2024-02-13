@@ -28,7 +28,7 @@ public class CartService {
         Long userId = cart.getUserId();
         UUID courseId = cart.getCourseId();
     List<Cart> cartList = cartRepository.findByUserId(userId);
-    if(cartList !=null && !cartList.isEmpty()) {
+    if(!cartList.isEmpty()) {
         Cart cart1 = cartRepository.findByCourseIdAndUserId(courseId,userId);
         if (cart1 != null) {
             return ResponseEntity.status(HttpStatus.OK).body("Course already exists");
@@ -44,7 +44,7 @@ public class CartService {
     public ResponseEntity<?> getCartDetailByUserId(Long userId) {
         List<CartDetail> cartDetails = new ArrayList<>();
       List<Cart> cart= cartRepository.findByUserId(userId);
-      if(cart != null && !cart.isEmpty()){
+      if(!cart.isEmpty()){
       for(Cart cart1 : cart) {
           UUID courseId = cart1.getCourseId();
           Course course = courseRepository.findCourseByCourseId(courseId);
@@ -72,8 +72,11 @@ public class CartService {
 
     public ResponseEntity<?> deleteCartById(UUID cartId) {
         if (cartRepository.existsById(cartId)){
-            cartRepository.deleteById(cartId);
-            return ResponseEntity.status(HttpStatus.OK).body("success");
+       Optional<Cart> cart = cartRepository.findById(cartId);
+        Long userId = cart.get().getUserId();
+        cartRepository.deleteById(cartId);
+        List<Cart> cartList = cartRepository.findByUserId(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(cartList);
         }
         return ResponseEntity.status(HttpStatus.OK).body("Cart not found");
     }
