@@ -85,11 +85,11 @@ public class CourseService {
 
     }
 
-    public ResponseEntity<?> searchCourses(String search) {
+    public ResponseEntity<?> searchCourses(String search,int pageNo,int pageSize) {
         if (search.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>());
         }
-        List<Course> courses =courseRepository.searchAllCourse(search);
+        Page<Course> courses =courseRepository.searchAllCourse(search,PageRequest.of(pageNo, pageSize));
         if(courses.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>());
         }

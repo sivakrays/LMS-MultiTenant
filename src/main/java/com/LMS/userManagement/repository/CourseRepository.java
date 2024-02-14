@@ -18,7 +18,7 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
             "c.title iLIKE CONCAT('%',:search, '%')" +
             "OR c.description iLIKE CONCAT('%', :search, '%') " +
             "OR c.category iLIKE CONCAT ('%', :search, '%')",nativeQuery = true)
-    List<Course> searchAllCourse( @Param("search")String search);
+    Page<Course> searchAllCourse( @Param("search")String search,PageRequest of);
 
    Page<Course> findCourseByUserId(Long userId, PageRequest of);
 

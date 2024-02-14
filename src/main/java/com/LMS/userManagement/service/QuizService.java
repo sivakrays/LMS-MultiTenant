@@ -1,4 +1,5 @@
 package com.LMS.userManagement.service;
+import com.LMS.userManagement.enumFile.BadgeType;
 import com.LMS.userManagement.model.BadgeCounts;
 import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
@@ -17,16 +18,17 @@ public class QuizService {
     @Autowired
     QuizRankRepository quizRankRepository;
 
-    @Transactional
+    //@Transactional
     public ResponseEntity<?> saveBadge(QuizRank quizRank) {
         Long userId = quizRank.getUserId();
         UUID subSectionId = quizRank.getSubSectionId();
         Integer energyPoints = quizRank.getEnergyPoints();
+        int badge =quizRank.getBadge();
         Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSubSectionId(userId, subSectionId);
         if (obj.isPresent()) {
             QuizRank quizRank1 = obj.get();
             quizRank1.setEnergyPoints(energyPoints);
-            quizRank1.setBadge(quizRank.getBadge());
+            quizRank1.setBadge(badge);
             quizRankRepository.save(quizRank1);
             BadgeCounts data= getBadgeCountsForUser(userId,energyPoints);
             return ResponseEntity.status(HttpStatus.OK).body(data);
@@ -41,7 +43,7 @@ public class QuizService {
     }
 
     public BadgeCounts getBadgeCountsForUser(Long userId, Integer energyPoints) {
-       int goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
+       int goldCount = quizRankRepository.countByUserIdAndBadge(userId,1);
         int silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
         int bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
         BadgeCounts badgeCounts=new BadgeCounts();
