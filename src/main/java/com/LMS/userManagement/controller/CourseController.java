@@ -41,8 +41,8 @@ public class CourseController {
 
     }
     @GetMapping("/searchCourses")
-    public ResponseEntity<?> searchCourses(@RequestParam("search") String search){
-        return courseService.searchCourses(search);
+    public ResponseEntity<?> searchCourses(@RequestParam("search") String search,@RequestHeader(defaultValue = "0") int pageNo,@RequestHeader(defaultValue = "6") int pageSize){
+        return courseService.searchCourses(search,pageNo,pageSize);
 
     }
     @PostMapping("/saveSection")

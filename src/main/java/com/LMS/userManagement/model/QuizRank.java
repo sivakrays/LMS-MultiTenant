@@ -12,6 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "subsectionId"}))
 public class QuizRank {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
