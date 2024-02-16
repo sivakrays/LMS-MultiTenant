@@ -32,6 +32,7 @@ public class AWSS3Service {
                 .contentLength(file.getSize())
                 .build();
         s3Client.putObject(objectRequest, RequestBody.fromBytes(file.getBytes()));
+
     }
 
     public byte[] getObject(String key){
