@@ -10,9 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/lms/api/auth")
+@RequestMapping("/lms/api/user")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 public class AwsS3Controller {
 
@@ -23,17 +24,18 @@ public class AwsS3Controller {
     @Autowired
     S3Client s3Client;
     private final AWSUtil awsUtil;
+    private String awsUrl="https://krays-lms-s3.s3.ap-south-1.amazonaws.com/";
+
 
     public AwsS3Controller(AWSUtil awsUtil) {
         this.awsUtil = awsUtil;
     }
 
-    @PostMapping(value = "/saveAws",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public  String saveFile(@RequestPart MultipartFile file,@RequestHeader String key) throws IOException {
-       // file.getBytes();
-     //   awss3Service.putObject(key, file.getBytes());
-        awss3Service.putObject(key, file);
-        return "file successfully uploaded Key ::"+key;
+    @PostMapping(value = "/uploadFile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public  String saveFile(@RequestPart MultipartFile file,@RequestParam String courseId) throws IOException {
+       String key="LmsCourse/"+courseId+"/"+UUID.randomUUID().toString();
+        awss3Service.putObject(key,file);
+        return awsUrl+key;
     }
 
     @GetMapping(value = "/fetchFile",produces ="video/mp4")

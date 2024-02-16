@@ -91,7 +91,7 @@ public class CourseService {
         }
         Page<Course> courses =courseRepository.searchAllCourse(search,PageRequest.of(pageNo, pageSize));
         if(courses.isEmpty()){
-            return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>());
+            return ResponseEntity.status(HttpStatus.OK).body(courses);
         }
         return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
