@@ -3,6 +3,7 @@ package com.LMS.userManagement.Razorpay;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +11,8 @@ import java.math.BigInteger;
 @RestController
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 @RequestMapping("/lms/api/auth")
+@Tag(name = "Razorpay", description = "Payment management APIs")
+
 public class RazorpayController {
 
     private RazorpayClient client;

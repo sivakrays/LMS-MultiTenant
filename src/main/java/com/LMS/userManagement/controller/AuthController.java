@@ -5,6 +5,7 @@ import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.service.AuthService;
 import com.LMS.userManagement.util.Views;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ import java.io.IOException;
 @RequestMapping("/lms/api/auth")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 @RequiredArgsConstructor
+@Tag(name = "User", description = "User management APIs")
+
 public class AuthController {
 
 
