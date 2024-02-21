@@ -50,7 +50,6 @@ public class SecurityConfiguration {
                                     .requestMatchers("/lms/api/tenant/**").permitAll()
                                     .requestMatchers("/lms/api/admin/**").permitAll()
                                    .requestMatchers("/lms/api/user/getCourseCompletion").permitAll()
-                                   .requestMatchers("/lms/api/user/uploadQuizCsv").permitAll()
                                     .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                    /*.requestMatchers("/lms/api/auth/saveAndEditProfile").permitAll()
                                     .requestMatchers("/lms/api/user/saveSection").permitAll()
