@@ -1,16 +1,18 @@
 package com.LMS.userManagement.service;
-import com.LMS.userManagement.enumFile.BadgeType;
+import com.LMS.userManagement.dto.QuizBean;
 import com.LMS.userManagement.model.BadgeCounts;
 import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
-import jakarta.transaction.Transactional;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.io.*;
+import java.util.*;
 
 
 @Service
@@ -54,5 +56,60 @@ public class QuizService {
         badgeCounts.setBronze(bronzeCount);
         return badgeCounts;
 
+    }
+
+    public ResponseEntity<?> uploadQuizCsv(MultipartFile file) throws IOException {
+
+        Workbook workbook = new XSSFWorkbook(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rows = sheet.iterator();
+
+        List<QuizBean> quizList = new ArrayList<>();
+
+        int rowNumber = 0;
+        while (rows.hasNext()) {
+            Row currentRow = rows.next();
+
+            // skip header
+            if (rowNumber == 0) {
+                rowNumber++;
+                continue;
+            }
+
+            Iterator<Cell> cellsInRow = currentRow.iterator();
+
+            QuizBean quiz = new QuizBean();
+            List<String> optionList=new ArrayList<>();
+
+            int cellIdx = 0;
+            while (cellsInRow.hasNext()) {
+                Cell currentCell = cellsInRow.next();
+                switch (cellIdx) {
+                    case 0 -> quiz.setKey((int) currentCell.getNumericCellValue());
+                    case 1 -> quiz.setTitle(currentCell.getStringCellValue());
+                    case 2 -> quiz.setQuestion(currentCell.getStringCellValue());
+                    case 3, 4, 5, 6, 7 -> {
+                        String opt=currentCell.getStringCellValue();
+                        if(opt!=null && !opt.equals("")){
+                            optionList.add(opt);
+                        }
+                    }
+                    case 8 -> quiz.setAnswer(currentCell.getStringCellValue());
+                    default -> {break; }
+                }
+
+
+                cellIdx++;
+            }
+            quiz.setOptions(optionList);
+            if (quiz.getKey()!=0) {
+                quizList.add(quiz);
+            }
+        }
+
+        workbook.close();
+
+
+    return ResponseEntity.ok(quizList);
     }
 }
