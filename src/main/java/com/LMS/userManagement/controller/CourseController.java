@@ -5,6 +5,7 @@ import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.Section;
 import com.LMS.userManagement.model.SubSection;
 import com.LMS.userManagement.service.CourseService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/lms/api/user")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
+@Tag(name = "Course", description = "Course management APIs")
+
 public class CourseController {
     @Autowired
     CourseService courseService;

@@ -3,6 +3,7 @@ package com.LMS.userManagement.controller;
 import com.LMS.userManagement.dto.AdminDto;
 import com.LMS.userManagement.model.Admin;
 import com.LMS.userManagement.service.AdminService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 @RequestMapping("/lms/api/admin")
 @RequiredArgsConstructor
+@Tag(name = "Admin", description = "Admin management APIs")
+
 public class AdminController {
 
     private final AdminService adminService;

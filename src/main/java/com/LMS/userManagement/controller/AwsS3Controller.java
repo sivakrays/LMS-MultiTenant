@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.awsS3.AWSS3Service;
 import com.LMS.userManagement.util.AWSUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/lms/api/user")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
+@Tag(name = "Video", description = "Video management APIs")
+
 public class AwsS3Controller {
 
 
