@@ -5,6 +5,8 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +14,10 @@ import java.util.Arrays;
 
 @Configuration
 public class SwaggerConfig {
+    @Value("${lms.openapi.prod-url}")
+    private String productionUrl;
+    @Value("${lms.openapi.dev-url}")
+    private String developmentUrl;
     @Bean
     public OpenAPI customOpenAPI() {
         OpenAPI openApi = new OpenAPI();
@@ -31,6 +37,10 @@ public class SwaggerConfig {
         openApi.addSecurityItem(
                 new SecurityRequirement().addList("bearer-jwt", Arrays.asList("read", "write"))
         );
+        openApi.servers(Arrays.asList(
+                new Server().url(productionUrl).description("Server URL in Production environment"),
+                new Server().url(developmentUrl).description("Server URL in Development environment")
+        ));
 
         return openApi;
     }
