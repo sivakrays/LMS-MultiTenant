@@ -14,10 +14,10 @@ import java.util.Arrays;
 
 @Configuration
 public class SwaggerConfig {
-    @Value("${lms.openapi.prod-url}")
-    private String productionUrl;
     @Value("${lms.openapi.dev-url}")
     private String developmentUrl;
+    @Value("${lms.openapi.local-url}")
+    private String localUrl;
     @Bean
     public OpenAPI customOpenAPI() {
         OpenAPI openApi = new OpenAPI();
@@ -38,7 +38,7 @@ public class SwaggerConfig {
                 new SecurityRequirement().addList("bearer-jwt", Arrays.asList("read", "write"))
         );
         openApi.servers(Arrays.asList(
-                new Server().url(productionUrl).description("Server URL in Production environment"),
+                new Server().url(localUrl).description("Server URL in Local environment"),
                 new Server().url(developmentUrl).description("Server URL in Development environment")
         ));
 
