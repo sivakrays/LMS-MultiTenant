@@ -22,7 +22,7 @@ public class ProfileController {
         return profileService.saveAndEditProfile(profileRequest);
     }
     @GetMapping("/getProfileById")
-    public ResponseEntity<?> getProfileById(@RequestHeader Long id){
+    public ResponseEntity<?> getProfileById(@RequestParam Long id){
         return profileService.getProfileById(id);
     }
 

@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.TenantDto;
 import com.LMS.userManagement.model.TenantDetails;
+import com.LMS.userManagement.records.LoginDto;
 import com.LMS.userManagement.service.TenantService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,8 @@ public class TenantController {
 
     @PostMapping("/tenantLogin")
     //@PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> tenantLogin(@RequestHeader String email,
-                                         @RequestHeader String password) {
-        return tenantService.tenantLogin(email, password);
+    public ResponseEntity<?> tenantLogin(@RequestBody LoginDto loginDto) {
+        return tenantService.tenantLogin(loginDto);
     }
 
 

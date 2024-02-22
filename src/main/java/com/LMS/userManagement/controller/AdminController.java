@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.AdminDto;
 import com.LMS.userManagement.model.Admin;
+import com.LMS.userManagement.records.LoginDto;
 import com.LMS.userManagement.service.AdminService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +31,12 @@ public class AdminController {
     }
 
     @PostMapping("/adminLogin")
-    public ResponseEntity<?> adminLogin(@RequestHeader String email,
-                                        @RequestHeader String password){
-        return    adminService.adminLogin(email,password);
+    public ResponseEntity<?> adminLogin(@RequestBody LoginDto loginDto){
+        return    adminService.adminLogin(loginDto);
     }
 
     @DeleteMapping("/deleteTenantById")
-    public ResponseEntity<?> deleteTenantById(@RequestHeader long id){
+    public ResponseEntity<?> deleteTenantById(@RequestParam long id){
         try {
         return adminService.deleteTenant(id);
     }catch (Exception e){
@@ -52,12 +52,12 @@ public class AdminController {
 
 
     @GetMapping("/viewAllTenants")
-    public ResponseEntity<?> findAllTenants(@RequestHeader int pageNo,@RequestHeader int pageSize) {
+    public ResponseEntity<?> findAllTenants(@RequestParam int pageNo,@RequestParam int pageSize) {
         return adminService.findAllTenants(pageNo,pageSize);
     }
 
     @PutMapping("/updateSchemaByTenant")
-    public ResponseEntity<?> updateSchemaByTenant(@RequestHeader String email){
+    public ResponseEntity<?> updateSchemaByTenant(@RequestParam String email){
         try {
             return adminService.updateSchemaByTenant(email);
         }catch (Exception e){
