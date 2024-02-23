@@ -1,8 +1,12 @@
 package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.QuizBean;
 import com.LMS.userManagement.model.BadgeCounts;
+import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,4 +131,29 @@ try {
         return ResponseEntity.ok(resource);
 
     }
+/*
+
+    public Set<?> parseCsv(MultipartFile file){
+        List<String> optionList =new ArrayList<>();
+        try {
+            Reader reader =new BufferedReader(new InputStreamReader(file.getInputStream()));
+            HeaderColumnNameMappingStrategy<QuizBean> strategy=
+                    new HeaderColumnNameMappingStrategy<>();
+            strategy.setType(QuizBean.class);
+            CsvToBean<QuizBean> csvToBean=new CsvToBeanBuilder<QuizBean>()
+                    .withMappingStrategy(strategy)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            csvToBean.parse()
+                    .stream().map(
+                            csvLine->
+                                    Quiz.builder()
+                                    .key(csvLine.getKey())
+
+                    )
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 }
