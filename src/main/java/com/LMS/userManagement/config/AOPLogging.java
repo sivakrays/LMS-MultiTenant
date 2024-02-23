@@ -1,3 +1,4 @@
+/*
 package com.LMS.userManagement.config;
 
 import org.aspectj.lang.JoinPoint;
@@ -38,7 +39,7 @@ public class AOPLogging {
          Object obj=joinPoint.proceed();
          return obj;
       }
-      catch(IllegalArgumentException e) {
+      catch(Exception e) {
          log.info("TaskException Message {}",e.getMessage());
          throw e;
       }
@@ -55,7 +56,7 @@ public class AOPLogging {
          log.info("Time taken by {} is {}",joinPoint,timeTaken);
          return obj;
       }
-      catch(IllegalArgumentException e) {
+      catch(Exception e) {
          log.info("TaskException Message {}",e.getMessage());
          throw e;
       }
@@ -63,3 +64,4 @@ public class AOPLogging {
 
    }
 
+*/

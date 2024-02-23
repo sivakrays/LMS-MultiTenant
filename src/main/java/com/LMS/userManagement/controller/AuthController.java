@@ -61,7 +61,6 @@ try {
     }
 
     @GetMapping("/getAllUser")
-    //@JsonView(Views.MyResponseViews.class)
     private ResponseEntity<?> getAllUser(@RequestHeader int pageNo,
                                          @RequestHeader int pageSize){
       return   authService.getAllUser(pageNo,pageSize);
