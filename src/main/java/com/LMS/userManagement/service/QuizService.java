@@ -6,12 +6,15 @@ import com.LMS.userManagement.repository.QuizRankRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.*;
 
 
@@ -111,5 +114,17 @@ public class QuizService {
 
 
     return ResponseEntity.ok(quizList);
+    }
+
+    public ResponseEntity<?> downloadQuizCsv() throws MalformedURLException {
+        Resource resource=null;
+    //  File file= new File("resources/projectResources/QuizTemplate.xlsx");
+try {
+    resource=new ClassPathResource("static/QuizTemplate.xlsx");
+}catch (Exception e) {
+    return ResponseEntity.ok(e.getMessage());
+}
+        return ResponseEntity.ok(resource);
+
     }
 }
