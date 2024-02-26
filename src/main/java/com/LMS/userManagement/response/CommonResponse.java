@@ -11,6 +11,7 @@ public class CommonResponse<T> {
 
     public boolean status;
     public String message;
-
     public T data;
+    public int statusCode;
+    public String error;
 }

@@ -6,14 +6,14 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Data
-@Builder
+
 public class UserDto {
 
-    private String email;
+    public String email;
 
-    private String role;
+    public String role;
 
-    private String name;
+    public String name;
 
-    private Timestamp createdDate;
+    public Timestamp createdDate;
 }

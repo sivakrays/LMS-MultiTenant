@@ -1,14 +1,16 @@
-package com.LMS.userManagement.records;
+package com.LMS.userManagement.util;
 
 import com.LMS.userManagement.dto.RegisterRequest;
-import com.LMS.userManagement.dto.UserDto;
 import com.LMS.userManagement.model.User;
+import com.LMS.userManagement.records.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 
 @RequiredArgsConstructor
+@Component
 public class Mapper {
 
     private final PasswordEncoder passwordEncoder;

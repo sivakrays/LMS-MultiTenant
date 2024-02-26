@@ -3,9 +3,10 @@ package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.*;
-import com.LMS.userManagement.records.Mapper;
+import com.LMS.userManagement.util.Constant;
+import com.LMS.userManagement.util.Mapper;
 import com.LMS.userManagement.records.UserDTO;
-import com.LMS.userManagement.records.LoginDto;
+import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.response.CommonResponse;
@@ -28,7 +29,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
 @Service
 @RequiredArgsConstructor
@@ -51,15 +51,17 @@ public class AuthService {
        var savedUser= userRepository.save(user);
         UserDTO userDto=mapper.UserDTOMapper(savedUser);
         return CommonResponse.<UserDTO>builder()
-                .message("SUCCESS")
+                .message(Constant.USER_REGISTERED)
                 .status(true)
                 .data(userDto)
+                .statusCode(Constant.SUCCESS)
                 .build();
+
     }
 
 
 
-    public ResponseEntity<?> authentication(LoginDto loginDto, String tenantId) {
+    public ResponseEntity<?> authentication(LoginDTO loginDto, String tenantId) {
         String email = loginDto.email();
         String password = loginDto.password();
 try {
