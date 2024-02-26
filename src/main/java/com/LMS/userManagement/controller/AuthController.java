@@ -1,18 +1,16 @@
 package com.LMS.userManagement.controller;
 
-import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
+import com.LMS.userManagement.dto.UserDto;
+import com.LMS.userManagement.records.UserDTO;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.AuthService;
-import com.LMS.userManagement.util.Views;
-import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -34,12 +32,16 @@ public class AuthController {
 
     @PostMapping("/register")
   //  @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> register (
+    public CommonResponse<UserDTO> register (
                             @RequestBody RegisterRequest request){
 try {
     return authService.register(request);
 }catch (Exception e){
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User already exists");
+    return CommonResponse.<UserDTO>builder()
+            .status(false)
+            .message("User already exits")
+            .data(new UserDTO(null,null,null,null))
+            .build();
 }
 }
 

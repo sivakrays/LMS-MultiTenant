@@ -35,6 +35,8 @@ public class AdminService {
     private EntityManager entityManager;
 
 
+
+
     public ResponseEntity<?> adminRegistration(AdminDto adminDto) {
         var adminDetails = adminRepository.findAllByEmail(adminDto.getEmail());
         if (adminDetails.isPresent()) {
