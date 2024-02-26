@@ -3,6 +3,7 @@ package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.dto.TenantDto;
 import com.LMS.userManagement.model.TenantDetails;
+import com.LMS.userManagement.records.LoginDto;
 import com.LMS.userManagement.repository.TenantRepository;
 import jakarta.transaction.Transactional;
 import org.flywaydb.core.Flyway;
@@ -67,7 +68,9 @@ public class TenantService {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tenant already exists");
     }
 
-    public ResponseEntity<?> tenantLogin(String email, String password) {
+    public ResponseEntity<?> tenantLogin(LoginDto loginDto) {
+        String email = loginDto.email();
+        String password = loginDto.password();
         Optional<TenantDetails> tenant=tenantRepository.findByEmail(email);
         if (tenant.isPresent() && tenant.get().getPassword().equals(password)){
           var t=  tenant.get();
