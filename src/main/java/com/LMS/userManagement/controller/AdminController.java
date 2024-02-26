@@ -1,8 +1,7 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.AdminDto;
-import com.LMS.userManagement.model.Admin;
-import com.LMS.userManagement.records.LoginDto;
+import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.service.AdminService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,7 @@ public class AdminController {
     }
 
     @PostMapping("/adminLogin")
-    public ResponseEntity<?> adminLogin(@RequestBody LoginDto loginDto){
+    public ResponseEntity<?> adminLogin(@RequestBody LoginDTO loginDto){
         return    adminService.adminLogin(loginDto);
     }
 

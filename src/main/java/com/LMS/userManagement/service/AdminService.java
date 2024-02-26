@@ -3,7 +3,7 @@ package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.AdminDto;
 import com.LMS.userManagement.model.Admin;
 import com.LMS.userManagement.model.TenantDetails;
-import com.LMS.userManagement.records.LoginDto;
+import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.AdminRepository;
 import com.LMS.userManagement.repository.TenantRepository;
 import jakarta.persistence.EntityManager;
@@ -36,6 +36,8 @@ public class AdminService {
     private EntityManager entityManager;
 
 
+
+
     public ResponseEntity<?> adminRegistration(AdminDto adminDto) {
         var adminDetails = adminRepository.findAllByEmail(adminDto.getEmail());
         if (adminDetails.isPresent()) {
@@ -52,7 +54,7 @@ public class AdminService {
         return ResponseEntity.status(HttpStatus.OK).body(savedAdmin);
     }
 
-    public ResponseEntity<?> adminLogin(LoginDto loginDto) {
+    public ResponseEntity<?> adminLogin(LoginDTO loginDto) {
         String email = loginDto.email();
         String password =loginDto.password();
         Optional<Admin> admin = adminRepository.findAllByEmail(email);

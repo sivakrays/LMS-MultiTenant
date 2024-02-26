@@ -2,11 +2,14 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
-import com.LMS.userManagement.dto.UserDto;
 import com.LMS.userManagement.model.*;
-import com.LMS.userManagement.records.LoginDto;
+import com.LMS.userManagement.util.Constant;
+import com.LMS.userManagement.util.Mapper;
+import com.LMS.userManagement.records.UserDTO;
+import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import com.LMS.userManagement.repository.UserRepository;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.securityConfig.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,12 +29,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final Mapper mapper;
     @Autowired
     private  UserRepository userRepository;
     @Autowired
@@ -43,28 +46,22 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    public ResponseEntity<?> register(RegisterRequest request) {
-
-        User user=User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .confirmPassword(passwordEncoder.encode(request.getConfirmPassword()))
-                .role(request.getRole().toLowerCase())
-                .createdDate(new Timestamp(System.currentTimeMillis()))
-                .build();
+    public CommonResponse<UserDTO> register(RegisterRequest request) {
+       User user=mapper.UserMapper(request);
        var savedUser= userRepository.save(user);
-       var userDto= UserDto.builder()
-                .email(savedUser.getEmail())
-                .createdDate(savedUser.createdDate)
-                .role(savedUser.role)
-                .name(savedUser.getName()).build();
-        return ResponseEntity.status(HttpStatus.OK).body(userDto);
+        UserDTO userDto=mapper.UserDTOMapper(savedUser);
+        return CommonResponse.<UserDTO>builder()
+                .message(Constant.USER_REGISTERED)
+                .status(true)
+                .data(userDto)
+                .statusCode(Constant.SUCCESS)
+                .build();
+
     }
 
 
 
-    public ResponseEntity<?> authentication(LoginDto loginDto, String tenantId) {
+    public ResponseEntity<?> authentication(LoginDTO loginDto, String tenantId) {
         String email = loginDto.email();
         String password = loginDto.password();
 try {
