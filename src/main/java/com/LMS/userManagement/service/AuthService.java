@@ -2,10 +2,10 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
-import com.LMS.userManagement.dto.UserDto;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.Mapper;
 import com.LMS.userManagement.records.UserDTO;
+import com.LMS.userManagement.records.LoginDto;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.response.CommonResponse;
@@ -59,7 +59,9 @@ public class AuthService {
 
 
 
-    public ResponseEntity<?> authentication(String email, String password,String tenantId) {
+    public ResponseEntity<?> authentication(LoginDto loginDto, String tenantId) {
+        String email = loginDto.email();
+        String password = loginDto.password();
 try {
     authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(

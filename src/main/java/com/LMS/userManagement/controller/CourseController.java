@@ -33,18 +33,18 @@ public class CourseController {
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getCourseById(@RequestHeader UUID courseId){
+    public ResponseEntity<?> getCourseById(@RequestParam UUID courseId){
     return courseService.getCourseById(courseId);
 
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getAllCourses(@RequestHeader int pageNo,@RequestHeader int pageSize) throws InterruptedException {
+    public ResponseEntity<?> getAllCourses(@RequestParam int pageNo,@RequestParam int pageSize) throws InterruptedException {
         return courseService.getAllCourses(pageNo,pageSize);
 
     }
     @GetMapping("/searchCourses")
-    public ResponseEntity<?> searchCourses(@RequestParam("search") String search,@RequestHeader(defaultValue = "0") int pageNo,@RequestHeader(defaultValue = "6") int pageSize){
+    public ResponseEntity<?> searchCourses(@RequestParam("search") String search,@RequestParam(defaultValue = "0") int pageNo,@RequestParam(defaultValue = "6") int pageSize){
         return courseService.searchCourses(search,pageNo,pageSize);
 
     }
@@ -55,7 +55,7 @@ public class CourseController {
     }
     @DeleteMapping("/deleteCourseById")
   //  @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> deleteCourseById(@RequestHeader UUID courseId){
+    public ResponseEntity<?> deleteCourseById(@RequestParam UUID courseId){
         return courseService.deleteCourseById(courseId);
     }
     @PutMapping("/updateCourse")
@@ -79,7 +79,7 @@ public class CourseController {
         return courseService.updateQuiz(quiz);
     }
     @GetMapping("/getCourseByUserId")
-    public ResponseEntity<?> getCourseByUserId(@RequestHeader Long userId,@RequestHeader int pageNo,@RequestHeader int pageSize){
+    public ResponseEntity<?> getCourseByUserId(@RequestParam Long userId,@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.getCourseByUserId(userId,pageNo,pageSize);
     }
 

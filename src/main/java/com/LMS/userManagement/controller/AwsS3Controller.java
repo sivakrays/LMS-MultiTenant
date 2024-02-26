@@ -42,7 +42,7 @@ public class AwsS3Controller {
     }
 
     @GetMapping(value = "/fetchFile",produces ="video/mp4")
-    public ResponseEntity<?> getFile(@RequestHeader String key){
+    public ResponseEntity<?> getFile(@RequestParam String key){
       byte[] file=  awss3Service.getObject(key);
       if(file==null){
           return ResponseEntity.ok("No Files Found");

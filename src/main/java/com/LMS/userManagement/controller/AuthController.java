@@ -1,9 +1,9 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.RegisterRequest;
-import com.LMS.userManagement.dto.UserDto;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.response.CommonResponse;
+import com.LMS.userManagement.records.LoginDto;
 import com.LMS.userManagement.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,10 +48,9 @@ try {
     @PostMapping("/login")
    // @PreAuthorize("hasAuthority('user')")
     public ResponseEntity<?> authentication (
-            @RequestHeader String email,
-            @RequestHeader String password,
+            @RequestBody LoginDto loginDto,
             @RequestHeader String tenantId) {
-        return authService.authentication(email, password,tenantId);
+        return authService.authentication(loginDto,tenantId);
 
     }
 
@@ -63,12 +62,14 @@ try {
     }
 
     @GetMapping("/getAllUser")
-    private ResponseEntity<?> getAllUser(@RequestHeader int pageNo,
-                                         @RequestHeader int pageSize){
+    //@JsonView(Views.MyResponseViews.class)
+    private ResponseEntity<?> getAllUser(@RequestParam int pageNo,
+                                         @RequestParam int pageSize){
+
       return   authService.getAllUser(pageNo,pageSize);
     }
     @DeleteMapping("/deleteUserById")
-    public ResponseEntity<?> deleteUserById(@RequestHeader Long userId){
+    public ResponseEntity<?> deleteUserById(@RequestParam Long userId){
         return authService.deleteUserById(userId);
     }
 

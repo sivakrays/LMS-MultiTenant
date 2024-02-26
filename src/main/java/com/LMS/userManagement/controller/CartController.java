@@ -25,11 +25,11 @@ public class CartController {
     }
 
     @GetMapping("/getCartByUserId")
-    public ResponseEntity<?> getCartDetailByUserId(@RequestHeader Long userId){
+    public ResponseEntity<?> getCartDetailByUserId(@RequestParam Long userId){
         return cartService.getCartDetailByUserId(userId);
     }
     @DeleteMapping("/deleteCartById")
-    public ResponseEntity<?> deleteCartById(@RequestHeader UUID cartId){
+    public ResponseEntity<?> deleteCartById(@RequestParam UUID cartId){
         return cartService.deleteCartById(cartId);
     }
 }
