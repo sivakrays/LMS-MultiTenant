@@ -1,17 +1,24 @@
 package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.QuizBean;
 import com.LMS.userManagement.model.BadgeCounts;
+import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.*;
 
 
@@ -112,4 +119,41 @@ public class QuizService {
 
     return ResponseEntity.ok(quizList);
     }
+
+    public ResponseEntity<?> downloadQuizCsv() throws MalformedURLException {
+        Resource resource=null;
+    //  File file= new File("resources/projectResources/QuizTemplate.xlsx");
+try {
+    resource=new ClassPathResource("static/QuizTemplate.xlsx");
+}catch (Exception e) {
+    return ResponseEntity.ok(e.getMessage());
+}
+        return ResponseEntity.ok(resource);
+
+    }
+/*
+
+    public Set<?> parseCsv(MultipartFile file){
+        List<String> optionList =new ArrayList<>();
+        try {
+            Reader reader =new BufferedReader(new InputStreamReader(file.getInputStream()));
+            HeaderColumnNameMappingStrategy<QuizBean> strategy=
+                    new HeaderColumnNameMappingStrategy<>();
+            strategy.setType(QuizBean.class);
+            CsvToBean<QuizBean> csvToBean=new CsvToBeanBuilder<QuizBean>()
+                    .withMappingStrategy(strategy)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            csvToBean.parse()
+                    .stream().map(
+                            csvLine->
+                                    Quiz.builder()
+                                    .key(csvLine.getKey())
+
+                    )
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 }

@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS sub_section
 -- Table: public.quiz
 CREATE TABLE IF NOT EXISTS quiz
 (
-    answer integer NOT NULL,
+    answer text,
     key integer,
     quiz_id uuid NOT NULL,
     sub_section_id uuid,

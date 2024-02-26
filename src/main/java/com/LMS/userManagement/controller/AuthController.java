@@ -64,6 +64,7 @@ try {
     //@JsonView(Views.MyResponseViews.class)
     private ResponseEntity<?> getAllUser(@RequestParam int pageNo,
                                          @RequestParam int pageSize){
+
       return   authService.getAllUser(pageNo,pageSize);
     }
     @DeleteMapping("/deleteUserById")
