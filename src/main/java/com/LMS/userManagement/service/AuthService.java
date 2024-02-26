@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -150,10 +151,11 @@ try {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    public ResponseEntity<?> deleteUserById(Long userId) {
+    public ResponseEntity<?> deleteUserById(Long userId,int pageNo,int pageSize) {
         if (userRepository.existsById(userId)){
             userRepository.deleteById(userId);
-            return ResponseEntity.status(HttpStatus.OK).body("Success");
+           Page<User> userList = userRepository.findAll(PageRequest.of(pageNo,pageSize));
+            return ResponseEntity.status(HttpStatus.OK).body(userList);
         }
         return ResponseEntity.status(HttpStatus.OK).body("User not found");
     }

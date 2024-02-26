@@ -66,8 +66,8 @@ try {
       return   authService.getAllUser(pageNo,pageSize);
     }
     @DeleteMapping("/deleteUserById")
-    public ResponseEntity<?> deleteUserById(@RequestHeader Long userId){
-        return authService.deleteUserById(userId);
+    public ResponseEntity<?> deleteUserById(@RequestHeader Long userId,@RequestHeader int pageNo,@RequestHeader int pageSize){
+        return authService.deleteUserById(userId,pageNo,pageSize);
     }
 
 

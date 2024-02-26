@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class CourseService {
@@ -37,10 +35,14 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).body(sectionList);
     }
 
-    public ResponseEntity<?> deleteCourseById(UUID courseId) {
+    public ResponseEntity<?> deleteCourseById(UUID courseId,int pageNo,int pageSize) {
+
         if (courseRepository.existsById(courseId)){
+            Optional<Course> course = courseRepository.findById(courseId);
+            Long userId = course.get().getUserId();
             courseRepository.deleteById(courseId);
-            return ResponseEntity.status(HttpStatus.OK).body("Success");
+            Page<Course> courses = courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo,pageSize));
+            return ResponseEntity.status(HttpStatus.OK).body(courses);
         }
         return ResponseEntity.status(HttpStatus.OK).body("Course not found");
     }

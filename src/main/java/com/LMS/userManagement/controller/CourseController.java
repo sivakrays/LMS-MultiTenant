@@ -55,8 +55,8 @@ public class CourseController {
     }
     @DeleteMapping("/deleteCourseById")
   //  @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> deleteCourseById(@RequestHeader UUID courseId){
-        return courseService.deleteCourseById(courseId);
+    public ResponseEntity<?> deleteCourseById(@RequestHeader UUID courseId,@RequestHeader int pageNo,@RequestHeader int pageSize){
+        return courseService.deleteCourseById(courseId,pageNo,pageSize);
     }
     @PutMapping("/updateCourse")
    // @PreAuthorize("hasAuthority('admin')")
