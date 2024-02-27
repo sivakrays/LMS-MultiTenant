@@ -3,14 +3,16 @@ package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.*;
+import com.LMS.userManagement.records.LoginResponse;
 import com.LMS.userManagement.util.Constant;
-import com.LMS.userManagement.util.Mapper;
+import com.LMS.userManagement.util.CustomMapper;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.securityConfig.JwtService;
+import com.LMS.userManagement.util.LMSUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,21 +23,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final Mapper mapper;
+    private final CustomMapper mapper;
+
+    private final LMSUtil lmsUtil;
     @Autowired
     private  UserRepository userRepository;
     @Autowired
@@ -48,9 +49,19 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public CommonResponse<UserDTO> register(RegisterRequest request) {
-       User user=mapper.UserMapper(request);
-       var savedUser= userRepository.save(user);
-        UserDTO userDto=mapper.UserDTOMapper(savedUser);
+        UserDTO userDto;
+        try {
+            User user=mapper.UserMapper(request);
+            var savedUser= userRepository.save(user);
+             userDto=mapper.UserDTOMapper(savedUser);
+        }catch (Exception e){
+            return CommonResponse.<UserDTO>builder()
+                    .status(false)
+                    .message(Constant.USER_EXISTS)
+                    .statusCode(Constant.FORBIDDEN)
+                    .build();
+        }
+
         return CommonResponse.<UserDTO>builder()
                 .message(Constant.USER_REGISTERED)
                 .status(true)
@@ -62,7 +73,7 @@ public class AuthService {
 
 
 
-    public CommonResponse<?> authentication(LoginDTO loginDto, String tenantId) {
+    public CommonResponse<LoginResponse> authentication(LoginDTO loginDto, String tenantId) {
         String email = loginDto.email();
         String password = loginDto.password();
         authenticationManager.authenticate(
@@ -83,7 +94,7 @@ public class AuthService {
             bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
             energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
         } catch (Exception e) {
-            return CommonResponse.builder()
+            return CommonResponse.<LoginResponse>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_USER_STATS)
@@ -104,11 +115,13 @@ public class AuthService {
                 .energyPoints(energyPoints)
                 .build();
 
-        return CommonResponse.builder()
+      var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth);
+
+        return CommonResponse.<LoginResponse>builder()
                 .status(true)
                 .statusCode(Constant.SUCCESS)
                 .message(Constant.AUTHENTICATED)
-                .data(auth)
+                .data(loginResponse)
                 .build();
     }
 
@@ -148,17 +161,22 @@ public class AuthService {
         Page<User> users = null;
         try {
             Pageable sortedByTime =
-                    PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
+                    PageRequest.of(pageNo, pageSize, Sort.by(Constant.CREATED_DATE).descending());
             users = userRepository.findAll(sortedByTime);
-
-            if (users.isEmpty()) {
-                return CommonResponse.<Page<User>>builder()
-                        .status(true)
-                        .statusCode(Constant.SUCCESS)
-                        .message(Constant.USERS_NOT_FOUND)
-                        .data(users)
-                        .build();
-            }
+        } catch (Exception e) {
+            return CommonResponse.<Page<User>>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_RETRIEVE_USERS)
+                    .build();
+        }
+        if (users.isEmpty()) {
+            return CommonResponse.<Page<User>>builder()
+                    .status(false)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.USERS_NOT_FOUND)
+                    .build();
+        }
 
             return CommonResponse.<Page<User>>builder()
                     .status(true)
@@ -166,14 +184,6 @@ public class AuthService {
                     .message(Constant.USERS_FOUND)
                     .data(users)
                     .build();
-        } catch (Exception e) {
-            return CommonResponse.<Page<User>>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_RETRIEVE_USERS)
-                    .data(users)
-                    .build();
-        }
     }
 
 

@@ -151,22 +151,30 @@ public class AdminService {
 
 
     public CommonResponse<Map<String, String>> getAllTenants() {
-        Map<String, String> tenantIdMap = null;
+        Map<String, String> tenantIdMap  = new HashMap<>();
+        List<TenantDetails> tenantList;
         try {
-            List<TenantDetails> tenantList = tenantRepository.findAll();
-            if (tenantList.isEmpty()) {
-                return CommonResponse.<Map<String, String>>builder()
-                        .status(true)
-                        .statusCode(Constant.SUCCESS)
-                        .message(Constant.NO_TENANTS)
-                        .data(tenantIdMap)
-                        .build();
-            }
+           tenantList = tenantRepository.findAll();
+    } catch (Exception e) {
+        // Log the exception or handle it appropriately
+        return CommonResponse.<Map<String, String>>builder()
+                .status(false)
+                .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                .message(Constant.FAILED_TENANT)
+                .data(tenantIdMap)
+                .build();
+    }
+        if (tenantList.isEmpty()) {
+            return CommonResponse.<Map<String, String>>builder()
+                    .status(false)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.NO_TENANTS)
+                    .data(tenantIdMap)
+                    .build();
+        }
 
-            tenantIdMap = new HashMap<>();
-            Map<String, String> finalTenantIdMap = tenantIdMap;
             tenantList.forEach(n -> {
-                finalTenantIdMap.put(n.getIssuer(), n.getTenantId());
+                tenantIdMap.put(n.getIssuer(), n.getTenantId());
             });
 
             return CommonResponse.<Map<String, String>>builder()
@@ -175,15 +183,7 @@ public class AdminService {
                     .message(Constant.TENANTS_FOUND)
                     .data(tenantIdMap)
                     .build();
-        } catch (Exception e) {
-            // Log the exception or handle it appropriately
-            return CommonResponse.<Map<String, String>>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_TENANT)
-                    .data(tenantIdMap)
-                    .build();
-        }
+
     }
 
 
