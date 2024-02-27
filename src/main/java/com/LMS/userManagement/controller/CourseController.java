@@ -4,6 +4,7 @@ import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.Section;
 import com.LMS.userManagement.model.SubSection;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,59 +28,59 @@ public class CourseController {
     CourseService courseService;
     @PostMapping("/saveCourse")
   //  @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> saveCourse(@RequestBody Course course){
+    public CommonResponse<Course> saveCourse(@RequestBody Course course){
      return courseService.saveCourse(course);
 
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getCourseById(@RequestParam UUID courseId){
+    public CommonResponse<Course> getCourseById(@RequestParam UUID courseId){
     return courseService.getCourseById(courseId);
 
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getAllCourses(@RequestParam int pageNo,@RequestParam int pageSize) throws InterruptedException {
+    public CommonResponse<Page<Course>> getAllCourses(@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.getAllCourses(pageNo,pageSize);
 
     }
     @GetMapping("/searchCourses")
-    public ResponseEntity<?> searchCourses(@RequestParam("search") String search,@RequestParam(defaultValue = "0") int pageNo,@RequestParam(defaultValue = "6") int pageSize){
+    public CommonResponse<?> searchCourses(@RequestParam("search") String search,@RequestParam(defaultValue = "0") int pageNo,@RequestParam(defaultValue = "6") int pageSize){
         return courseService.searchCourses(search,pageNo,pageSize);
 
     }
     @PostMapping("/saveSection")
    // @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> saveSection(@RequestBody List<Section> sections){
+    public CommonResponse<List<Section>> saveSection(@RequestBody List<Section> sections){
         return courseService.saveSection(sections);
     }
     @DeleteMapping("/deleteCourseById")
   //  @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> deleteCourseById(@RequestParam UUID courseId){
+    public CommonResponse<String> deleteCourseById(@RequestParam UUID courseId){
         return courseService.deleteCourseById(courseId);
     }
     @PutMapping("/updateCourse")
    // @PreAuthorize("hasAuthority('admin')")
-    public  ResponseEntity<?> updateCourse(@RequestBody Course course){
+    public  CommonResponse<Course> updateCourse(@RequestBody Course course){
         return courseService.updateCourse(course);
     }
     @PutMapping("/updateSection")
    // @PreAuthorize("hasAuthority('admin')")
-    public  ResponseEntity<?> updateSection(@RequestBody Section section){
+    public  CommonResponse<Section> updateSection(@RequestBody Section section){
         return courseService.updateSection(section);
     }
     @PutMapping("/updateSubSection")
    // @PreAuthorize("hasAuthority('admin')")
-    public  ResponseEntity<?> updateSubSection(@RequestBody SubSection subSection){
+    public  CommonResponse<SubSection> updateSubSection(@RequestBody SubSection subSection){
         return courseService.updateSubSection(subSection);
     }
     @PutMapping("/updateQuiz")
  //   @PreAuthorize("hasAuthority('admin')")
-    public  ResponseEntity<?> updateQuiz(@RequestBody Quiz quiz){
+    public  CommonResponse<?> updateQuiz(@RequestBody Quiz quiz){
         return courseService.updateQuiz(quiz);
     }
     @GetMapping("/getCourseByUserId")
-    public ResponseEntity<?> getCourseByUserId(@RequestParam Long userId,@RequestParam int pageNo,@RequestParam int pageSize){
+    public CommonResponse<?> getCourseByUserId(@RequestParam Long userId,@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.getCourseByUserId(userId,pageNo,pageSize);
     }
 

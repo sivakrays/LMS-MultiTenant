@@ -4,6 +4,8 @@ import com.LMS.userManagement.model.BadgeCounts;
 import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
+import com.LMS.userManagement.response.CommonResponse;
+import com.LMS.userManagement.util.Constant;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
@@ -28,28 +30,47 @@ public class QuizService {
     QuizRankRepository quizRankRepository;
 
     //@Transactional
-    public ResponseEntity<?> saveBadge(QuizRank quizRank) {
+    public CommonResponse<?> saveBadge(QuizRank quizRank) {
         Long userId = quizRank.getUserId();
         UUID subSectionId = quizRank.getSubSectionId();
         Integer energyPoints = quizRank.getEnergyPoints();
-        int badge =quizRank.getBadge();
+        int badge = quizRank.getBadge();
         Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSubSectionId(userId, subSectionId);
-        if (obj.isPresent()) {
-            QuizRank quizRank1 = obj.get();
-            quizRank1.setEnergyPoints(energyPoints);
-            quizRank1.setBadge(badge);
-            quizRankRepository.save(quizRank1);
-            BadgeCounts data= getBadgeCountsForUser(userId,energyPoints);
-            return ResponseEntity.status(HttpStatus.OK).body(data);
-
-        }else{
-        quizRankRepository.save(quizRank);
-            BadgeCounts data1= getBadgeCountsForUser(userId,energyPoints);
-            return ResponseEntity.status(HttpStatus.OK).body(data1);
+        BadgeCounts data = null;
+        try {
+            if (obj.isPresent()) {
+                QuizRank quizRank1 = obj.get();
+                quizRank1.setEnergyPoints(energyPoints);
+                quizRank1.setBadge(badge);
+                quizRankRepository.save(quizRank1);
+                data = getBadgeCountsForUser(userId, energyPoints);
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.BADGE_UPDATED)
+                        .data(data)
+                        .build();
+            } else {
+                quizRankRepository.save(quizRank);
+                BadgeCounts data1 = getBadgeCountsForUser(userId, energyPoints);
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.BADGE_SAVED)
+                        .data(data1)
+                        .build();
+            }
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_BADGE)
+                    .data(data)
+                    .build();
         }
-
-
     }
+
 
     public BadgeCounts getBadgeCountsForUser(Long userId, Integer energyPoints) {
        int goldCount = quizRankRepository.countByUserIdAndBadge(userId,1);
@@ -65,72 +86,98 @@ public class QuizService {
 
     }
 
-    public ResponseEntity<?> uploadQuizCsv(MultipartFile file) throws IOException {
+    public CommonResponse<?> uploadQuizCsv(MultipartFile file) {
+        List<QuizBean> quizList = null;
+        try {
+            Workbook workbook = new XSSFWorkbook(file.getInputStream());
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rows = sheet.iterator();
 
-        Workbook workbook = new XSSFWorkbook(file.getInputStream());
-        Sheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> rows = sheet.iterator();
+            quizList = new ArrayList<>();
 
-        List<QuizBean> quizList = new ArrayList<>();
+            int rowNumber = 0;
+            while (rows.hasNext()) {
+                Row currentRow = rows.next();
 
-        int rowNumber = 0;
-        while (rows.hasNext()) {
-            Row currentRow = rows.next();
-
-            // skip header
-            if (rowNumber == 0) {
-                rowNumber++;
-                continue;
-            }
-
-            Iterator<Cell> cellsInRow = currentRow.iterator();
-
-            QuizBean quiz = new QuizBean();
-            List<String> optionList=new ArrayList<>();
-
-            int cellIdx = 0;
-            while (cellsInRow.hasNext()) {
-                Cell currentCell = cellsInRow.next();
-                switch (cellIdx) {
-                    case 0 -> quiz.setKey((int) currentCell.getNumericCellValue());
-                    case 1 -> quiz.setTitle(currentCell.getStringCellValue());
-                    case 2 -> quiz.setQuestion(currentCell.getStringCellValue());
-                    case 3, 4, 5, 6, 7 -> {
-                        String opt=currentCell.getStringCellValue();
-                        if(opt!=null && !opt.equals("")){
-                            optionList.add(opt);
-                        }
-                    }
-                    case 8 -> quiz.setAnswer(currentCell.getStringCellValue());
-                    default -> {break; }
+                // skip header
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
                 }
 
+                Iterator<Cell> cellsInRow = currentRow.iterator();
 
-                cellIdx++;
+                QuizBean quiz = new QuizBean();
+                List<String> optionList = new ArrayList<>();
+
+                int cellIdx = 0;
+                while (cellsInRow.hasNext()) {
+                    Cell currentCell = cellsInRow.next();
+                    switch (cellIdx) {
+                        case 0 -> quiz.setKey((int) currentCell.getNumericCellValue());
+                        case 1 -> quiz.setTitle(currentCell.getStringCellValue());
+                        case 2 -> quiz.setQuestion(currentCell.getStringCellValue());
+                        case 3, 4, 5, 6, 7 -> {
+                            String opt = currentCell.getStringCellValue();
+                            if (opt != null && !opt.equals("")) {
+                                optionList.add(opt);
+                            }
+                        }
+                        case 8 -> quiz.setAnswer(currentCell.getStringCellValue());
+                        default -> {
+                            break;
+                        }
+                    }
+
+                    cellIdx++;
+                }
+                quiz.setOptions(optionList);
+                if (quiz.getKey() != 0) {
+                    quizList.add(quiz);
+                }
             }
-            quiz.setOptions(optionList);
-            if (quiz.getKey()!=0) {
-                quizList.add(quiz);
-            }
+
+            workbook.close();
+            return CommonResponse.builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.QUIZ_CSV_UPLOAD)
+                    .data(quizList)
+                    .build();
+        } catch (IOException e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_QUIZ_CSV_UPLOAD)
+                    .data(quizList)
+                    .build();
         }
-
-        workbook.close();
-
-
-    return ResponseEntity.ok(quizList);
     }
 
-    public ResponseEntity<?> downloadQuizCsv() throws MalformedURLException {
-        Resource resource=null;
-    //  File file= new File("resources/projectResources/QuizTemplate.xlsx");
-try {
-    resource=new ClassPathResource("static/QuizTemplate.xlsx");
-}catch (Exception e) {
-    return ResponseEntity.ok(e.getMessage());
-}
-        return ResponseEntity.ok(resource);
 
+
+    public CommonResponse<?> downloadQuizCsv() {
+        Resource resource = null;
+        try {
+            resource = new ClassPathResource("static/QuizTemplate.xlsx");
+            return CommonResponse.builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.QUIZ_CSV_DOWNLOAD)
+                    .data(resource)
+                    .build();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_QUIZ_CSV_DOWNLOAD)
+                    .data(resource)
+                    .build();
+        }
     }
+
 /*
 
     public Set<?> parseCsv(MultipartFile file){

@@ -1,9 +1,12 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.awsS3.AWSS3Service;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.AWSUtil;
+import com.LMS.userManagement.util.Constant;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,13 +45,35 @@ public class AwsS3Controller {
     }
 
     @GetMapping(value = "/fetchFile",produces ="video/mp4")
-    public ResponseEntity<?> getFile(@RequestParam String key){
-      byte[] file=  awss3Service.getObject(key);
-      if(file==null){
-          return ResponseEntity.ok("No Files Found");
-      }
-      return ResponseEntity.ok(file);
+    public CommonResponse<?> getFile(@RequestParam String key) {
+        byte[] file = null;
+        try {
+            file = awss3Service.getObject(key);
+            if (file == null) {
+                return CommonResponse.builder()
+                        .status(false)
+                        .statusCode(Constant.NOT_FOUND)
+                        .message(Constant.NO_FILES)
+                        .data(file)
+                        .build();
+            } else {
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.SUCCESS_FILE)
+                        .data(file)
+                        .build();
+            }
+        } catch (Exception e) {
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_FILES)
+                    .data(file)
+                    .build();
+        }
     }
+
 //
 //    @PostMapping("/saveFileToS3")
 //    public  String saveFileToS3(@RequestPart MultipartFile file,@RequestHeader String key) throws IOException {

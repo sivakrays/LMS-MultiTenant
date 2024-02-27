@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.TenantDto;
 import com.LMS.userManagement.records.LoginDTO;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.TenantService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +21,13 @@ public class TenantController {
     private TenantService tenantService;
 
     @PostMapping("/registerTenant")
-    public ResponseEntity<?> registerTenant(@RequestBody TenantDto tenantDetails) {
-        try {
+    public CommonResponse<?> registerTenant(@RequestBody TenantDto tenantDetails) {
         return tenantService.registerTenant(tenantDetails);
-    }catch (Exception e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
     }
 
     @PostMapping("/tenantLogin")
     //@PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> tenantLogin(@RequestBody LoginDTO loginDto) {
+    public CommonResponse<?> tenantLogin(@RequestBody LoginDTO loginDto) {
         return tenantService.tenantLogin(loginDto);
     }
 
