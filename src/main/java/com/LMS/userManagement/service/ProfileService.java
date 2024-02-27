@@ -16,7 +16,7 @@ public class ProfileService {
     @Autowired
     private UserRepository userRepository;
     @Transactional
-    public CommonResponse<?> saveAndEditProfile(ProfileDto profileRequest) {
+    public CommonResponse<User> saveAndEditProfile(ProfileDto profileRequest) {
         Optional<User> user = userRepository.findById(profileRequest.getId());
         User savedUser = null;
         try {
@@ -29,14 +29,14 @@ public class ProfileService {
                 user1.setCity(profileRequest.getCity());
                 user1.setCountry(profileRequest.getCountry());
                 savedUser = userRepository.save(user1);
-                return CommonResponse.builder()
+                return CommonResponse.<User>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.PROFILE_UPDATED)
                         .data(savedUser)
                         .build();
             } else {
-                return CommonResponse.builder()
+                return CommonResponse.<User>builder()
                         .status(false)
                         .statusCode(Constant.NOT_FOUND)
                         .message(Constant.USER_NOT_FOUND)
@@ -45,7 +45,7 @@ public class ProfileService {
             }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<User>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_PROFILE_SAVE_EDIT)
@@ -54,18 +54,19 @@ public class ProfileService {
         }
     }
 
-    public CommonResponse<?> getProfileById(Long id) {
+    public CommonResponse<User> getProfileById(Long id) {
+        Optional<User> user = null;
         try {
-            Optional<User> user = userRepository.findById(id);
+            user = userRepository.findById(id);
             if (user.isPresent()) {
-                return CommonResponse.builder()
+                return CommonResponse.<User>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.PROFILE_FOUND)
                         .data(user.get())
                         .build();
             } else {
-                return CommonResponse.builder()
+                return CommonResponse.<User>builder()
                         .status(false)
                         .statusCode(Constant.NOT_FOUND)
                         .message(Constant.PROFILE_NOT_FOUND)
@@ -74,7 +75,7 @@ public class ProfileService {
             }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<User>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_RETRIEVED_PROFILE)

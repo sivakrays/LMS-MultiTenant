@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -84,9 +85,9 @@ public class CourseService {
     }
     public CommonResponse<Course> updateCourse(Course course) {
 
-        Course updatedCourse = null;
+
         try {
-            updatedCourse = courseRepository.save(course);
+            Course updatedCourse = courseRepository.save(course);
             return CommonResponse.<Course>builder()
                     .status(true)
                     .data(updatedCourse)
@@ -96,7 +97,7 @@ public class CourseService {
         } catch (Exception e) {
             return CommonResponse.<Course>builder()
                     .status(false)
-                    .data(updatedCourse)
+                    .data(null)
                     .message(Constant.COURSE_UPDATE_FAILED)
                     .statusCode(Constant.FORBIDDEN)
                     .build();

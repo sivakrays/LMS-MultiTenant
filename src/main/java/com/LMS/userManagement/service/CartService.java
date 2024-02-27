@@ -7,10 +7,7 @@ import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,7 +24,7 @@ public class CartService {
     CartRepository cartRepository;
 
 
-    public CommonResponse<?> saveCart(Cart cart) {
+    public CommonResponse<List<Cart>> saveCart(Cart cart) {
         List<Cart> carts = null;
         try {
             Long userId = cart.getUserId();
@@ -38,7 +35,7 @@ public class CartService {
             if (!cartList.isEmpty()) {
                 Cart existingCart = cartRepository.findByCourseIdAndUserId(courseId, userId);
                 if (existingCart != null) {
-                    return CommonResponse.builder()
+                    return CommonResponse.<List<Cart>>builder()
                             .status(false)
                             .statusCode(Constant.SUCCESS)
                             .message(Constant.COURSE_EXISTS_CART)
@@ -50,7 +47,7 @@ public class CartService {
             cartRepository.save(cart);
             carts = cartRepository.findByUserId(userId);
 
-            return CommonResponse.builder()
+            return CommonResponse.<List<Cart>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.CART_SAVED)
@@ -58,7 +55,7 @@ public class CartService {
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<List<Cart>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.CART_FAILED)
@@ -68,7 +65,7 @@ public class CartService {
     }
 
 
-    public CommonResponse<?> getCartDetailByUserId(Long userId) {
+    public CommonResponse<List<CartDetail>> getCartDetailByUserId(Long userId) {
         List<CartDetail> cartDetails = null;
         try {
             cartDetails = new ArrayList<>();
@@ -91,14 +88,14 @@ public class CartService {
                         cartDetails.add(cartDetail);
                     }
                 }
-                return CommonResponse.builder()
+                return CommonResponse.<List<CartDetail>>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.CART_DETAILS_FOUND)
                         .data(cartDetails)
                         .build();
             } else {
-                return CommonResponse.builder()
+                return CommonResponse.<List<CartDetail>>builder()
                         .status(false)
                         .statusCode(Constant.NOT_FOUND)
                         .message(Constant.EMPTY_CART)
@@ -107,7 +104,7 @@ public class CartService {
             }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<List<CartDetail>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_CART_DETAILS)
@@ -118,7 +115,7 @@ public class CartService {
 
 
 
-    public CommonResponse<?> deleteCartById(UUID cartId) {
+    public CommonResponse<List<CartDetail>> deleteCartById(UUID cartId) {
         List<CartDetail> cartDetails = null;
         try {
             cartDetails = new ArrayList<>();
@@ -145,14 +142,14 @@ public class CartService {
                             cartDetails.add(cartDetail);
                         }
                     }
-                    return CommonResponse.builder()
+                    return CommonResponse.<List<CartDetail>>builder()
                             .status(true)
                             .statusCode(Constant.SUCCESS)
                             .message(Constant.CART_DELETED)
                             .data(cartDetails)
                             .build();
                 } else {
-                    return CommonResponse.builder()
+                    return CommonResponse.<List<CartDetail>>builder()
                             .status(false)
                             .statusCode(Constant.SUCCESS)
                             .message(Constant.CART_EMPTY_DELETION)
@@ -160,7 +157,7 @@ public class CartService {
                             .build();
                 }
             }
-            return CommonResponse.builder()
+            return CommonResponse.<List<CartDetail>>builder()
                     .status(false)
                     .statusCode(Constant.NOT_FOUND)
                     .message(Constant.NO_CART)
@@ -168,7 +165,7 @@ public class CartService {
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<List<CartDetail>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_DELETE_CART)

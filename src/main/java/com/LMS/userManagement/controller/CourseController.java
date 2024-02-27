@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -45,7 +46,7 @@ public class CourseController {
 
     }
     @GetMapping("/searchCourses")
-    public CommonResponse<?> searchCourses(@RequestParam("search") String search,@RequestParam(defaultValue = "0") int pageNo,@RequestParam(defaultValue = "6") int pageSize){
+    public CommonResponse<Page<Course>> searchCourses(@RequestParam("search") String search,@RequestParam(defaultValue = "0") int pageNo,@RequestParam(defaultValue = "6") int pageSize){
         return courseService.searchCourses(search,pageNo,pageSize);
 
     }
@@ -76,11 +77,11 @@ public class CourseController {
     }
     @PutMapping("/updateQuiz")
  //   @PreAuthorize("hasAuthority('admin')")
-    public  CommonResponse<?> updateQuiz(@RequestBody Quiz quiz){
+    public  CommonResponse<Quiz> updateQuiz(@RequestBody Quiz quiz){
         return courseService.updateQuiz(quiz);
     }
     @GetMapping("/getCourseByUserId")
-    public CommonResponse<?> getCourseByUserId(@RequestParam Long userId,@RequestParam int pageNo,@RequestParam int pageSize){
+    public CommonResponse<Page<Course>> getCourseByUserId(@RequestParam Long userId,@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.getCourseByUserId(userId,pageNo,pageSize);
     }
 

@@ -30,7 +30,7 @@ public class QuizService {
     QuizRankRepository quizRankRepository;
 
     //@Transactional
-    public CommonResponse<?> saveBadge(QuizRank quizRank) {
+    public CommonResponse<BadgeCounts> saveBadge(QuizRank quizRank) {
         Long userId = quizRank.getUserId();
         UUID subSectionId = quizRank.getSubSectionId();
         Integer energyPoints = quizRank.getEnergyPoints();
@@ -44,7 +44,7 @@ public class QuizService {
                 quizRank1.setBadge(badge);
                 quizRankRepository.save(quizRank1);
                 data = getBadgeCountsForUser(userId, energyPoints);
-                return CommonResponse.builder()
+                return CommonResponse.<BadgeCounts>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.BADGE_UPDATED)
@@ -53,7 +53,7 @@ public class QuizService {
             } else {
                 quizRankRepository.save(quizRank);
                 BadgeCounts data1 = getBadgeCountsForUser(userId, energyPoints);
-                return CommonResponse.builder()
+                return CommonResponse.<BadgeCounts>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.BADGE_SAVED)
@@ -62,7 +62,7 @@ public class QuizService {
             }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<BadgeCounts>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_BADGE)
@@ -86,7 +86,7 @@ public class QuizService {
 
     }
 
-    public CommonResponse<?> uploadQuizCsv(MultipartFile file) {
+    public CommonResponse<List<QuizBean>> uploadQuizCsv(MultipartFile file) {
         List<QuizBean> quizList = null;
         try {
             Workbook workbook = new XSSFWorkbook(file.getInputStream());
@@ -138,7 +138,7 @@ public class QuizService {
             }
 
             workbook.close();
-            return CommonResponse.builder()
+            return CommonResponse.<List<QuizBean>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.QUIZ_CSV_UPLOAD)
@@ -146,7 +146,7 @@ public class QuizService {
                     .build();
         } catch (IOException e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<List<QuizBean>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_QUIZ_CSV_UPLOAD)
@@ -157,11 +157,11 @@ public class QuizService {
 
 
 
-    public CommonResponse<?> downloadQuizCsv() {
+    public CommonResponse<Resource> downloadQuizCsv() {
         Resource resource = null;
         try {
             resource = new ClassPathResource("static/QuizTemplate.xlsx");
-            return CommonResponse.builder()
+            return CommonResponse.<Resource>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.QUIZ_CSV_DOWNLOAD)
@@ -169,7 +169,7 @@ public class QuizService {
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<Resource>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_QUIZ_CSV_DOWNLOAD)
