@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.dto.UserDto;
+import com.LMS.userManagement.model.User;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.records.LoginDTO;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,28 +28,25 @@ import java.io.IOException;
 
 public class AuthController {
 
-
     @Autowired
     private  AuthService authService;
-
-
 
 
     @PostMapping("/register")
   //  @PreAuthorize("hasAuthority('manager')")
     public CommonResponse<UserDTO> register (
-                            @RequestBody RegisterRequest request){
-try {
-    return authService.register(request);
-}catch (Exception e){
-    return CommonResponse.<UserDTO>builder()
+            @RequestBody RegisterRequest request){
+    try {
+        return authService.register(request);
+    }catch (Exception e){
+        return CommonResponse.<UserDTO>builder()
             .status(true)
             .message(Constant.USER_EXISTS)
             .data(null)
             .statusCode(Constant.FORBIDDEN)
             .build();
-}
-}
+        }
+    }
 
     @PostMapping("/login")
    // @PreAuthorize("hasAuthority('user')")
@@ -67,8 +66,8 @@ try {
 
     @GetMapping("/getAllUser")
     //@JsonView(Views.MyResponseViews.class)
-    private CommonResponse<?> getAllUser(@RequestParam int pageNo,
-                                         @RequestParam int pageSize){
+    private CommonResponse<Page<User>> getAllUser(@RequestParam int pageNo,
+                                                  @RequestParam int pageSize){
 
       return   authService.getAllUser(pageNo,pageSize);
     }

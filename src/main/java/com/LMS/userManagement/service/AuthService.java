@@ -144,7 +144,7 @@ public class AuthService {
 
     }
 
-    public CommonResponse<?> getAllUser(int pageNo, int pageSize) {
+    public CommonResponse<Page<User>> getAllUser(int pageNo, int pageSize) {
         Page<User> users = null;
         try {
             Pageable sortedByTime =
@@ -152,7 +152,7 @@ public class AuthService {
             users = userRepository.findAll(sortedByTime);
 
             if (users.isEmpty()) {
-                return CommonResponse.builder()
+                return CommonResponse.<Page<User>>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.USERS_NOT_FOUND)
@@ -160,14 +160,14 @@ public class AuthService {
                         .build();
             }
 
-            return CommonResponse.builder()
+            return CommonResponse.<Page<User>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.USERS_FOUND)
                     .data(users)
                     .build();
         } catch (Exception e) {
-            return CommonResponse.builder()
+            return CommonResponse.<Page<User>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_RETRIEVE_USERS)

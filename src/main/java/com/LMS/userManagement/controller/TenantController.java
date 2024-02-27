@@ -21,13 +21,13 @@ public class TenantController {
     private TenantService tenantService;
 
     @PostMapping("/registerTenant")
-    public CommonResponse<?> registerTenant(@RequestBody TenantDto tenantDetails) {
+    public CommonResponse<TenantDto> registerTenant(@RequestBody TenantDto tenantDetails) {
         return tenantService.registerTenant(tenantDetails);
     }
 
     @PostMapping("/tenantLogin")
     //@PreAuthorize("hasAuthority('manager')")
-    public CommonResponse<?> tenantLogin(@RequestBody LoginDTO loginDto) {
+    public CommonResponse<TenantDto> tenantLogin(@RequestBody LoginDTO loginDto) {
         return tenantService.tenantLogin(loginDto);
     }
 
