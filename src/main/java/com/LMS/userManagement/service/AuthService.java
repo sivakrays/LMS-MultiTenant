@@ -28,6 +28,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
 import java.io.IOException;
 
 @Service
@@ -61,39 +62,37 @@ public class AuthService {
 
 
 
-    public ResponseEntity<?> authentication(LoginDTO loginDto, String tenantId) {
+    public CommonResponse<?> authentication(LoginDTO loginDto, String tenantId) {
         String email = loginDto.email();
         String password = loginDto.password();
-try {
-    authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                    email,password
-            )
-    );
-}catch (Exception e){
-    return ResponseEntity.status(403).body("Bad Credential");
-}
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        email, password
+                )
+        );
 
-      var user =userRepository.findByEmail(email);
-      long userId=user.getId();
-        int goldCount ;
-        int silverCount ;
+        var user = userRepository.findByEmail(email);
+        long userId = user.getId();
+        int goldCount;
+        int silverCount;
         int bronzeCount;
         Integer energyPoints;
         try {
-           goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
-           silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
-           bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
-           energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
-      }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-      }
-        String jwtToken=jwtService.generateToken(user,tenantId);
-       // revokeAllUserTokens(user);
-       // saveUserToken(user, jwtToken);
+            goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
+            silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
+            bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
+            energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
+        } catch (Exception e) {
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_USER_STATS)
+                    .data(null)
+                    .build();
+        }
 
-       // String refreshToken=jwtService.generateRefreshToken(user,tenantId);
-        var auth=  AuthenticationResponse.builder()
+        String jwtToken = jwtService.generateToken(user, tenantId);
+        var auth = AuthenticationResponse.builder()
                 .token(jwtToken)
                 .role(user.getRole())
                 .userId(user.getId())
@@ -103,11 +102,16 @@ try {
                 .silver(silverCount)
                 .bronze(bronzeCount)
                 .energyPoints(energyPoints)
-             //   .refreshToken(refreshToken)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(auth);
+        return CommonResponse.builder()
+                .status(true)
+                .statusCode(Constant.SUCCESS)
+                .message(Constant.AUTHENTICATED)
+                .data(auth)
+                .build();
     }
+
 
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -140,23 +144,67 @@ try {
 
     }
 
-    public ResponseEntity<?> getAllUser(int pageNo,int pageSize) {
-        Pageable sortedByTime =
-                PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
-        Page<User> users=userRepository.findAll(sortedByTime);
-        if(users.isEmpty()){
-            return ResponseEntity.status(HttpStatus.OK).body(users);
+    public CommonResponse<?> getAllUser(int pageNo, int pageSize) {
+        Page<User> users = null;
+        try {
+            Pageable sortedByTime =
+                    PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
+            users = userRepository.findAll(sortedByTime);
+
+            if (users.isEmpty()) {
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.USERS_NOT_FOUND)
+                        .data(users)
+                        .build();
+            }
+
+            return CommonResponse.builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.USERS_FOUND)
+                    .data(users)
+                    .build();
+        } catch (Exception e) {
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_RETRIEVE_USERS)
+                    .data(users)
+                    .build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    public ResponseEntity<?> deleteUserById(Long userId) {
-        if (userRepository.existsById(userId)){
-            userRepository.deleteById(userId);
-            return ResponseEntity.status(HttpStatus.OK).body("Success");
+
+    public CommonResponse<?> deleteUserById(Long userId) {
+        try {
+            if (userRepository.existsById(userId)) {
+                userRepository.deleteById(userId);
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.DELETE_USER)
+                        .data(null)
+                        .build();
+            } else {
+                return CommonResponse.builder()
+                        .status(false)
+                        .statusCode(Constant.NOT_FOUND)
+                        .message(Constant.NO_USER)
+                        .data(null)
+                        .build();
+            }
+        } catch (Exception e) {
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_DELETE_USER)
+                    .data(null)
+                    .build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body("User not found");
     }
+
     /*private void saveUserToken(User user, String jwtToken) {
         var token=Token.builder()
                 .user(user)

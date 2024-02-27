@@ -1,6 +1,7 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.model.Cart;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CartService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,16 @@ public class CartController {
     private CartService cartService;
 
     @PostMapping("/saveCart")
-    public ResponseEntity<?> saveCart(@RequestBody Cart cart){
+    public CommonResponse<?> saveCart(@RequestBody Cart cart){
         return cartService.saveCart(cart);
     }
 
     @GetMapping("/getCartByUserId")
-    public ResponseEntity<?> getCartDetailByUserId(@RequestParam Long userId){
+    public CommonResponse<?> getCartDetailByUserId(@RequestParam Long userId){
         return cartService.getCartDetailByUserId(userId);
     }
     @DeleteMapping("/deleteCartById")
-    public ResponseEntity<?> deleteCartById(@RequestParam UUID cartId){
+    public CommonResponse<?> deleteCartById(@RequestParam UUID cartId){
         return cartService.deleteCartById(cartId);
     }
 }

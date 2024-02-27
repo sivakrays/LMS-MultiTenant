@@ -6,6 +6,8 @@ import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.AdminRepository;
 import com.LMS.userManagement.repository.TenantRepository;
+import com.LMS.userManagement.response.CommonResponse;
+import com.LMS.userManagement.util.Constant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -36,84 +38,214 @@ public class AdminService {
     private EntityManager entityManager;
 
 
+    public CommonResponse<?> adminRegistration(AdminDto adminDto) {
+        Admin savedAdmin = null;
+        try {
+            var adminDetails = adminRepository.findAllByEmail(adminDto.getEmail());
+            if (adminDetails.isPresent()) {
+                return CommonResponse.builder()
+                        .status(false)
+                        .message(Constant.USER_EXISTS)
+                        .statusCode(Constant.FORBIDDEN)
+                        .data(null)
+                        .build();
+            }
 
-
-    public ResponseEntity<?> adminRegistration(AdminDto adminDto) {
-        var adminDetails = adminRepository.findAllByEmail(adminDto.getEmail());
-        if (adminDetails.isPresent()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User already exists");
-
-        }
-        var admin = Admin.builder()
-                .role("owner")
-                .password(adminDto.getPassword())
-                .createdDate(new Timestamp(System.currentTimeMillis()))
-                .email(adminDto.getEmail())
-                .build();
-        var savedAdmin = adminRepository.save(admin);
-        return ResponseEntity.status(HttpStatus.OK).body(savedAdmin);
-    }
-
-    public ResponseEntity<?> adminLogin(LoginDTO loginDto) {
-        String email = loginDto.email();
-        String password =loginDto.password();
-        Optional<Admin> admin = adminRepository.findAllByEmail(email);
-        if (admin.isPresent() && admin.get().getPassword().equals(password)) {
-            var ad = admin.get();
-            var adminDto = AdminDto.builder()
-                    .password(null)
-                    .email(ad.getEmail())
-                    .role(ad.getRole())
+            var admin = Admin.builder()
+                    .role("owner")
+                    .password(adminDto.getPassword()) // Avoid exposing password in response
+                    .createdDate(new Timestamp(System.currentTimeMillis()))
+                    .email(adminDto.getEmail())
                     .build();
-            return ResponseEntity.status(HttpStatus.OK).body(adminDto);
+            savedAdmin = adminRepository.save(admin);
+
+            return CommonResponse.builder()
+                    .status(true)
+                    .message(Constant.ADMIN_REGISTERED)
+                    .statusCode(Constant.SUCCESS)
+                    .data(savedAdmin) // Assuming you want to return admin ID
+                    .build();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .message(Constant.FAILED_ADMIN_REGISTER)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .data(savedAdmin)
+                    .build();
         }
-        return ResponseEntity.status(403).body("User not found");
     }
+
+
+    public CommonResponse<?> adminLogin(LoginDTO loginDto) {
+        AdminDto adminDto = null;
+        try {
+            String email = loginDto.email();
+            String password = loginDto.password();
+            Optional<Admin> admin = adminRepository.findAllByEmail(email);
+
+            if (admin.isPresent() && admin.get().getPassword().equals(password)) {
+                var ad = admin.get();
+                adminDto = AdminDto.builder()
+                        .password(null)
+                        .email(ad.getEmail())
+                        .role(ad.getRole())
+                        .build();
+                return CommonResponse.builder()
+                        .status(true)
+                        .message(Constant.LOGIN_SUCCESS)
+                        .statusCode(Constant.SUCCESS)
+                        .data(adminDto)
+                        .build();
+            } else {
+                return CommonResponse.builder()
+                        .status(false)
+                        .message(Constant.USER_EXISTS)
+                        .statusCode(Constant.FORBIDDEN)
+                        .data(adminDto)
+                        .build();
+            }
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .message(Constant.LOGIN_FAILED)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .data(adminDto)
+                    .build();
+        }
+    }
+
 
     @Transactional
-    public ResponseEntity<?> deleteTenant(long id) {
-        Optional<TenantDetails> tenant = tenantRepository.findById(id);
-        if (tenant.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body("User Not found");
+    public CommonResponse<?> deleteTenant(long id) {
+        try {
+            Optional<TenantDetails> tenant = tenantRepository.findById(id);
+            if (tenant.isEmpty()) {
+                return CommonResponse.builder()
+                        .status(false)
+                        .statusCode(Constant.NO_CONTENT)
+                        .message(Constant.NO_TENANTS)
+                        .data(null)
+                        .build();
+            }
+            var tenantDtls = tenant.get();
+            String schemaName = tenantDtls.getTenantId();
+            entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
+            tenantRepository.deleteById(id);
+            return CommonResponse.builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.REMOVED_USER)
+                    .data(null)
+                    .build();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_DELETE_TENANT)
+                    .data(null)
+                    .build();
         }
-        var tenantDtls = tenant.get();
-        String schemaName = tenantDtls.getTenantId();
-        entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
-        tenantRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("User removed successfully");
     }
 
 
-    public ResponseEntity<?> getAllTenants() {
-        List<TenantDetails> tenantList = tenantRepository.findAll();
-        if (tenantList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(tenantList);
-        }
-        Map<String, String> tenantIdMap = new HashMap<>();
-        tenantList.forEach(n -> {
-            tenantIdMap.put(n.getIssuer(), n.getTenantId());
-        });
+    public CommonResponse<?> getAllTenants() {
+        try {
+            List<TenantDetails> tenantList = tenantRepository.findAll();
+            if (tenantList.isEmpty()) {
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.NO_TENANTS)
+                        .data(tenantList)
+                        .build();
+            }
 
-        return ResponseEntity.status(HttpStatus.OK).body(tenantIdMap);
+            Map<String, String> tenantIdMap = new HashMap<>();
+            tenantList.forEach(n -> {
+                tenantIdMap.put(n.getIssuer(), n.getTenantId());
+            });
+
+            return CommonResponse.builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.TENANTS_FOUND)
+                    .data(tenantIdMap)
+                    .build();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_TENANT)
+                    .data(null)
+                    .build();
+        }
     }
 
 
-    public ResponseEntity<?> findAllTenants(int pageNo,int pageSize) {
-        Page<TenantDetails> tenantList = tenantRepository.findAll(PageRequest.of(pageNo, pageSize));
-        if (tenantList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(tenantList);
+
+    public CommonResponse<?> findAllTenants(int pageNo, int pageSize) {
+        Page<TenantDetails> tenantList = null;
+        try {
+            tenantList = tenantRepository.findAll(PageRequest.of(pageNo, pageSize));
+            if (tenantList.isEmpty()) {
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.NO_TENANTS)
+                        .data(tenantList)
+                        .build();
+            }
+            return CommonResponse.builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.TENANTS_FOUND)
+                    .data(tenantList)
+                    .build();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_TENANT)
+                    .data(tenantList)
+                    .build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(tenantList);
     }
+
 
     @Transactional
-    public ResponseEntity<?> updateSchemaByTenant(String email) {
-        Optional<TenantDetails> tenantDetails =
-                tenantRepository.findByEmail(email);
-        if (tenantDetails.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(tenantDetails);
+    public CommonResponse<?> updateSchemaByTenant(String email) {
+        Optional<TenantDetails> tenantDetails = null;
+        try {
+            tenantDetails = tenantRepository.findByEmail(email);
+            if (tenantDetails.isEmpty()) {
+                return CommonResponse.builder()
+                        .status(false)
+                        .statusCode(Constant.NO_CONTENT)
+                        .message(Constant.TENANT_NOT_FOUND_BY_EMAIL)
+                        .data(null)
+                        .build();
+            }
+            tenantService.initDatabase(tenantDetails.get().getTenantId());
+            return CommonResponse.builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.SCHEMA_UPDATED)
+                    .data(tenantDetails)
+                    .build();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.SCHEMA_UPDATE_FAILED)
+                    .data(tenantDetails)
+                    .build();
         }
-        tenantService.initDatabase(tenantDetails.get().getTenantId());
-        return ResponseEntity.status(HttpStatus.OK).body("Schema updated successfully");
     }
+
 }
