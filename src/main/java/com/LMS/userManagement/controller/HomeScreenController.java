@@ -1,5 +1,6 @@
 package com.LMS.userManagement.controller;
 
+import com.LMS.userManagement.model.EduContent;
 import com.LMS.userManagement.records.EduContentDTO;
 import com.LMS.userManagement.records.HomeDTO;
 import com.LMS.userManagement.response.CommonResponse;
@@ -37,5 +38,10 @@ public class HomeScreenController {
  @GetMapping("/getHomeScreen")
     public CommonResponse<?> getHomeScreenByTenantId(@RequestHeader String tenantId){
      return homeService.getHomeScreenByTenantId(tenantId);
+ }
+
+ @GetMapping("/getEducationContent")
+    public CommonResponse<List<EduContent>> getEducationContent(@RequestHeader String tenantId){
+     return homeService.getEducationContent(tenantId);
  }
 }

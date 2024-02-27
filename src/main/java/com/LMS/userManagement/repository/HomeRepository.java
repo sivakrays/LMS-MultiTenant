@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface HomeRepository extends JpaRepository<Home,Long> {
     Home findByTenantId(String tenantId);
+
 }

@@ -3,8 +3,7 @@ package com.LMS.userManagement.service;
 import com.LMS.userManagement.awsS3.AWSS3Service;
 import com.LMS.userManagement.model.EduContent;
 import com.LMS.userManagement.model.Home;
-import com.LMS.userManagement.records.EduContentDTO;
-import com.LMS.userManagement.records.HomeDTO;
+import com.LMS.userManagement.records.*;
 import com.LMS.userManagement.repository.EduContentRepository;
 import com.LMS.userManagement.repository.HomeRepository;
 import com.LMS.userManagement.response.CommonResponse;
@@ -93,6 +92,17 @@ public class HomeScreenService {
                 .status(true)
                 .statusCode(Constant.SUCCESS)
                 .message("SUCCESS")
+                .build();
+    }
+
+
+    public CommonResponse<List<EduContent>> getEducationContent(String tenantId) {
+        List<EduContent> contentList= eduContentRepository.findAllByTenantId(tenantId);
+        return CommonResponse.<List<EduContent>>builder()
+                .message("SUCCESS")
+                .status(true)
+                .statusCode(Constant.SUCCESS)
+                .data(contentList)
                 .build();
     }
 }
