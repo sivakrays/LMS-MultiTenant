@@ -3,14 +3,16 @@ package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.*;
+import com.LMS.userManagement.records.LoginResponse;
 import com.LMS.userManagement.util.Constant;
-import com.LMS.userManagement.util.Mapper;
+import com.LMS.userManagement.util.CustomMapper;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.securityConfig.JwtService;
+import com.LMS.userManagement.util.LMSUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,8 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +34,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final Mapper mapper;
+    private final CustomMapper mapper;
+
+    private final LMSUtil lmsUtil;
     @Autowired
     private  UserRepository userRepository;
     @Autowired
@@ -47,9 +49,19 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public CommonResponse<UserDTO> register(RegisterRequest request) {
-       User user=mapper.UserMapper(request);
-       var savedUser= userRepository.save(user);
-        UserDTO userDto=mapper.UserDTOMapper(savedUser);
+        UserDTO userDto;
+        try {
+            User user=mapper.UserMapper(request);
+            var savedUser= userRepository.save(user);
+            userDto=mapper.UserDTOMapper(savedUser);
+        }catch (Exception e){
+            return CommonResponse.<UserDTO>builder()
+                    .status(false)
+                    .message(Constant.USER_EXISTS)
+                    .statusCode(Constant.FORBIDDEN)
+                    .build();
+        }
+
         return CommonResponse.<UserDTO>builder()
                 .message(Constant.USER_REGISTERED)
                 .status(true)
@@ -61,39 +73,37 @@ public class AuthService {
 
 
 
-    public ResponseEntity<?> authentication(LoginDTO loginDto, String tenantId) {
+    public CommonResponse<LoginResponse> authentication(LoginDTO loginDto, String tenantId) {
         String email = loginDto.email();
         String password = loginDto.password();
-try {
-    authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                    email,password
-            )
-    );
-}catch (Exception e){
-    return ResponseEntity.status(403).body("Bad Credential");
-}
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        email, password
+                )
+        );
 
-      var user =userRepository.findByEmail(email);
-      long userId=user.getId();
-        int goldCount ;
-        int silverCount ;
+        var user = userRepository.findByEmail(email);
+        long userId = user.getId();
+        int goldCount;
+        int silverCount;
         int bronzeCount;
         Integer energyPoints;
         try {
-           goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
-           silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
-           bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
-           energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
-      }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-      }
-        String jwtToken=jwtService.generateToken(user,tenantId);
-       // revokeAllUserTokens(user);
-       // saveUserToken(user, jwtToken);
+            goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
+            silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
+            bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
+            energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
+        } catch (Exception e) {
+            return CommonResponse.<LoginResponse>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_USER_STATS)
+                    .data(null)
+                    .build();
+        }
 
-       // String refreshToken=jwtService.generateRefreshToken(user,tenantId);
-        var auth=  AuthenticationResponse.builder()
+        String jwtToken = jwtService.generateToken(user, tenantId);
+        var auth = AuthenticationResponse.builder()
                 .token(jwtToken)
                 .role(user.getRole())
                 .userId(user.getId())
@@ -103,11 +113,18 @@ try {
                 .silver(silverCount)
                 .bronze(bronzeCount)
                 .energyPoints(energyPoints)
-             //   .refreshToken(refreshToken)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(auth);
+        var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth);
+
+        return CommonResponse.<LoginResponse>builder()
+                .status(true)
+                .statusCode(Constant.SUCCESS)
+                .message(Constant.AUTHENTICATED)
+                .data(loginResponse)
+                .build();
     }
+
 
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -127,9 +144,9 @@ try {
             var user=this.userRepository.findByEmail(userEmail);
             if(jwtService.isTokenValid(refreshToken,user)){
                 String accessToken=jwtService.generateToken(user,tenantId);
-           //     revokeAllUserTokens(user);
-            //    saveUserToken(user,accessToken);
-               var authResponse= AuthenticationResponse.builder()
+                //     revokeAllUserTokens(user);
+                //    saveUserToken(user,accessToken);
+                var authResponse= AuthenticationResponse.builder()
                         .token(accessToken)
                         //.refreshToken(refreshToken)
                         .build();
@@ -144,42 +161,60 @@ try {
         Page<User> users = null;
         try {
             Pageable sortedByTime =
-                    PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
+                    PageRequest.of(pageNo, pageSize, Sort.by(Constant.CREATED_DATE).descending());
             users = userRepository.findAll(sortedByTime);
-
-            if (users.isEmpty()) {
-                return CommonResponse.<Page<User>>builder()
-                        .status(true)
-                        .statusCode(Constant.SUCCESS)
-                        .message(Constant.USERS_NOT_FOUND)
-                        .data(users)
-                        .build();
-            }
-
-            return CommonResponse.<Page<User>>builder()
-                    .status(true)
-                    .statusCode(Constant.SUCCESS)
-                    .message(Constant.USERS_FOUND)
-                    .data(users)
-                    .build();
         } catch (Exception e) {
             return CommonResponse.<Page<User>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_RETRIEVE_USERS)
-                    .data(users)
                     .build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(users);
+        if (users.isEmpty()) {
+            return CommonResponse.<Page<User>>builder()
+                    .status(false)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.USERS_NOT_FOUND)
+                    .build();
+        }
+
+        return CommonResponse.<Page<User>>builder()
+                .status(true)
+                .statusCode(Constant.SUCCESS)
+                .message(Constant.USERS_FOUND)
+                .data(users)
+                .build();
     }
 
-    public ResponseEntity<?> deleteUserById(Long userId) {
-        if (userRepository.existsById(userId)){
-            userRepository.deleteById(userId);
-            return ResponseEntity.status(HttpStatus.OK).body("Success");
+
+    public CommonResponse<?> deleteUserById(Long userId) {
+        try {
+            if (userRepository.existsById(userId)) {
+                userRepository.deleteById(userId);
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.DELETE_USER)
+                        .data(null)
+                        .build();
+            } else {
+                return CommonResponse.builder()
+                        .status(false)
+                        .statusCode(Constant.NOT_FOUND)
+                        .message(Constant.NO_USER)
+                        .data(null)
+                        .build();
+            }
+        } catch (Exception e) {
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_DELETE_USER)
+                    .data(null)
+                    .build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body("User not found");
     }
+
     /*private void saveUserToken(User user, String jwtToken) {
         var token=Token.builder()
                 .user(user)

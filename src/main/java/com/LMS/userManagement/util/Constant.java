@@ -91,5 +91,8 @@ public class Constant {
     public static final int UNAUTHORIZED = 401;
     public static final int NOT_FOUND = 404;
 
+    //Common Data
+    public static final String CREATED_DATE="createdDate";
+
 
 }

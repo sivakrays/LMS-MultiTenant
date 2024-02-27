@@ -1,11 +1,8 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.ProfileDto;
-<<<<<<< HEAD
-=======
 import com.LMS.userManagement.model.User;
 import com.LMS.userManagement.response.CommonResponse;
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
 import com.LMS.userManagement.service.ProfileService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,19 +22,11 @@ public class ProfileController {
     @Autowired
     ProfileService profileService;
     @PostMapping("/saveAndEditProfile")
-<<<<<<< HEAD
-    public ResponseEntity<?> saveAndEditProfile(@RequestBody ProfileDto profileRequest){
-        return profileService.saveAndEditProfile(profileRequest);
-    }
-    @GetMapping("/getProfileById")
-    public ResponseEntity<?> getProfileById(@RequestParam Long id){
-=======
     public CommonResponse<User> saveAndEditProfile(@RequestBody ProfileDto profileRequest){
         return profileService.saveAndEditProfile(profileRequest);
     }
     @GetMapping("/getProfileById")
     public CommonResponse<User> getProfileById(@RequestParam Long id){
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         return profileService.getProfileById(id);
     }
 

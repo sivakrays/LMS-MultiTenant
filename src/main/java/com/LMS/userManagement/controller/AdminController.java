@@ -4,6 +4,7 @@ import com.LMS.userManagement.dto.AdminDto;
 import com.LMS.userManagement.model.Admin;
 import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.records.LoginDTO;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.AdminService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +29,8 @@ public class AdminController {
 
     @PostMapping("/adminRegistration")
     //@PreAuthorize("hasAuthority('admin')")
-<<<<<<< HEAD
-    public ResponseEntity<?> adminRegistration(@RequestBody AdminDto adminDto){
-     return    adminService.adminRegistration(adminDto);
-    }
-
-    @PostMapping("/adminLogin")
-    public ResponseEntity<?> adminLogin(@RequestBody LoginDTO loginDto){
-        return    adminService.adminLogin(loginDto);
-    }
-
-    @DeleteMapping("/deleteTenantById")
-    public ResponseEntity<?> deleteTenantById(@RequestParam long id){
-        try {
-=======
     public CommonResponse<Admin> adminRegistration(@RequestBody AdminDto adminDto){
-     return adminService.adminRegistration(adminDto);
+        return adminService.adminRegistration(adminDto);
     }
 
     @PostMapping("/adminLogin")
@@ -53,56 +40,36 @@ public class AdminController {
 
     @DeleteMapping("/deleteTenantById")
     public CommonResponse<Optional<TenantDetails>> deleteTenantById(@RequestParam long id){
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         return adminService.deleteTenant(id);
-    }catch (Exception e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
     }
 
 
     @GetMapping("/getAllTenants")
-<<<<<<< HEAD
-    public ResponseEntity<?> getAllTenants() {
-=======
     public CommonResponse<Map<String, String>> getAllTenants() {
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         return adminService.getAllTenants();
     }
 
 
     @GetMapping("/viewAllTenants")
-<<<<<<< HEAD
-    public ResponseEntity<?> findAllTenants(@RequestParam int pageNo,@RequestParam int pageSize) {
-=======
     public CommonResponse<Page<TenantDetails>> findAllTenants(@RequestParam int pageNo, @RequestParam int pageSize) {
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         return adminService.findAllTenants(pageNo,pageSize);
     }
 
     @PutMapping("/updateSchemaByTenant")
-<<<<<<< HEAD
-    public ResponseEntity<?> updateSchemaByTenant(@RequestParam String email){
-        try {
-=======
     public CommonResponse<Optional<TenantDetails>> updateSchemaByTenant(@RequestParam String email){
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
-            return adminService.updateSchemaByTenant(email);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        return adminService.updateSchemaByTenant(email);
     }
 
 
     //Testing APIs
     @GetMapping("/adminRead")
-   @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('admin')")
     public String adminRead(){
 
         return "admin:: can  read";
     }
 
-@PostMapping("/adminCreate")
+    @PostMapping("/adminCreate")
     @PreAuthorize("hasAuthority('admin')")
     public String adminCreate(){
         return "admin:: can create";

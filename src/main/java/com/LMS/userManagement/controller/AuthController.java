@@ -1,21 +1,18 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.RegisterRequest;
-import com.LMS.userManagement.dto.UserDto;
 import com.LMS.userManagement.model.User;
+import com.LMS.userManagement.records.LoginResponse;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.service.AuthService;
-import com.LMS.userManagement.util.Constant;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -33,46 +30,36 @@ public class AuthController {
 
 
     @PostMapping("/register")
-  //  @PreAuthorize("hasAuthority('manager')")
-    public CommonResponse<UserDTO> register (
-            @RequestBody RegisterRequest request){
-    try {
+    //  @PreAuthorize("hasAuthority('manager')")
+    public CommonResponse<UserDTO> register (@RequestBody RegisterRequest request){
         return authService.register(request);
-    }catch (Exception e){
-        return CommonResponse.<UserDTO>builder()
-            .status(true)
-            .message(Constant.USER_EXITS)
-            .data(null)
-            .statusCode(Constant.FORBIDDEN)
-            .build();
-        }
+
     }
 
     @PostMapping("/login")
-   // @PreAuthorize("hasAuthority('user')")
-    public ResponseEntity<?> authentication (
+    // @PreAuthorize("hasAuthority('user')")
+    public CommonResponse<LoginResponse> authentication (
             @RequestBody LoginDTO loginDto,
             @RequestHeader String tenantId) {
         return authService.authentication(loginDto,tenantId);
 
     }
 
-  
+
     @PostMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request,
-                            HttpServletResponse response) throws IOException {
+                             HttpServletResponse response) throws IOException {
         authService.refreshToken(request,response);
     }
 
     @GetMapping("/getAllUser")
-    //@JsonView(Views.MyResponseViews.class)
-
     private CommonResponse<Page<User>> getAllUser(@RequestParam int pageNo,
                                                   @RequestParam int pageSize){
-      return   authService.getAllUser(pageNo,pageSize);
+
+        return   authService.getAllUser(pageNo,pageSize);
     }
     @DeleteMapping("/deleteUserById")
-    public ResponseEntity<?> deleteUserById(@RequestParam Long userId){
+    public CommonResponse<?> deleteUserById(@RequestParam Long userId){
         return authService.deleteUserById(userId);
     }
 

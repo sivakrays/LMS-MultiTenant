@@ -1,7 +1,9 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.awsS3.AWSS3Service;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.AWSUtil;
+import com.LMS.userManagement.util.Constant;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,20 +37,12 @@ public class AwsS3Controller {
 
     @PostMapping(value = "/uploadFile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public  String saveFile(@RequestPart MultipartFile file,@RequestParam String courseId) throws IOException {
-       String key="LmsCourse/"+courseId+"/"+UUID.randomUUID().toString();
+        String key="LmsCourse/"+courseId+"/"+UUID.randomUUID().toString();
         awss3Service.putObject(key,file);
         return awsUrl+key;
     }
 
     @GetMapping(value = "/fetchFile",produces ="video/mp4")
-<<<<<<< HEAD
-    public ResponseEntity<?> getFile(@RequestParam String key){
-      byte[] file=  awss3Service.getObject(key);
-      if(file==null){
-          return ResponseEntity.ok("No Files Found");
-      }
-      return ResponseEntity.ok(file);
-=======
     public CommonResponse<byte[]> getFile(@RequestParam String key) {
         byte[] file = null;
         try {
@@ -76,8 +70,8 @@ public class AwsS3Controller {
                     .data(file)
                     .build();
         }
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
     }
+
 //
 //    @PostMapping("/saveFileToS3")
 //    public  String saveFileToS3(@RequestPart MultipartFile file,@RequestHeader String key) throws IOException {

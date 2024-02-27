@@ -8,7 +8,6 @@ import com.LMS.userManagement.util.Constant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -52,9 +51,7 @@ public class ProfileService {
                     .message(Constant.FAILED_PROFILE_SAVE_EDIT)
                     .data(savedUser)
                     .build();
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         }
-        return ResponseEntity.status(HttpStatus.OK).body("User does not found");
     }
 
     public CommonResponse<User> getProfileById(Long id) {
@@ -85,6 +82,6 @@ public class ProfileService {
                     .data(null)
                     .build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
+
 }

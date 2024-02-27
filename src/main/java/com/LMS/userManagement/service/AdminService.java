@@ -6,6 +6,8 @@ import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.AdminRepository;
 import com.LMS.userManagement.repository.TenantRepository;
+import com.LMS.userManagement.response.CommonResponse;
+import com.LMS.userManagement.util.Constant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -34,8 +36,6 @@ public class AdminService {
     private EntityManager entityManager;
 
 
-<<<<<<< HEAD
-=======
     public CommonResponse<Admin> adminRegistration(AdminDto adminDto) {
         Admin savedAdmin = null;
         try {
@@ -48,16 +48,15 @@ public class AdminService {
                         .data(savedAdmin)
                         .build();
             }
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
 
+            var admin = Admin.builder()
+                    .role("owner")
+                    .password(adminDto.getPassword()) // Avoid exposing password in response
+                    .createdDate(new Timestamp(System.currentTimeMillis()))
+                    .email(adminDto.getEmail())
+                    .build();
+            savedAdmin = adminRepository.save(admin);
 
-<<<<<<< HEAD
-    public ResponseEntity<?> adminRegistration(AdminDto adminDto) {
-        var adminDetails = adminRepository.findAllByEmail(adminDto.getEmail());
-        if (adminDetails.isPresent()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User already exists");
-
-=======
             return CommonResponse.<Admin>builder()
                     .status(true)
                     .message(Constant.ADMIN_REGISTERED)
@@ -72,30 +71,9 @@ public class AdminService {
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .data(savedAdmin)
                     .build();
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         }
-        var admin = Admin.builder()
-                .role("owner")
-                .password(adminDto.getPassword())
-                .createdDate(new Timestamp(System.currentTimeMillis()))
-                .email(adminDto.getEmail())
-                .build();
-        var savedAdmin = adminRepository.save(admin);
-        return ResponseEntity.status(HttpStatus.OK).body(savedAdmin);
     }
 
-<<<<<<< HEAD
-    public ResponseEntity<?> adminLogin(LoginDTO loginDto) {
-        String email = loginDto.email();
-        String password =loginDto.password();
-        Optional<Admin> admin = adminRepository.findAllByEmail(email);
-        if (admin.isPresent() && admin.get().getPassword().equals(password)) {
-            var ad = admin.get();
-            var adminDto = AdminDto.builder()
-                    .password(null)
-                    .email(ad.getEmail())
-                    .role(ad.getRole())
-=======
 
     public CommonResponse<AdminDto> adminLogin(LoginDTO loginDto) {
         AdminDto adminDto = null;
@@ -132,20 +110,12 @@ public class AdminService {
                     .message(Constant.LOGIN_FAILED)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .data(adminDto)
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
                     .build();
-            return ResponseEntity.status(HttpStatus.OK).body(adminDto);
         }
-        return ResponseEntity.status(403).body("User not found");
     }
 
+
     @Transactional
-<<<<<<< HEAD
-    public ResponseEntity<?> deleteTenant(long id) {
-        Optional<TenantDetails> tenant = tenantRepository.findById(id);
-        if (tenant.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body("User Not found");
-=======
     public CommonResponse<Optional<TenantDetails>> deleteTenant(long id) {
         Optional<TenantDetails> tenant = null;
         try {
@@ -176,47 +146,15 @@ public class AdminService {
                     .message(Constant.FAILED_DELETE_TENANT)
                     .data(null)
                     .build();
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         }
-        var tenantDtls = tenant.get();
-        String schemaName = tenantDtls.getTenantId();
-        entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
-        tenantRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("User removed successfully");
     }
 
 
-<<<<<<< HEAD
-    public ResponseEntity<?> getAllTenants() {
-        List<TenantDetails> tenantList = tenantRepository.findAll();
-        if (tenantList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(tenantList);
-=======
     public CommonResponse<Map<String, String>> getAllTenants() {
-        Map<String, String> tenantIdMap = null;
+        Map<String, String> tenantIdMap  = new HashMap<>();
+        List<TenantDetails> tenantList;
         try {
-            List<TenantDetails> tenantList = tenantRepository.findAll();
-            if (tenantList.isEmpty()) {
-                return CommonResponse.<Map<String, String>>builder()
-                        .status(true)
-                        .statusCode(Constant.SUCCESS)
-                        .message(Constant.NO_TENANTS)
-                        .data(tenantIdMap)
-                        .build();
-            }
-
-            tenantIdMap = new HashMap<>();
-            Map<String, String> finalTenantIdMap = tenantIdMap;
-            tenantList.forEach(n -> {
-                finalTenantIdMap.put(n.getIssuer(), n.getTenantId());
-            });
-
-            return CommonResponse.<Map<String, String>>builder()
-                    .status(true)
-                    .statusCode(Constant.SUCCESS)
-                    .message(Constant.TENANTS_FOUND)
-                    .data(tenantIdMap)
-                    .build();
+            tenantList = tenantRepository.findAll();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
             return CommonResponse.<Map<String, String>>builder()
@@ -225,23 +163,30 @@ public class AdminService {
                     .message(Constant.FAILED_TENANT)
                     .data(tenantIdMap)
                     .build();
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         }
-        Map<String, String> tenantIdMap = new HashMap<>();
+        if (tenantList.isEmpty()) {
+            return CommonResponse.<Map<String, String>>builder()
+                    .status(false)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.NO_TENANTS)
+                    .data(tenantIdMap)
+                    .build();
+        }
+
         tenantList.forEach(n -> {
             tenantIdMap.put(n.getIssuer(), n.getTenantId());
         });
 
-        return ResponseEntity.status(HttpStatus.OK).body(tenantIdMap);
+        return CommonResponse.<Map<String, String>>builder()
+                .status(true)
+                .statusCode(Constant.SUCCESS)
+                .message(Constant.TENANTS_FOUND)
+                .data(tenantIdMap)
+                .build();
+
     }
 
 
-<<<<<<< HEAD
-    public ResponseEntity<?> findAllTenants(int pageNo,int pageSize) {
-        Page<TenantDetails> tenantList = tenantRepository.findAll(PageRequest.of(pageNo, pageSize));
-        if (tenantList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(tenantList);
-=======
 
     public CommonResponse<Page<TenantDetails>> findAllTenants(int pageNo, int pageSize) {
         Page<TenantDetails> tenantList = null;
@@ -269,19 +214,11 @@ public class AdminService {
                     .message(Constant.FAILED_TENANT)
                     .data(tenantList)
                     .build();
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         }
-        return ResponseEntity.status(HttpStatus.OK).body(tenantList);
     }
 
+
     @Transactional
-<<<<<<< HEAD
-    public ResponseEntity<?> updateSchemaByTenant(String email) {
-        Optional<TenantDetails> tenantDetails =
-                tenantRepository.findByEmail(email);
-        if (tenantDetails.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(tenantDetails);
-=======
     public CommonResponse<Optional<TenantDetails>> updateSchemaByTenant(String email) {
         Optional<TenantDetails> tenantDetails = null;
         try {
@@ -309,9 +246,7 @@ public class AdminService {
                     .message(Constant.SCHEMA_UPDATE_FAILED)
                     .data(tenantDetails)
                     .build();
->>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         }
-        tenantService.initDatabase(tenantDetails.get().getTenantId());
-        return ResponseEntity.status(HttpStatus.OK).body("Schema updated successfully");
     }
+
 }
