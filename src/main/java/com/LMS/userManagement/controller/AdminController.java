@@ -1,14 +1,20 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.AdminDto;
+import com.LMS.userManagement.model.Admin;
+import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.service.AdminService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*",allowedHeaders = "*")
@@ -20,11 +26,9 @@ public class AdminController {
 
     private final AdminService adminService;
 
-
-
-
     @PostMapping("/adminRegistration")
     //@PreAuthorize("hasAuthority('admin')")
+<<<<<<< HEAD
     public ResponseEntity<?> adminRegistration(@RequestBody AdminDto adminDto){
      return    adminService.adminRegistration(adminDto);
     }
@@ -37,6 +41,19 @@ public class AdminController {
     @DeleteMapping("/deleteTenantById")
     public ResponseEntity<?> deleteTenantById(@RequestParam long id){
         try {
+=======
+    public CommonResponse<Admin> adminRegistration(@RequestBody AdminDto adminDto){
+     return adminService.adminRegistration(adminDto);
+    }
+
+    @PostMapping("/adminLogin")
+    public CommonResponse<AdminDto> adminLogin(@RequestBody LoginDTO loginDto){
+        return adminService.adminLogin(loginDto);
+    }
+
+    @DeleteMapping("/deleteTenantById")
+    public CommonResponse<Optional<TenantDetails>> deleteTenantById(@RequestParam long id){
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         return adminService.deleteTenant(id);
     }catch (Exception e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -45,19 +62,31 @@ public class AdminController {
 
 
     @GetMapping("/getAllTenants")
+<<<<<<< HEAD
     public ResponseEntity<?> getAllTenants() {
+=======
+    public CommonResponse<Map<String, String>> getAllTenants() {
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         return adminService.getAllTenants();
     }
 
 
     @GetMapping("/viewAllTenants")
+<<<<<<< HEAD
     public ResponseEntity<?> findAllTenants(@RequestParam int pageNo,@RequestParam int pageSize) {
+=======
+    public CommonResponse<Page<TenantDetails>> findAllTenants(@RequestParam int pageNo, @RequestParam int pageSize) {
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         return adminService.findAllTenants(pageNo,pageSize);
     }
 
     @PutMapping("/updateSchemaByTenant")
+<<<<<<< HEAD
     public ResponseEntity<?> updateSchemaByTenant(@RequestParam String email){
         try {
+=======
+    public CommonResponse<Optional<TenantDetails>> updateSchemaByTenant(@RequestParam String email){
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
             return adminService.updateSchemaByTenant(email);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -85,7 +114,6 @@ public class AdminController {
 
         return "admin:: can  delete";
     }
-
 
 
 }

@@ -140,12 +140,35 @@ try {
 
     }
 
-    public ResponseEntity<?> getAllUser(int pageNo,int pageSize) {
-        Pageable sortedByTime =
-                PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
-        Page<User> users=userRepository.findAll(sortedByTime);
-        if(users.isEmpty()){
-            return ResponseEntity.status(HttpStatus.OK).body(users);
+    public CommonResponse<Page<User>> getAllUser(int pageNo, int pageSize) {
+        Page<User> users = null;
+        try {
+            Pageable sortedByTime =
+                    PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
+            users = userRepository.findAll(sortedByTime);
+
+            if (users.isEmpty()) {
+                return CommonResponse.<Page<User>>builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.USERS_NOT_FOUND)
+                        .data(users)
+                        .build();
+            }
+
+            return CommonResponse.<Page<User>>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.USERS_FOUND)
+                    .data(users)
+                    .build();
+        } catch (Exception e) {
+            return CommonResponse.<Page<User>>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_RETRIEVE_USERS)
+                    .data(users)
+                    .build();
         }
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }

@@ -28,12 +28,17 @@ public class QuizService {
     QuizRankRepository quizRankRepository;
 
     //@Transactional
+<<<<<<< HEAD
     public ResponseEntity<?> saveBadge(QuizRank quizRank) {
+=======
+    public CommonResponse<BadgeCounts> saveBadge(QuizRank quizRank) {
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         Long userId = quizRank.getUserId();
         UUID subSectionId = quizRank.getSubSectionId();
         Integer energyPoints = quizRank.getEnergyPoints();
         int badge =quizRank.getBadge();
         Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSubSectionId(userId, subSectionId);
+<<<<<<< HEAD
         if (obj.isPresent()) {
             QuizRank quizRank1 = obj.get();
             quizRank1.setEnergyPoints(energyPoints);
@@ -41,6 +46,42 @@ public class QuizService {
             quizRankRepository.save(quizRank1);
             BadgeCounts data= getBadgeCountsForUser(userId,energyPoints);
             return ResponseEntity.status(HttpStatus.OK).body(data);
+=======
+        BadgeCounts data = null;
+        try {
+            if (obj.isPresent()) {
+                QuizRank quizRank1 = obj.get();
+                quizRank1.setEnergyPoints(energyPoints);
+                quizRank1.setBadge(badge);
+                quizRankRepository.save(quizRank1);
+                data = getBadgeCountsForUser(userId, energyPoints);
+                return CommonResponse.<BadgeCounts>builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.BADGE_UPDATED)
+                        .data(data)
+                        .build();
+            } else {
+                quizRankRepository.save(quizRank);
+                BadgeCounts data1 = getBadgeCountsForUser(userId, energyPoints);
+                return CommonResponse.<BadgeCounts>builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.BADGE_SAVED)
+                        .data(data1)
+                        .build();
+            }
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.<BadgeCounts>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_BADGE)
+                    .data(data)
+                    .build();
+        }
+    }
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
 
         }else{
         quizRankRepository.save(quizRank);
@@ -65,7 +106,16 @@ public class QuizService {
 
     }
 
+<<<<<<< HEAD
     public ResponseEntity<?> uploadQuizCsv(MultipartFile file) throws IOException {
+=======
+    public CommonResponse<List<QuizBean>> uploadQuizCsv(MultipartFile file) {
+        List<QuizBean> quizList = null;
+        try {
+            Workbook workbook = new XSSFWorkbook(file.getInputStream());
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rows = sheet.iterator();
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
 
         Workbook workbook = new XSSFWorkbook(file.getInputStream());
         Sheet sheet = workbook.getSheetAt(0);
@@ -83,6 +133,7 @@ public class QuizService {
                 continue;
             }
 
+<<<<<<< HEAD
             Iterator<Cell> cellsInRow = currentRow.iterator();
 
             QuizBean quiz = new QuizBean();
@@ -112,6 +163,23 @@ public class QuizService {
             if (quiz.getKey()!=0) {
                 quizList.add(quiz);
             }
+=======
+            workbook.close();
+            return CommonResponse.<List<QuizBean>>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.QUIZ_CSV_UPLOAD)
+                    .data(quizList)
+                    .build();
+        } catch (IOException e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.<List<QuizBean>>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_QUIZ_CSV_UPLOAD)
+                    .data(quizList)
+                    .build();
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
         }
 
         workbook.close();
@@ -130,6 +198,29 @@ try {
 }
         return ResponseEntity.ok(resource);
 
+<<<<<<< HEAD
+=======
+
+    public CommonResponse<Resource> downloadQuizCsv() {
+        Resource resource = null;
+        try {
+            resource = new ClassPathResource("static/QuizTemplate.xlsx");
+            return CommonResponse.<Resource>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.QUIZ_CSV_DOWNLOAD)
+                    .data(resource)
+                    .build();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.<Resource>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_QUIZ_CSV_DOWNLOAD)
+                    .data(resource)
+                    .build();
+        }
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
     }
 /*
 

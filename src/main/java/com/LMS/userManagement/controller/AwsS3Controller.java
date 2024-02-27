@@ -5,7 +5,6 @@ import com.LMS.userManagement.util.AWSUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -42,12 +41,42 @@ public class AwsS3Controller {
     }
 
     @GetMapping(value = "/fetchFile",produces ="video/mp4")
+<<<<<<< HEAD
     public ResponseEntity<?> getFile(@RequestParam String key){
       byte[] file=  awss3Service.getObject(key);
       if(file==null){
           return ResponseEntity.ok("No Files Found");
       }
       return ResponseEntity.ok(file);
+=======
+    public CommonResponse<byte[]> getFile(@RequestParam String key) {
+        byte[] file = null;
+        try {
+            file = awss3Service.getObject(key);
+            if (file == null) {
+                return CommonResponse.<byte[]>builder()
+                        .status(false)
+                        .statusCode(Constant.NOT_FOUND)
+                        .message(Constant.NO_FILES)
+                        .data(file)
+                        .build();
+            } else {
+                return CommonResponse.<byte[]>builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.SUCCESS_FILE)
+                        .data(file)
+                        .build();
+            }
+        } catch (Exception e) {
+            return CommonResponse.<byte[]>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_FILES)
+                    .data(file)
+                    .build();
+        }
+>>>>>>> d3a4e0276580c6bff977241ede174a99b09b7795
     }
 //
 //    @PostMapping("/saveFileToS3")
