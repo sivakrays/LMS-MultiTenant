@@ -1,22 +1,18 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.RegisterRequest;
-import com.LMS.userManagement.dto.UserDto;
 import com.LMS.userManagement.model.User;
 import com.LMS.userManagement.records.LoginResponse;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.service.AuthService;
-import com.LMS.userManagement.util.Constant;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -29,11 +25,8 @@ import java.io.IOException;
 
 public class AuthController {
 
-
     @Autowired
     private  AuthService authService;
-
-
 
 
     @PostMapping("/register")

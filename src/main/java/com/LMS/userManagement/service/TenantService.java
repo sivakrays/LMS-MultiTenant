@@ -40,7 +40,7 @@ public class TenantService {
     }
 
     @Transactional
-    public CommonResponse<?> registerTenant(TenantDto tenantDetails) {
+    public CommonResponse<TenantDto> registerTenant(TenantDto tenantDetails) {
         TenantDto t = null;
         try {
             Optional<TenantDetails> tenant = tenantRepository.findByTenantId(tenantDetails.getTenantId());
@@ -63,7 +63,7 @@ public class TenantService {
                             .email(savedTenant.getEmail())
                             .build();
 
-                    return CommonResponse.builder()
+                    return CommonResponse.<TenantDto>builder()
                             .status(true)
                             .statusCode(Constant.SUCCESS)
                             .message(Constant.TENANT_REGISTERED_SUCCESSFUL)
@@ -71,7 +71,7 @@ public class TenantService {
                             .build();
                 }
             }
-            return CommonResponse.builder()
+            return CommonResponse.<TenantDto>builder()
                     .status(false)
                     .statusCode(Constant.FORBIDDEN)
                     .message(Constant.TENANT_EXISTS)
@@ -79,7 +79,7 @@ public class TenantService {
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<TenantDto>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_REGISTER_TENANT)
@@ -89,7 +89,7 @@ public class TenantService {
     }
 
 
-    public CommonResponse<?> tenantLogin(LoginDTO loginDto) {
+    public CommonResponse<TenantDto> tenantLogin(LoginDTO loginDto) {
         TenantDto tenantDto = null;
         try {
             String email = loginDto.email();
@@ -104,14 +104,14 @@ public class TenantService {
                         .tenantId(t.getTenantId())
                         .build();
 
-                return CommonResponse.builder()
+                return CommonResponse.<TenantDto>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.LOGIN_SUCCESS)
                         .data(tenantDto)
                         .build();
             }
-            return CommonResponse.builder()
+            return CommonResponse.<TenantDto>builder()
                     .status(false)
                     .statusCode(Constant.UNAUTHORIZED)
                     .message(Constant.TENANT_NOT_FOUND)
@@ -119,7 +119,7 @@ public class TenantService {
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.builder()
+            return CommonResponse.<TenantDto>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.LOGIN_FAILED)

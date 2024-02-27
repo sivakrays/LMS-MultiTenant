@@ -184,7 +184,6 @@ public class AuthService {
                     .message(Constant.USERS_FOUND)
                     .data(users)
                     .build();
-
     }
 
 
