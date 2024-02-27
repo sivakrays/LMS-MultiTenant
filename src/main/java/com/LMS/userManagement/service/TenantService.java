@@ -4,6 +4,8 @@ import com.LMS.userManagement.dto.TenantDto;
 import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.TenantRepository;
+import com.LMS.userManagement.response.CommonResponse;
+import com.LMS.userManagement.util.Constant;
 import jakarta.transaction.Transactional;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,51 +40,93 @@ public class TenantService {
     }
 
     @Transactional
-    public ResponseEntity<?> registerTenant(TenantDto tenantDetails) {
-        Optional<TenantDetails> tenant=tenantRepository.findByTenantId(tenantDetails.getTenantId());
-        if(tenant.isEmpty()){
-      var tenantDtls=      TenantDetails.builder()
-                    .tenantId(tenantDetails.getTenantId())
-                    .role("manager")
-                    .issuer(tenantDetails.getIssuer())
-                    .email(tenantDetails.getEmail())
-                    .password(tenantDetails.getPassword())
-              .createdDate(new Timestamp(System.currentTimeMillis())).build();
-             var savedTenant=   tenantRepository.save(tenantDtls);
-          if (savedTenant!=null){
-              initDatabase(tenantDetails.getTenantId());
-           var t=   TenantDto.builder()
-                      .role(savedTenant.getRole())
-                      .issuer(savedTenant.getIssuer())
-                      .tenantId(savedTenant.getTenantId())
-                      .email(savedTenant.getEmail()).build();
+    public CommonResponse<?> registerTenant(TenantDto tenantDetails) {
+        TenantDto t = null;
+        try {
+            Optional<TenantDetails> tenant = tenantRepository.findByTenantId(tenantDetails.getTenantId());
+            if (tenant.isEmpty()) {
+                var tenantDtls = TenantDetails.builder()
+                        .tenantId(tenantDetails.getTenantId())
+                        .role("manager")
+                        .issuer(tenantDetails.getIssuer())
+                        .email(tenantDetails.getEmail())
+                        .password(tenantDetails.getPassword())
+                        .createdDate(new Timestamp(System.currentTimeMillis()))
+                        .build();
+                var savedTenant = tenantRepository.save(tenantDtls);
+                if (savedTenant != null) {
+                    initDatabase(tenantDetails.getTenantId());
+                    t = TenantDto.builder()
+                            .role(savedTenant.getRole())
+                            .issuer(savedTenant.getIssuer())
+                            .tenantId(savedTenant.getTenantId())
+                            .email(savedTenant.getEmail())
+                            .build();
 
-              return ResponseEntity.status(HttpStatus.OK).body(t);
-
-          }
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tenant already exists");
-    }
-
-    public ResponseEntity<?> tenantLogin(LoginDTO loginDto) {
-        String email = loginDto.email();
-        String password = loginDto.password();
-        Optional<TenantDetails> tenant=tenantRepository.findByEmail(email);
-        if (tenant.isPresent() && tenant.get().getPassword().equals(password)){
-          var t=  tenant.get();
-         var tenantDto =  TenantDto.builder()
-                    .email(t.getEmail())
-                    .role(t.getRole())
-                    .issuer(t.getIssuer())
-                    .tenantId(t.getTenantId())
+                    return CommonResponse.builder()
+                            .status(true)
+                            .statusCode(Constant.SUCCESS)
+                            .message(Constant.TENANT_REGISTERED_SUCCESSFUL)
+                            .data(t)
+                            .build();
+                }
+            }
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.FORBIDDEN)
+                    .message(Constant.TENANT_EXISTS)
+                    .data(t)
                     .build();
-
-
-           return ResponseEntity.status(HttpStatus.OK).body(tenantDto);
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_REGISTER_TENANT)
+                    .data(t)
+                    .build();
         }
-        return ResponseEntity.status(403).body("user not found");
     }
 
+
+    public CommonResponse<?> tenantLogin(LoginDTO loginDto) {
+        TenantDto tenantDto = null;
+        try {
+            String email = loginDto.email();
+            String password = loginDto.password();
+            Optional<TenantDetails> tenant = tenantRepository.findByEmail(email);
+            if (tenant.isPresent() && tenant.get().getPassword().equals(password)) {
+                var t = tenant.get();
+                tenantDto = TenantDto.builder()
+                        .email(t.getEmail())
+                        .role(t.getRole())
+                        .issuer(t.getIssuer())
+                        .tenantId(t.getTenantId())
+                        .build();
+
+                return CommonResponse.builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.LOGIN_SUCCESS)
+                        .data(tenantDto)
+                        .build();
+            }
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.UNAUTHORIZED)
+                    .message(Constant.TENANT_NOT_FOUND)
+                    .data(tenantDto)
+                    .build();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.LOGIN_FAILED)
+                    .data(tenantDto)
+                    .build();
+        }
+    }
 
 
 }

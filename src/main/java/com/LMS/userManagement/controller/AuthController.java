@@ -42,7 +42,7 @@ try {
 }catch (Exception e){
     return CommonResponse.<UserDTO>builder()
             .status(true)
-            .message(Constant.USER_EXITS)
+            .message(Constant.USER_EXISTS)
             .data(null)
             .statusCode(Constant.FORBIDDEN)
             .build();
@@ -51,7 +51,7 @@ try {
 
     @PostMapping("/login")
    // @PreAuthorize("hasAuthority('user')")
-    public ResponseEntity<?> authentication (
+    public CommonResponse<?> authentication (
             @RequestBody LoginDTO loginDto,
             @RequestHeader String tenantId) {
         return authService.authentication(loginDto,tenantId);
@@ -67,13 +67,13 @@ try {
 
     @GetMapping("/getAllUser")
     //@JsonView(Views.MyResponseViews.class)
-    private ResponseEntity<?> getAllUser(@RequestParam int pageNo,
+    private CommonResponse<?> getAllUser(@RequestParam int pageNo,
                                          @RequestParam int pageSize){
 
       return   authService.getAllUser(pageNo,pageSize);
     }
     @DeleteMapping("/deleteUserById")
-    public ResponseEntity<?> deleteUserById(@RequestParam Long userId){
+    public CommonResponse<?> deleteUserById(@RequestParam Long userId){
         return authService.deleteUserById(userId);
     }
 

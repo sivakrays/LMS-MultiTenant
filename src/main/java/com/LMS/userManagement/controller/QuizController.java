@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.model.BadgeCounts;
 import com.LMS.userManagement.model.QuizRank;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.QuizService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +23,18 @@ public class QuizController {
     @Autowired
     QuizService quizService;
     @PostMapping("/saveBadge")
-    public ResponseEntity<?> saveBadge(@RequestBody QuizRank quizRank) {
+    public CommonResponse<?> saveBadge(@RequestBody QuizRank quizRank) {
         return quizService.saveBadge(quizRank);
     }
 
 
     @PostMapping("/uploadQuizCsv")
-    public ResponseEntity<?> uploadQuizCsv(@RequestPart("file") MultipartFile file) throws IOException {
+    public CommonResponse<?> uploadQuizCsv(@RequestPart("file") MultipartFile file) throws IOException {
         return quizService.uploadQuizCsv(file);
     }
 
     @GetMapping(value = "/downloadQuizCsv",produces ="application/octet-stream")
-    public ResponseEntity<?> downloadQuizCsv() throws MalformedURLException {
+    public CommonResponse<?> downloadQuizCsv() throws MalformedURLException {
         return quizService.downloadQuizCsv();
     }
 }

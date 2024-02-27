@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.AdminDto;
 import com.LMS.userManagement.records.LoginDTO;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.AdminService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,43 +26,35 @@ public class AdminController {
 
     @PostMapping("/adminRegistration")
     //@PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> adminRegistration(@RequestBody AdminDto adminDto){
-     return    adminService.adminRegistration(adminDto);
+    public CommonResponse<?> adminRegistration(@RequestBody AdminDto adminDto){
+     return adminService.adminRegistration(adminDto);
     }
 
     @PostMapping("/adminLogin")
-    public ResponseEntity<?> adminLogin(@RequestBody LoginDTO loginDto){
+    public CommonResponse<?> adminLogin(@RequestBody LoginDTO loginDto){
         return    adminService.adminLogin(loginDto);
     }
 
     @DeleteMapping("/deleteTenantById")
-    public ResponseEntity<?> deleteTenantById(@RequestParam long id){
-        try {
+    public CommonResponse<?> deleteTenantById(@RequestParam long id){
         return adminService.deleteTenant(id);
-    }catch (Exception e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
     }
 
 
     @GetMapping("/getAllTenants")
-    public ResponseEntity<?> getAllTenants() {
+    public CommonResponse<?> getAllTenants() {
         return adminService.getAllTenants();
     }
 
 
     @GetMapping("/viewAllTenants")
-    public ResponseEntity<?> findAllTenants(@RequestParam int pageNo,@RequestParam int pageSize) {
+    public CommonResponse<?> findAllTenants(@RequestParam int pageNo,@RequestParam int pageSize) {
         return adminService.findAllTenants(pageNo,pageSize);
     }
 
     @PutMapping("/updateSchemaByTenant")
-    public ResponseEntity<?> updateSchemaByTenant(@RequestParam String email){
-        try {
+    public CommonResponse<?> updateSchemaByTenant(@RequestParam String email){
             return adminService.updateSchemaByTenant(email);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
     }
 
 
