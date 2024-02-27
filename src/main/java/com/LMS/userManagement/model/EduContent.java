@@ -1,19 +1,25 @@
 package com.LMS.userManagement.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class Home {
+@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class EduContent {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
     @Column(columnDefinition = "TEXT")
-    public String title;
-
-    @Column(columnDefinition = "TEXT")
     public String image;
+
     @Column(columnDefinition = "TEXT")
     public String imageContent;
 

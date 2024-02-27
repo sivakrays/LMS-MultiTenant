@@ -4,7 +4,7 @@ import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.util.Constant;
-import com.LMS.userManagement.util.Mapper;
+import com.LMS.userManagement.util.CustomMapper;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.QuizRankRepository;
@@ -34,7 +34,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final Mapper mapper;
+    private final CustomMapper mapper;
     @Autowired
     private  UserRepository userRepository;
     @Autowired
