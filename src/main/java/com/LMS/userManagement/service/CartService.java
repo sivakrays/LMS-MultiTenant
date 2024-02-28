@@ -97,7 +97,7 @@ public class CartService {
             } else {
                 return CommonResponse.<List<CartDetail>>builder()
                         .status(false)
-                        .statusCode(Constant.NOT_FOUND)
+                        .statusCode(Constant.NO_CONTENT)
                         .message(Constant.EMPTY_CART)
                         .data(cartDetails)
                         .build();
@@ -159,8 +159,8 @@ public class CartService {
             }
             return CommonResponse.<List<CartDetail>>builder()
                     .status(false)
-                    .statusCode(Constant.NOT_FOUND)
-                    .message(Constant.NO_CART)
+                    .statusCode(Constant.NO_CONTENT)
+                    .message(Constant.NO_DATA)
                     .data(cartDetails)
                     .build();
         } catch (Exception e) {

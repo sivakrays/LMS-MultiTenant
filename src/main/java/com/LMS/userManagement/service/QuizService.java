@@ -87,6 +87,7 @@ public class QuizService {
     }
 
     public CommonResponse<List<QuizBean>> uploadQuizCsv(MultipartFile file) {
+        DataFormatter formatter = new DataFormatter();
         List<QuizBean> quizList = null;
         try {
             Workbook workbook = new XSSFWorkbook(file.getInputStream());
@@ -115,18 +116,24 @@ public class QuizService {
                     Cell currentCell = cellsInRow.next();
                     switch (cellIdx) {
                         case 0 -> quiz.setKey((int) currentCell.getNumericCellValue());
-                        case 1 -> quiz.setTitle(currentCell.getStringCellValue());
-                        case 2 -> quiz.setQuestion(currentCell.getStringCellValue());
+                        case 1 -> {
+                            String title=formatter.formatCellValue(currentCell);
+                            quiz.setTitle(title);}
+                        case 2 -> {
+                            String question=formatter.formatCellValue(currentCell);
+                            quiz.setQuestion(question);}
                         case 3, 4, 5, 6, 7 -> {
-                            String opt = currentCell.getStringCellValue();
-                            if (opt != null && !opt.equals("")) {
+                            String opt= formatter.formatCellValue(currentCell);
+                            // String opt=currentCell.getStringCellValue();
+                            if(opt!=null && !opt.equals("")){
                                 optionList.add(opt);
                             }
                         }
-                        case 8 -> quiz.setAnswer(currentCell.getStringCellValue());
-                        default -> {
-                            break;
-                        }
+                        case 8 -> {
+                            String answer= formatter.formatCellValue(currentCell);
+                            // currentCell.getStringCellValue();
+                            quiz.setAnswer(answer);}
+                        default -> {break; }
                     }
 
                     cellIdx++;
@@ -148,7 +155,7 @@ public class QuizService {
             // Log the exception or handle it appropriately
             return CommonResponse.<List<QuizBean>>builder()
                     .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .statusCode(Constant.FORBIDDEN)
                     .message(Constant.FAILED_QUIZ_CSV_UPLOAD)
                     .data(quizList)
                     .build();

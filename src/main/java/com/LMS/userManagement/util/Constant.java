@@ -7,7 +7,7 @@ public class Constant {
 
     // POSITIVE Message
     public static final String USER_EXISTS = "User Already Exists";
-    public static final String USERS_FOUND = "Users Found";
+    public static final String DATA_FOUND = "Data found";
     public static final String TENANT_EXISTS = "Tenant already exists";
     public static final String COURSE_EXISTS_CART = "Course already exists in the cart";
     public static final String COURSES_FOUND = "Courses found";
@@ -40,8 +40,8 @@ public class Constant {
     //NEGATIVE Message
     public static final String NO_COURSE = "No Courses Found";
     public static final String EMPTY_CART = "Cart is empty";
-    public static final String NO_CART = "Cart not found";
-    public static final String NO_USER = "User not found";
+    public static final String NO_CARTNO_CART = "Cart not found";
+    public static final String NO_DATA = "No data found";
     public static final String PROFILE_NOT_FOUND = "Profile not found";
     public static final String FAILED_COURSE = "Failed to retrieve courses";
     public static final String FAILED_RETRIEVED_PROFILE = "Failed to retrieve profile";
@@ -56,7 +56,7 @@ public class Constant {
     public static final String FAILED_REGISTER_TENANT = "Failed to register tenant";
     public static final String LOGIN_FAILED = "Login failed";
     public static final String USER_NOT_FOUND = "User not found or incorrect credentials";
-    public static final String USERS_NOT_FOUND = "Users not found";
+    public static final String USERS_NOT_FOUND = "No data Found";
     public static final String ADMIN_NOT_FOUND = "Admin not found or incorrect credentials";
     public static final String FAILED_ADMIN_REGISTER = "Failed to register admin";
     public static final String REMOVED_USER = "User removed successfully";
@@ -71,7 +71,7 @@ public class Constant {
     public static final String COURSE_SAVE_FAILED = "Failed to save course";
     public static final String SECTION_SAVE_FAILED = "Failed to save section";
     public static final String DELETE_COURSE = "Course Deleted Successfully";
-    public static final String DELETE_USER = "User Deleted Successfully";
+    public static final String USER_DELETED = "User Deleted Successfully";
     public static final String FAILED_DELETE_USER = "Failed to delete user";
     public static final String DELETE_COURSE_FAILED = "Failed to Delete Course";
     public static final String SEARCH_FAILED = "Failed to search courses";
@@ -88,7 +88,6 @@ public class Constant {
     public static final int SUCCESS = 200;
     public static final int INTERNAL_SERVER_ERROR = 500;
     public static final int UNAUTHORIZED = 401;
-    public static final int NOT_FOUND = 404;
 
     //Common Data
     public static final String CREATED_DATE="createdDate";

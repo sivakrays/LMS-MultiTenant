@@ -177,14 +177,14 @@ public class AuthService {
             return CommonResponse.<Page<User>>builder()
                     .status(false)
                     .statusCode(Constant.SUCCESS)
-                    .message(Constant.USERS_NOT_FOUND)
+                    .message(Constant.NO_DATA)
                     .build();
         }
 
         return CommonResponse.<Page<User>>builder()
                 .status(true)
                 .statusCode(Constant.SUCCESS)
-                .message(Constant.USERS_FOUND)
+                .message(Constant.DATA_FOUND)
                 .data(users)
                 .build();
     }
@@ -199,14 +199,14 @@ public class AuthService {
                 return CommonResponse.<Page<User>>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
-                        .message(Constant.DELETE_USER)
+                        .message(Constant.USER_DELETED)
                         .data(userList)
                         .build();
             } else {
                 return CommonResponse.<Page<User>>builder()
                         .status(false)
-                        .statusCode(Constant.NOT_FOUND)
-                        .message(Constant.NO_USER)
+                        .statusCode(Constant.NO_CONTENT)
+                        .message(Constant.NO_DATA)
                         .data(userList)
                         .build();
             }
