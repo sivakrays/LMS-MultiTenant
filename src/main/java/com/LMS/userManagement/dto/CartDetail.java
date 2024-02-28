@@ -10,7 +10,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDetail {
-
     public UUID cartId;
     public UUID courseId;
     public String title;

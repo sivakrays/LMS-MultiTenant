@@ -1,6 +1,9 @@
 package com.LMS.userManagement.service;
 import com.LMS.userManagement.model.*;
-import com.LMS.userManagement.repository.*;
+import com.LMS.userManagement.repository.CourseRepository;
+import com.LMS.userManagement.repository.QuizRepository;
+import com.LMS.userManagement.repository.SectionRepository;
+import com.LMS.userManagement.repository.SubSectionRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +28,6 @@ public class CourseService {
     @Autowired
     QuizRepository quizRepository;
 
-    @Autowired
-    DurationRepository durationRepository;
-
     public CommonResponse<List<Section>> saveSection(List<Section> sections) {
 
         List<Section> sectionList = null;
@@ -51,28 +51,32 @@ public class CourseService {
 
     }
 
-    public CommonResponse<String> deleteCourseById(UUID courseId) {
+    public CommonResponse<Page<Course>> deleteCourseById(UUID courseId,int pageNo,int pageSize) {
 
         try {
+            Page<Course> courses = null;
             if (courseRepository.existsById(courseId)) {
+                Optional<Course> course = courseRepository.findById(courseId);
+                Long userId = course.get().getUserId();
                 courseRepository.deleteById(courseId);
-                return CommonResponse.<String>builder()
+                 courses = courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo,pageSize));
+                return CommonResponse.<Page<Course>>builder()
                         .status(true)
                         .message(Constant.DELETE_COURSE)
-                        .data(null)
+                        .data(courses)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
-                return CommonResponse.<String>builder()
+                return CommonResponse.<Page<Course>>builder()
                         .status(false)
                         .message(Constant.NO_COURSE)
-                        .data(null)
+                        .data(courses)
                         .statusCode(Constant.NO_CONTENT)
                         .build();
             }
 
         } catch (Exception e) {
-            return CommonResponse.<String>builder()
+            return CommonResponse.<Page<Course>>builder()
                     .status(false)
                     .message(Constant.DELETE_COURSE_FAILED)
                     .data(null)
@@ -326,41 +330,6 @@ public class CourseService {
                     .build();
         }
     }
-
-    public CommonResponse<Duration> saveCourseVideoDuration(Duration videoDuration) {
-
-        Duration existingDuration = null;
-        try {
-            Optional<Duration> existingDurationOptional = durationRepository.findById(videoDuration.getDurationId());
-            if (existingDurationOptional.isEmpty()) {
-                Duration savedDuration = durationRepository.save(videoDuration);
-                return CommonResponse.<Duration>builder()
-                        .status(true)
-                        .data(savedDuration)
-                        .message(Constant.SAVED_VIDEO_DURATION)
-                        .statusCode(Constant.SUCCESS)
-                        .build();
-            } else {
-                existingDuration = existingDurationOptional.get();
-                existingDuration.setPlayedSeconds(videoDuration.getPlayedSeconds());
-                return CommonResponse.<Duration>builder()
-                        .status(true)
-                        .data(existingDuration)
-                        .message(Constant.UPDATED_VIDEO_DURATION)
-                        .statusCode(Constant.SUCCESS)
-                        .build();
-            }
-        } catch (Exception e) {
-            return CommonResponse.<Duration>builder()
-                    .status(false)
-                    .data(existingDuration)
-                    .message(Constant.FAILED_VIDEO_DURATION)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .build();
-        }
-    }
-
-
 
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {

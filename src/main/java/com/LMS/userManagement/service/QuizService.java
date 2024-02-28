@@ -73,7 +73,7 @@ public class QuizService {
 
 
     public BadgeCounts getBadgeCountsForUser(Long userId, Integer energyPoints) {
-       int goldCount = quizRankRepository.countByUserIdAndBadge(userId,1);
+        int goldCount = quizRankRepository.countByUserIdAndBadge(userId,1);
         int silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
         int bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
         BadgeCounts badgeCounts=new BadgeCounts();

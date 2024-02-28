@@ -154,16 +154,16 @@ public class AdminService {
         Map<String, String> tenantIdMap  = new HashMap<>();
         List<TenantDetails> tenantList;
         try {
-           tenantList = tenantRepository.findAll();
-    } catch (Exception e) {
-        // Log the exception or handle it appropriately
-        return CommonResponse.<Map<String, String>>builder()
-                .status(false)
-                .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                .message(Constant.FAILED_TENANT)
-                .data(tenantIdMap)
-                .build();
-    }
+            tenantList = tenantRepository.findAll();
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            return CommonResponse.<Map<String, String>>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_TENANT)
+                    .data(tenantIdMap)
+                    .build();
+        }
         if (tenantList.isEmpty()) {
             return CommonResponse.<Map<String, String>>builder()
                     .status(false)
@@ -173,16 +173,16 @@ public class AdminService {
                     .build();
         }
 
-            tenantList.forEach(n -> {
-                tenantIdMap.put(n.getIssuer(), n.getTenantId());
-            });
+        tenantList.forEach(n -> {
+            tenantIdMap.put(n.getIssuer(), n.getTenantId());
+        });
 
-            return CommonResponse.<Map<String, String>>builder()
-                    .status(true)
-                    .statusCode(Constant.SUCCESS)
-                    .message(Constant.TENANTS_FOUND)
-                    .data(tenantIdMap)
-                    .build();
+        return CommonResponse.<Map<String, String>>builder()
+                .status(true)
+                .statusCode(Constant.SUCCESS)
+                .message(Constant.TENANTS_FOUND)
+                .data(tenantIdMap)
+                .build();
 
     }
 

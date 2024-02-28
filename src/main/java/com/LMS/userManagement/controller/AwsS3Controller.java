@@ -37,7 +37,7 @@ public class AwsS3Controller {
 
     @PostMapping(value = "/uploadFile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public  String saveFile(@RequestPart MultipartFile file,@RequestParam String courseId) throws IOException {
-       String key="LmsCourse/"+courseId+"/"+UUID.randomUUID().toString();
+        String key="LmsCourse/"+courseId+"/"+UUID.randomUUID().toString();
         awss3Service.putObject(key,file);
         return awsUrl+key;
     }

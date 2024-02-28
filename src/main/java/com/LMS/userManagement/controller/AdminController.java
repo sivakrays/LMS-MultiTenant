@@ -30,7 +30,7 @@ public class AdminController {
     @PostMapping("/adminRegistration")
     //@PreAuthorize("hasAuthority('admin')")
     public CommonResponse<Admin> adminRegistration(@RequestBody AdminDto adminDto){
-     return adminService.adminRegistration(adminDto);
+        return adminService.adminRegistration(adminDto);
     }
 
     @PostMapping("/adminLogin")
@@ -57,19 +57,19 @@ public class AdminController {
 
     @PutMapping("/updateSchemaByTenant")
     public CommonResponse<Optional<TenantDetails>> updateSchemaByTenant(@RequestParam String email){
-            return adminService.updateSchemaByTenant(email);
+        return adminService.updateSchemaByTenant(email);
     }
 
 
     //Testing APIs
     @GetMapping("/adminRead")
-   @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('admin')")
     public String adminRead(){
 
         return "admin:: can  read";
     }
 
-@PostMapping("/adminCreate")
+    @PostMapping("/adminCreate")
     @PreAuthorize("hasAuthority('admin')")
     public String adminCreate(){
         return "admin:: can create";

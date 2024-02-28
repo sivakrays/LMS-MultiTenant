@@ -30,14 +30,14 @@ public class AuthController {
 
 
     @PostMapping("/register")
-  //  @PreAuthorize("hasAuthority('manager')")
+    //  @PreAuthorize("hasAuthority('manager')")
     public CommonResponse<UserDTO> register (@RequestBody RegisterRequest request){
-    return authService.register(request);
+        return authService.register(request);
 
-}
+    }
 
     @PostMapping("/login")
-   // @PreAuthorize("hasAuthority('user')")
+    // @PreAuthorize("hasAuthority('user')")
     public CommonResponse<LoginResponse> authentication (
             @RequestBody LoginDTO loginDto,
             @RequestHeader String tenantId) {
@@ -45,10 +45,10 @@ public class AuthController {
 
     }
 
-  
+
     @PostMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request,
-                            HttpServletResponse response) throws IOException {
+                             HttpServletResponse response) throws IOException {
         authService.refreshToken(request,response);
     }
 
@@ -56,11 +56,12 @@ public class AuthController {
     private CommonResponse<Page<User>> getAllUser(@RequestParam int pageNo,
                                                   @RequestParam int pageSize){
 
-      return   authService.getAllUser(pageNo,pageSize);
+        return   authService.getAllUser(pageNo,pageSize);
     }
     @DeleteMapping("/deleteUserById")
-    public CommonResponse<?> deleteUserById(@RequestParam Long userId){
-        return authService.deleteUserById(userId);
+    public CommonResponse<Page<User>> deleteUserById(@RequestParam Long userId,@RequestParam int pageNo,
+                                            @RequestParam int pageSize){
+        return authService.deleteUserById(userId,pageNo,pageSize);
     }
 
 

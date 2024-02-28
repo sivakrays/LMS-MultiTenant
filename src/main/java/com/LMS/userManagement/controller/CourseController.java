@@ -34,24 +34,25 @@ public class CourseController {
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<Page<Course>> getAllCourses(@RequestParam int pageNo,@RequestParam int pageSize){
+    public CommonResponse<Page<Course>> getAllCourses(@RequestParam int pageNo,@RequestParam int pageSize) throws InterruptedException {
         return courseService.getAllCourses(pageNo,pageSize);
 
     }
     @GetMapping("/searchCourses")
-    public CommonResponse<Page<Course>> searchCourses(@RequestParam("search") String search,@RequestParam(defaultValue = "0") int pageNo,@RequestParam(defaultValue = "6") int pageSize){
+
+    public CommonResponse<Page<Course>> searchCourses(@RequestParam("search") String search, @RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "6") int pageSize){
         return courseService.searchCourses(search,pageNo,pageSize);
 
     }
     @PostMapping("/saveSection")
    // @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse<List<Section>> saveSection(@RequestBody List<Section> sections){
+    public CommonResponse<List<Section>>saveSection(@RequestBody List<Section> sections){
         return courseService.saveSection(sections);
     }
     @DeleteMapping("/deleteCourseById")
   //  @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse<String> deleteCourseById(@RequestParam UUID courseId){
-        return courseService.deleteCourseById(courseId);
+    public CommonResponse< Page<Course>> deleteCourseById(@RequestParam UUID courseId,@RequestParam int pageNo,@RequestParam int pageSize){
+        return courseService.deleteCourseById(courseId,pageNo,pageSize);
     }
     @PutMapping("/updateCourse")
    // @PreAuthorize("hasAuthority('admin')")
@@ -60,7 +61,7 @@ public class CourseController {
     }
     @PutMapping("/updateSection")
    // @PreAuthorize("hasAuthority('admin')")
-    public  CommonResponse<Section> updateSection(@RequestBody Section section){
+    public  CommonResponse<Section>updateSection(@RequestBody Section section){
         return courseService.updateSection(section);
     }
     @PutMapping("/updateSubSection")
