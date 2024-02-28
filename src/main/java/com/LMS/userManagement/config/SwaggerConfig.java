@@ -24,7 +24,7 @@ public class SwaggerConfig {
         openApi.info(
                 new Info()
                         .title("LMS API")
-                        .version("1.0")
+                        .version("3.0")
                         .description("Learning Management System")
         );
 
@@ -38,7 +38,6 @@ public class SwaggerConfig {
                 new SecurityRequirement().addList("bearer-jwt", Arrays.asList("read", "write"))
         );
         openApi.servers(Arrays.asList(
-                new Server().url(localUrl).description("Server URL in Local environment"),
                 new Server().url(developmentUrl).description("Server URL in Development environment")
         ));
 

@@ -50,7 +50,7 @@ public class AwsS3Controller {
             if (file == null) {
                 return CommonResponse.<byte[]>builder()
                         .status(false)
-                        .statusCode(Constant.NOT_FOUND)
+                        .statusCode(Constant.NO_CONTENT)
                         .message(Constant.NO_FILES)
                         .data(file)
                         .build();

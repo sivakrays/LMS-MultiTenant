@@ -38,7 +38,7 @@ public class ProfileService {
             } else {
                 return CommonResponse.<User>builder()
                         .status(false)
-                        .statusCode(Constant.NOT_FOUND)
+                        .statusCode(Constant.NO_CONTENT)
                         .message(Constant.USER_NOT_FOUND)
                         .data(savedUser)
                         .build();
@@ -68,7 +68,7 @@ public class ProfileService {
             } else {
                 return CommonResponse.<User>builder()
                         .status(false)
-                        .statusCode(Constant.NOT_FOUND)
+                        .statusCode(Constant.NO_CONTENT)
                         .message(Constant.PROFILE_NOT_FOUND)
                         .data(null)
                         .build();
