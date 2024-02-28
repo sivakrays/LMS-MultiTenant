@@ -1,8 +1,5 @@
 package com.LMS.userManagement.service;
-import com.LMS.userManagement.model.Course;
-import com.LMS.userManagement.model.Quiz;
-import com.LMS.userManagement.model.Section;
-import com.LMS.userManagement.model.SubSection;
+import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.repository.QuizRepository;
 import com.LMS.userManagement.repository.SectionRepository;
@@ -54,31 +51,32 @@ public class CourseService {
 
     }
 
-    public CommonResponse<?> deleteCourseById(UUID courseId,int pageNo,int pageSize) {
+    public CommonResponse<Page<Course>> deleteCourseById(UUID courseId,int pageNo,int pageSize) {
 
         try {
+            Page<Course> courses = null;
             if (courseRepository.existsById(courseId)) {
                 Optional<Course> course = courseRepository.findById(courseId);
                 Long userId = course.get().getUserId();
                 courseRepository.deleteById(courseId);
-                Page<Course> courses = courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo,pageSize));
-                return CommonResponse.builder()
+                 courses = courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo,pageSize));
+                return CommonResponse.<Page<Course>>builder()
                         .status(true)
                         .message(Constant.DELETE_COURSE)
                         .data(courses)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
-                return CommonResponse.builder()
+                return CommonResponse.<Page<Course>>builder()
                         .status(false)
                         .message(Constant.NO_COURSE)
-                        .data(null)
+                        .data(courses)
                         .statusCode(Constant.NO_CONTENT)
                         .build();
             }
 
         } catch (Exception e) {
-            return CommonResponse.builder()
+            return CommonResponse.<Page<Course>>builder()
                     .status(false)
                     .message(Constant.DELETE_COURSE_FAILED)
                     .data(null)

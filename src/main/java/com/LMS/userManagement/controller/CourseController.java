@@ -58,7 +58,7 @@ public class CourseController {
     }
     @DeleteMapping("/deleteCourseById")
   //  @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse<?> deleteCourseById(@RequestParam UUID courseId,@RequestParam int pageNo,@RequestParam int pageSize){
+    public CommonResponse< Page<Course>> deleteCourseById(@RequestParam UUID courseId,@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.deleteCourseById(courseId,pageNo,pageSize);
     }
     @PutMapping("/updateCourse")

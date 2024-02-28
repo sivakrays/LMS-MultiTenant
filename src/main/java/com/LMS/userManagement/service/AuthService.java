@@ -30,6 +30,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+import static software.amazon.awssdk.services.s3.model.IntelligentTieringConfiguration.builder;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -187,27 +189,28 @@ public class AuthService {
     }
 
 
-    public CommonResponse<?> deleteUserById(Long userId,int pageNo,int pageSize) {
+    public CommonResponse<Page<User>> deleteUserById(Long userId,int pageNo,int pageSize) {
         try {
+            Page<User> userList = null;
             if (userRepository.existsById(userId)) {
                 userRepository.deleteById(userId);
-                Page<User> userList = userRepository.findAll(PageRequest.of(pageNo,pageSize));
-                return CommonResponse.builder()
+               userList = userRepository.findAll(PageRequest.of(pageNo,pageSize));
+                return CommonResponse.<Page<User>>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.DELETE_USER)
                         .data(userList)
                         .build();
             } else {
-                return CommonResponse.builder()
+                return CommonResponse.<Page<User>>builder()
                         .status(false)
                         .statusCode(Constant.NOT_FOUND)
                         .message(Constant.NO_USER)
-                        .data(null)
+                        .data(userList)
                         .build();
             }
         } catch (Exception e) {
-            return CommonResponse.builder()
+            return CommonResponse.<Page<User>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_DELETE_USER)

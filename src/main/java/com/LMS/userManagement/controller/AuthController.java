@@ -59,7 +59,7 @@ public class AuthController {
         return   authService.getAllUser(pageNo,pageSize);
     }
     @DeleteMapping("/deleteUserById")
-    public CommonResponse<?> deleteUserById(@RequestParam Long userId,@RequestParam int pageNo,
+    public CommonResponse<Page<User>> deleteUserById(@RequestParam Long userId,@RequestParam int pageNo,
                                             @RequestParam int pageSize){
         return authService.deleteUserById(userId,pageNo,pageSize);
     }
