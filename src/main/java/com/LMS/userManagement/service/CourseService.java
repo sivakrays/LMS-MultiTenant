@@ -1,12 +1,6 @@
 package com.LMS.userManagement.service;
-import com.LMS.userManagement.model.Course;
-import com.LMS.userManagement.model.Quiz;
-import com.LMS.userManagement.model.Section;
-import com.LMS.userManagement.model.SubSection;
-import com.LMS.userManagement.repository.CourseRepository;
-import com.LMS.userManagement.repository.QuizRepository;
-import com.LMS.userManagement.repository.SectionRepository;
-import com.LMS.userManagement.repository.SubSectionRepository;
+import com.LMS.userManagement.model.*;
+import com.LMS.userManagement.repository.*;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +24,9 @@ public class CourseService {
     SubSectionRepository subSectionRepository;
     @Autowired
     QuizRepository quizRepository;
+
+    @Autowired
+    DurationRepository durationRepository;
 
     public CommonResponse<List<Section>> saveSection(List<Section> sections) {
 
@@ -329,6 +326,41 @@ public class CourseService {
                     .build();
         }
     }
+
+    public CommonResponse<Duration> saveCourseVideoDuration(Duration videoDuration) {
+
+        Duration existingDuration = null;
+        try {
+            Optional<Duration> existingDurationOptional = durationRepository.findById(videoDuration.getDurationId());
+            if (existingDurationOptional.isEmpty()) {
+                Duration savedDuration = durationRepository.save(videoDuration);
+                return CommonResponse.<Duration>builder()
+                        .status(true)
+                        .data(savedDuration)
+                        .message(Constant.SAVED_VIDEO_DURATION)
+                        .statusCode(Constant.SUCCESS)
+                        .build();
+            } else {
+                existingDuration = existingDurationOptional.get();
+                existingDuration.setPlayedSeconds(videoDuration.getPlayedSeconds());
+                return CommonResponse.<Duration>builder()
+                        .status(true)
+                        .data(existingDuration)
+                        .message(Constant.UPDATED_VIDEO_DURATION)
+                        .statusCode(Constant.SUCCESS)
+                        .build();
+            }
+        } catch (Exception e) {
+            return CommonResponse.<Duration>builder()
+                    .status(false)
+                    .data(existingDuration)
+                    .message(Constant.FAILED_VIDEO_DURATION)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+    }
+
+
 
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {

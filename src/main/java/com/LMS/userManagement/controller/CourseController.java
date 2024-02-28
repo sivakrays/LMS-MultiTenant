@@ -1,21 +1,14 @@
 package com.LMS.userManagement.controller;
 
-import com.LMS.userManagement.model.Course;
-import com.LMS.userManagement.model.Quiz;
-import com.LMS.userManagement.model.Section;
-import com.LMS.userManagement.model.SubSection;
+import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -83,6 +76,11 @@ public class CourseController {
     @GetMapping("/getCourseByUserId")
     public CommonResponse<Page<Course>> getCourseByUserId(@RequestParam Long userId,@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.getCourseByUserId(userId,pageNo,pageSize);
+    }
+
+    @PostMapping("/saveCourseVideoDuration")
+    public CommonResponse<Duration> saveCourseVideoDuration(@RequestBody Duration videoDuration){
+        return courseService.saveCourseVideoDuration(videoDuration);
     }
 
    /* @GetMapping("/getCourseCompletion")
