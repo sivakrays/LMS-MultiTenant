@@ -18,6 +18,8 @@ public class Constant {
     public static final String CART_DELETED = "Cart Deleted Successfully";
     public static final String LOGIN_SUCCESS = "Login Successful";
     public static final String SUCCESS_FILE = "File retrieved successfully";
+    public static final String UPDATED_VIDEO_DURATION = "Course Video Duration updated";
+    public static final String SAVED_VIDEO_DURATION = "Course Video Duration saved";
     public static final String TENANT_REGISTERED_SUCCESSFUL = "Tenant registered successfully";
     public static final String ADMIN_REGISTERED = "Admin registered successfully";
     public static final String SCHEMA_UPDATED = "Schema updated successfully";
@@ -44,6 +46,7 @@ public class Constant {
     public static final String NO_DATA = "No data found";
     public static final String PROFILE_NOT_FOUND = "Profile not found";
     public static final String FAILED_COURSE = "Failed to retrieve courses";
+    public static final String FAILED_VIDEO_DURATION = "Failed to save course video duration";
     public static final String FAILED_RETRIEVED_PROFILE = "Failed to retrieve profile";
     public static final String FAILED_TENANT = "Failed to retrieve tenants";
     public static final String FAILED_USER_STATS = "Failed to retrieve user statistics";
@@ -88,6 +91,7 @@ public class Constant {
     public static final int SUCCESS = 200;
     public static final int INTERNAL_SERVER_ERROR = 500;
     public static final int UNAUTHORIZED = 401;
+
 
     //Common Data
     public static final String CREATED_DATE="createdDate";
