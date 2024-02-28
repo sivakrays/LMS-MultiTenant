@@ -54,19 +54,22 @@ public class CourseService {
 
     }
 
-    public CommonResponse<String> deleteCourseById(UUID courseId) {
+    public CommonResponse<?> deleteCourseById(UUID courseId,int pageNo,int pageSize) {
 
         try {
             if (courseRepository.existsById(courseId)) {
+                Optional<Course> course = courseRepository.findById(courseId);
+                Long userId = course.get().getUserId();
                 courseRepository.deleteById(courseId);
-                return CommonResponse.<String>builder()
+                Page<Course> courses = courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo,pageSize));
+                return CommonResponse.builder()
                         .status(true)
                         .message(Constant.DELETE_COURSE)
-                        .data(null)
+                        .data(courses)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
-                return CommonResponse.<String>builder()
+                return CommonResponse.builder()
                         .status(false)
                         .message(Constant.NO_COURSE)
                         .data(null)
@@ -75,7 +78,7 @@ public class CourseService {
             }
 
         } catch (Exception e) {
-            return CommonResponse.<String>builder()
+            return CommonResponse.builder()
                     .status(false)
                     .message(Constant.DELETE_COURSE_FAILED)
                     .data(null)

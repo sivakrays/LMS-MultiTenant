@@ -187,15 +187,16 @@ public class AuthService {
     }
 
 
-    public CommonResponse<?> deleteUserById(Long userId) {
+    public CommonResponse<?> deleteUserById(Long userId,int pageNo,int pageSize) {
         try {
             if (userRepository.existsById(userId)) {
                 userRepository.deleteById(userId);
+                Page<User> userList = userRepository.findAll(PageRequest.of(pageNo,pageSize));
                 return CommonResponse.builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.DELETE_USER)
-                        .data(null)
+                        .data(userList)
                         .build();
             } else {
                 return CommonResponse.builder()
