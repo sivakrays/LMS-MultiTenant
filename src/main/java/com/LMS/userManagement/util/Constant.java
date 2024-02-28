@@ -24,7 +24,7 @@ public class Constant {
     public static final String COURSE_UPDATED = "Course updated successfully";
     public static final String PROFILE_UPDATED = "Profile updated successfully";
     public static final String COURSE_SAVED = "Course saved successfully";
-    public static final String AUTHENTICATED = "Authentication successful";
+    public static final String AUTHENTICATED = "Login sc";
     public static final String CART_SAVED = "Cart saved successfully";
     public static final String SECTION_SAVED = "Section saved successfully";
     public static final String SUBSECTION_SAVED = "Subsection saved successfully";
