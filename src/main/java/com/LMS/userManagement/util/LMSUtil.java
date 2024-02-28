@@ -24,25 +24,43 @@ public class LMSUtil {
     public LoginResponse findHomeScreenByTenantId(String tenantId, AuthenticationResponse auth){
         Home home= homeRepository.findByTenantId(tenantId);
       List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
+      List<CourseData> educationContentList=new ArrayList<>();
+      if (!contentList.isEmpty()) {
+          contentList.forEach(n -> {
+              educationContentList.add(
+                      new CourseData(n.getImage(),
+                              n.getImage_content()));
+          });
+      }
         if (home==null){
             return new LoginResponse(
                     auth,
                     null
             );
         }
+
+
         List<HomeData> homeList=new ArrayList<>();
-        var banner=   new Banner(
-                home.getBannerImage(),
-                home.getHomeTitle(),
-                home.getTheme(),
-                home.getSupportNumber()
+
+        Banner banner= ExtractBannerDetailFromHome(home);
+
+
+        List<CourseData> popularCourseList=new ArrayList<>();
+        var popularCourse=   new FeaturedCourse(
+                    home.getCourseTitle(),
+                   popularCourseList
         );
 
-        var featuredCourse=   new FeaturedCourse(
-                home.getCourseTitle(),
+        List<CourseData> recommendedCourseList=new ArrayList<>();
+        var recommendedCourse=   new FeaturedCourse(
                 home.getCourseTitle2(),
+                recommendedCourseList
+        );
+
+
+        var educationContent=new FeaturedCourse(
                 home.getEducationTitle(),
-                contentList
+                educationContentList
         );
 
         var promo= new PromoData(
@@ -51,15 +69,29 @@ public class LMSUtil {
                 home.getPromoDescription()
         );
 
+        List<FeaturedCourse> featuredCourseList=new ArrayList<>();
+        featuredCourseList.add(popularCourse);
+        featuredCourseList.add(recommendedCourse);
+        featuredCourseList.add(educationContent);
+
         homeList.add(new HomeData(
                 banner,
-                featuredCourse,
+                featuredCourseList,
                 promo
         ))   ;
 
      return   new LoginResponse(
                 auth,
              homeList
+        );
+    }
+
+    private Banner ExtractBannerDetailFromHome(Home home) {
+        return  new Banner(
+                home.getBannerImage(),
+                home.getHomeTitle(),
+                home.getTheme(),
+                home.getSupportNumber()
         );
     }
 }

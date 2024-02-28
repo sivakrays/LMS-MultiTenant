@@ -24,7 +24,6 @@ public class Constant {
     public static final String COURSE_UPDATED = "Course updated successfully";
     public static final String PROFILE_UPDATED = "Profile updated successfully";
     public static final String COURSE_SAVED = "Course saved successfully";
-    public static final String AUTHENTICATED = "Login sc";
     public static final String CART_SAVED = "Cart saved successfully";
     public static final String SECTION_SAVED = "Section saved successfully";
     public static final String SUBSECTION_SAVED = "Subsection saved successfully";
@@ -55,7 +54,7 @@ public class Constant {
     public static final String NO_FILES = "No files found";
     public static final String NO_TENANTS = "No Tenants Found";
     public static final String FAILED_REGISTER_TENANT = "Failed to register tenant";
-    public static final String LOGIN_FAILED = "Failed to login";
+    public static final String LOGIN_FAILED = "Login failed";
     public static final String USER_NOT_FOUND = "User not found or incorrect credentials";
     public static final String USERS_NOT_FOUND = "Users not found";
     public static final String ADMIN_NOT_FOUND = "Admin not found or incorrect credentials";
