@@ -1,12 +1,8 @@
 package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.QuizBean;
 import com.LMS.userManagement.model.BadgeCounts;
-import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +62,7 @@ public class QuizService {
     }
 
     public ResponseEntity<?> uploadQuizCsv(MultipartFile file) throws IOException {
-
+        DataFormatter formatter = new DataFormatter();
         Workbook workbook = new XSSFWorkbook(file.getInputStream());
         Sheet sheet = workbook.getSheetAt(0);
         Iterator<Row> rows = sheet.iterator();
@@ -93,15 +89,23 @@ public class QuizService {
                 Cell currentCell = cellsInRow.next();
                 switch (cellIdx) {
                     case 0 -> quiz.setKey((int) currentCell.getNumericCellValue());
-                    case 1 -> quiz.setTitle(currentCell.getStringCellValue());
-                    case 2 -> quiz.setQuestion(currentCell.getStringCellValue());
+                    case 1 -> {
+                        String title=formatter.formatCellValue(currentCell);
+                        quiz.setTitle(title);}
+                    case 2 -> {
+                        String question=formatter.formatCellValue(currentCell);
+                        quiz.setQuestion(question);}
                     case 3, 4, 5, 6, 7 -> {
-                        String opt=currentCell.getStringCellValue();
+                       String opt= formatter.formatCellValue(currentCell);
+                       // String opt=currentCell.getStringCellValue();
                         if(opt!=null && !opt.equals("")){
                             optionList.add(opt);
                         }
                     }
-                    case 8 -> quiz.setAnswer(currentCell.getStringCellValue());
+                    case 8 -> {
+                        String answer= formatter.formatCellValue(currentCell);
+                       // currentCell.getStringCellValue();
+                        quiz.setAnswer(answer);}
                     default -> {break; }
                 }
 
@@ -131,29 +135,43 @@ try {
         return ResponseEntity.ok(resource);
 
     }
-/*
 
+/*
     public Set<?> parseCsv(MultipartFile file){
-        List<String> optionList =new ArrayList<>();
         try {
             Reader reader =new BufferedReader(new InputStreamReader(file.getInputStream()));
-            HeaderColumnNameMappingStrategy<QuizBean> strategy=
+            HeaderColumnNameMappingStrategy<QuizCsvRepresentation> strategy=
                     new HeaderColumnNameMappingStrategy<>();
-            strategy.setType(QuizBean.class);
-            CsvToBean<QuizBean> csvToBean=new CsvToBeanBuilder<QuizBean>()
+            strategy.setType(QuizCsvRepresentation.class);
+            CsvToBean<QuizCsvRepresentation> csvToBean=
+                    new CsvToBeanBuilder<QuizCsvRepresentation>(reader)
                     .withMappingStrategy(strategy)
                     .withIgnoreEmptyLine(true)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-            csvToBean.parse()
+          return   csvToBean.parse()
                     .stream().map(
                             csvLine->
-                                    Quiz.builder()
-                                    .key(csvLine.getKey())
+                                    QuizData.builder()
+                                            .key(csvLine.getKey())
+                                            .title(csvLine.getTitle())
+                                            .question(csvLine.getQuestion())
+                                            .option1(csvLine.getOption1())
+                                            .option2(csvLine.getOption2())
+                                            .option3(csvLine.getOption3())
+                                            .option4(csvLine.getOption4())
+                                            .option5(csvLine.getOption5())
+                                            .build()
 
                     )
+                    .collect(Collectors.toSet());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ResponseEntity<?> uploadCommonCsv(MultipartFile file) {
+     Set<?> quiz=   parseCsv(file);
+     return ResponseEntity.ok(quiz);
     }*/
 }

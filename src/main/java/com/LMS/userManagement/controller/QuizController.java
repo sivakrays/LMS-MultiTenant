@@ -27,7 +27,7 @@ public class QuizController {
     }
 
 
-    @PostMapping("/uploadQuizCsv")
+    @PostMapping(value = "/uploadQuizCsv",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadQuizCsv(@RequestPart("file") MultipartFile file) throws IOException {
         return quizService.uploadQuizCsv(file);
     }
@@ -36,4 +36,9 @@ public class QuizController {
     public ResponseEntity<?> downloadQuizCsv() throws MalformedURLException {
         return quizService.downloadQuizCsv();
     }
+/*
+    @PostMapping("/uploadCommonCsv")
+    public ResponseEntity<?> uploadCommonCsv(@RequestPart("file") MultipartFile file) throws IOException {
+        return quizService.uploadCommonCsv(file);
+    }*/
 }
