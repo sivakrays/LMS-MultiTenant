@@ -4,6 +4,7 @@ import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.dto.UserDto;
 import com.LMS.userManagement.model.*;
+import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.securityConfig.JwtService;
@@ -36,6 +37,8 @@ public class AuthService {
     private  UserRepository userRepository;
     @Autowired
     QuizRankRepository quizRankRepository;
+    @Autowired
+    CartRepository cartRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -81,11 +84,13 @@ try {
         int silverCount ;
         int bronzeCount;
         Integer energyPoints;
+        int cartCount;
         try {
            goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
            silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
            bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
            energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
+            cartCount = cartRepository.cartCountByUserId(userId);
       }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
       }
@@ -104,6 +109,7 @@ try {
                 .silver(silverCount)
                 .bronze(bronzeCount)
                 .energyPoints(energyPoints)
+                .cartCount(cartCount)
              //   .refreshToken(refreshToken)
                 .build();
 

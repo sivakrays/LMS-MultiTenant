@@ -31,6 +31,8 @@ public class AuthenticationResponse {
 
     private Integer energyPoints;
 
+    private int cartCount;
+
  //   private String refreshToken;
 
 
