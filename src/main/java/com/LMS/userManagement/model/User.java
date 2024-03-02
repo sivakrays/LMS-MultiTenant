@@ -53,19 +53,14 @@ public class User implements UserDetails {
 
     public String role;
 
-    @JsonView(Views.MyResponseViews.class)
     public String gender;
 
-    @JsonView(Views.MyResponseViews.class)
     public String school;
 
-    @JsonView(Views.MyResponseViews.class)
     public Integer standard;
 
-    @JsonView(Views.MyResponseViews.class)
     public String city;
 
-    @JsonView(Views.MyResponseViews.class)
     public String country;
 
   /* @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
