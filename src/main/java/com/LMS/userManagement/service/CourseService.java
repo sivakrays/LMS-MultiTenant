@@ -1,12 +1,6 @@
 package com.LMS.userManagement.service;
-import com.LMS.userManagement.model.Course;
-import com.LMS.userManagement.model.Quiz;
-import com.LMS.userManagement.model.Section;
-import com.LMS.userManagement.model.SubSection;
-import com.LMS.userManagement.repository.CourseRepository;
-import com.LMS.userManagement.repository.QuizRepository;
-import com.LMS.userManagement.repository.SectionRepository;
-import com.LMS.userManagement.repository.SubSectionRepository;
+import com.LMS.userManagement.model.*;
+import com.LMS.userManagement.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +23,9 @@ public class CourseService {
     SubSectionRepository subSectionRepository;
     @Autowired
     QuizRepository quizRepository;
+
+    @Autowired
+    HtmlCourseRepository htmlCourseRepository;
 
     public ResponseEntity<?> saveSection(List<Section> sections) {
         List<Section> sectionList = sectionRepository.saveAll(sections);
@@ -104,6 +101,11 @@ public class CourseService {
             return ResponseEntity.status(HttpStatus.OK).body(courses);
         }
         return ResponseEntity.status(HttpStatus.OK).body(courses);
+    }
+
+    public ResponseEntity<?> saveHtmlCourse(HtmlCourse course) {
+    var htmlCourse=    htmlCourseRepository.save(course);
+       return  ResponseEntity.ok(htmlCourse);
     }
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {

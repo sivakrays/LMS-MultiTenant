@@ -45,7 +45,9 @@ public class TenantService {
         Optional<TenantDetails> tenant=tenantRepository.findByTenantId(tenantDetails.getTenantId());
         if(tenant.isEmpty()){
       var tenantDtls=      TenantDetails.builder()
-                    .tenantId(tenantDetails.getTenantId())
+                    .tenantId(tenantDetails.getTenantId()
+                            .replace(" ","_")
+                            .toLowerCase())
                     .role("manager")
                     .issuer(tenantDetails.getIssuer())
                     .email(tenantDetails.getEmail())

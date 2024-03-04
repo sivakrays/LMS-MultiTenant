@@ -1,9 +1,6 @@
 package com.LMS.userManagement.controller;
 
-import com.LMS.userManagement.model.Course;
-import com.LMS.userManagement.model.Quiz;
-import com.LMS.userManagement.model.Section;
-import com.LMS.userManagement.model.SubSection;
+import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,5 +84,10 @@ public class CourseController {
     public ResponseEntity<?> getCourseCompletion(@RequestHeader int courseId){
         return courseService.getCourseCompletion(courseId);
     }*/
+
+    @PostMapping("/saveHtmlCourse")
+    public ResponseEntity<?> saveCourse(@RequestBody HtmlCourse course){
+        return courseService.saveHtmlCourse(course);
+    }
 }
 
