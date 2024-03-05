@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -21,6 +22,10 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
     Page<Course> searchAllCourse( @Param("search")String search,PageRequest of);
 
    Page<Course> findCourseByUserId(Long userId, PageRequest of);
+
+
+   @Query(value = "SELECT PROFILE_IMAGE FROM USER_DETAILS WHERE ID=?1",nativeQuery = true)
+   String findUserProfileByUserId(Long userId);
 
 
 

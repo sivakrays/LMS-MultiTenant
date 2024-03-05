@@ -4,8 +4,9 @@ import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.LoginResponse;
+import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.util.Constant;
-import com.LMS.userManagement.util.CustomMapper;
+import com.LMS.userManagement.mapper.CustomMapper;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.QuizRankRepository;
@@ -17,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static software.amazon.awssdk.services.s3.model.IntelligentTieringConfiguration.builder;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +38,10 @@ public class AuthService {
     private final CustomMapper mapper;
 
     private final LMSUtil lmsUtil;
-    @Autowired
-    private  UserRepository userRepository;
-    @Autowired
-    QuizRankRepository quizRankRepository;
+    private final UserRepository userRepository;
+    private final QuizRankRepository quizRankRepository;
+
+    private final CartRepository cartRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -94,16 +93,11 @@ public class AuthService {
 
         var user = userRepository.findByEmail(email);
         long userId = user.getId();
-        int goldCount;
-        int silverCount;
-        int bronzeCount;
-        Integer energyPoints;
-
-            goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
-            silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
-            bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
-            energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
-
+         int goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
+         int silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
+         int bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
+         Integer energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
+         int cartCount = cartRepository.cartCountByUserId(userId);
 
         String jwtToken = jwtService.generateToken(user, tenantId);
         var auth = AuthenticationResponse.builder()
@@ -116,6 +110,8 @@ public class AuthService {
                 .silver(silverCount)
                 .bronze(bronzeCount)
                 .energyPoints(energyPoints)
+                .profileImage(user.getProfileImage())
+                .cartCount(cartCount)
                 .build();
 
         var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth);

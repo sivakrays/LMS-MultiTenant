@@ -17,6 +17,8 @@ public class EduContent {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
+    public String imageTitle;
+
     @Column(columnDefinition = "TEXT")
     public String image;
 

@@ -45,8 +45,11 @@ public class TenantService {
         try {
             Optional<TenantDetails> tenant = tenantRepository.findByTenantId(tenantDetails.getTenantId());
             if (tenant.isEmpty()) {
+                String tenantId=tenantDetails.getTenantId()
+                        .replaceAll(" ","_")
+                        .toLowerCase();
                 var tenantDtls = TenantDetails.builder()
-                        .tenantId(tenantDetails.getTenantId())
+                        .tenantId(tenantId)
                         .role("manager")
                         .issuer(tenantDetails.getIssuer())
                         .email(tenantDetails.getEmail())
@@ -55,7 +58,7 @@ public class TenantService {
                         .build();
                 var savedTenant = tenantRepository.save(tenantDtls);
                 if (savedTenant != null) {
-                    initDatabase(tenantDetails.getTenantId());
+                    initDatabase(savedTenant.getTenantId());
                     t = TenantDto.builder()
                             .role(savedTenant.getRole())
                             .issuer(savedTenant.getIssuer())

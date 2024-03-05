@@ -1,4 +1,4 @@
-package com.LMS.userManagement.util;
+package com.LMS.userManagement.mapper;
 
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.EduContent;

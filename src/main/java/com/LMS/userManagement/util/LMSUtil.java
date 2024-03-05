@@ -28,7 +28,9 @@ public class LMSUtil {
       if (!contentList.isEmpty()) {
           contentList.forEach(n -> {
               educationContentList.add(
-                      new CourseData(n.getImage(),
+                      new CourseData(
+                              n.getImage_title(),
+                              n.getImage(),
                               n.getImage_content()));
           });
       }
@@ -48,19 +50,22 @@ public class LMSUtil {
         List<CourseData> popularCourseList=new ArrayList<>();
         var popularCourse=   new FeaturedCourse(
                     home.getCourseTitle(),
-                   popularCourseList
+                   popularCourseList,
+                false
         );
 
         List<CourseData> recommendedCourseList=new ArrayList<>();
         var recommendedCourse=   new FeaturedCourse(
                 home.getCourseTitle2(),
-                recommendedCourseList
+                recommendedCourseList,
+                false
         );
 
 
         var educationContent=new FeaturedCourse(
                 home.getEducationTitle(),
-                educationContentList
+                educationContentList,
+                true
         );
 
         var promo= new PromoData(

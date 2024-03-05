@@ -1,5 +1,7 @@
 package com.LMS.userManagement.service;
+import com.LMS.userManagement.mapper.CourseMapper;
 import com.LMS.userManagement.model.*;
+import com.LMS.userManagement.records.CourseDTO;
 import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.repository.QuizRepository;
 import com.LMS.userManagement.repository.SectionRepository;
@@ -27,6 +29,12 @@ public class CourseService {
     SubSectionRepository subSectionRepository;
     @Autowired
     QuizRepository quizRepository;
+
+    private final CourseMapper mapper;
+
+    public CourseService(CourseMapper mapper) {
+        this.mapper = mapper;
+    }
 
     public CommonResponse<List<Section>> saveSection(List<Section> sections) {
 
@@ -192,31 +200,31 @@ public class CourseService {
     }
 
 
-    public CommonResponse<Course> getCourseById(UUID courseId) {
+    public CommonResponse<CourseDTO> getCourseById(UUID courseId) {
 
-        Course course = null;
         try {
-            course = courseRepository.findCourseByCourseId(courseId);
-            if(course != null){
-                return CommonResponse.<Course>builder()
+            Course  courseDetails = courseRepository.findCourseByCourseId(courseId);
+            if(courseDetails != null){
+                String profileImage=courseRepository.findUserProfileByUserId(courseDetails.getUserId());
+                CourseDTO courseDTO=mapper.CourseToCourseDtoMapper(courseDetails,profileImage);
+
+                return CommonResponse.<CourseDTO>builder()
                         .status(true)
-                        .data(course)
+                        .data(courseDTO)
                         .message(Constant.COURSES_FOUND)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
-                return CommonResponse.<Course>builder()
+                return CommonResponse.<CourseDTO>builder()
                         .status(false)
-                        .data(course)
                         .message(Constant.NO_COURSE)
                         .statusCode(Constant.NO_CONTENT)
                         .build();
             }
 
         } catch (Exception e) {
-            return CommonResponse.<Course>builder()
+            return CommonResponse.<CourseDTO>builder()
                     .status(false)
-                    .data(course)
                     .message(Constant.FAILED_COURSE)
                     .statusCode(Constant.FORBIDDEN)
                     .build();
