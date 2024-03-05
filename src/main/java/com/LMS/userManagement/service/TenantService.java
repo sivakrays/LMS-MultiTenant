@@ -44,10 +44,11 @@ public class TenantService {
     public ResponseEntity<?> registerTenant(TenantDto tenantDetails) {
         Optional<TenantDetails> tenant=tenantRepository.findByTenantId(tenantDetails.getTenantId());
         if(tenant.isEmpty()){
+           String tenantId= tenantDetails.getTenantId()
+                    .replace(" ","_")
+                    .toLowerCase();
       var tenantDtls=      TenantDetails.builder()
-                    .tenantId(tenantDetails.getTenantId()
-                            .replace(" ","_")
-                            .toLowerCase())
+                    .tenantId(tenantId)
                     .role("manager")
                     .issuer(tenantDetails.getIssuer())
                     .email(tenantDetails.getEmail())
@@ -55,7 +56,7 @@ public class TenantService {
               .createdDate(new Timestamp(System.currentTimeMillis())).build();
              var savedTenant=   tenantRepository.save(tenantDtls);
           if (savedTenant!=null){
-              initDatabase(tenantDetails.getTenantId());
+              initDatabase(tenantDtls.getTenantId());
            var t=   TenantDto.builder()
                       .role(savedTenant.getRole())
                       .issuer(savedTenant.getIssuer())

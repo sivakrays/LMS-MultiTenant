@@ -76,11 +76,12 @@ public class CourseService {
     }
 
     public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
+        List<Object> courseList=new ArrayList<>();
         Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo,pageSize));
-        if(!course.isEmpty()){
-            return ResponseEntity.status(HttpStatus.OK).body(course);
-        }
-            return ResponseEntity.status(HttpStatus.OK).body(course);
+        Page<HtmlCourse> htmlCourses=htmlCourseRepository.findAll(PageRequest.of(pageNo,pageSize));
+        courseList.add(course.getContent());
+        courseList.add(htmlCourses.getContent());
+        return ResponseEntity.status(HttpStatus.OK).body(courseList);
 
     }
 
