@@ -4,6 +4,7 @@ import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.Section;
 import com.LMS.userManagement.model.SubSection;
+import com.LMS.userManagement.records.CourseDTO;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +36,7 @@ public class CourseController {
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<Course> getCourseById(@RequestParam UUID courseId){
+    public CommonResponse<CourseDTO> getCourseById(@RequestParam UUID courseId){
     return courseService.getCourseById(courseId);
 
     }

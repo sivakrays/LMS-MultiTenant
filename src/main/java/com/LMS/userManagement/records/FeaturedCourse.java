@@ -6,6 +6,8 @@ import java.util.List;
 
 public record FeaturedCourse(
         String title,
-        List<CourseData> data
+        List<CourseData> data,
+
+        boolean isEducation
 ) {
 }

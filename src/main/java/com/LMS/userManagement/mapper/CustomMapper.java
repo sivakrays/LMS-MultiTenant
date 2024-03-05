@@ -1,4 +1,4 @@
-package com.LMS.userManagement.util;
+package com.LMS.userManagement.mapper;
 
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.EduContent;
@@ -15,8 +15,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class CustomMapper {
 
     private final PasswordEncoder passwordEncoder;

@@ -8,14 +8,13 @@ import com.LMS.userManagement.repository.EduContentRepository;
 import com.LMS.userManagement.repository.HomeRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
-import com.LMS.userManagement.util.CustomMapper;
+import com.LMS.userManagement.mapper.CustomMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

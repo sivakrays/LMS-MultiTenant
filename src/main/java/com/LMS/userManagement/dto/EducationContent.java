@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public interface EducationContent {
 
+    public String getImage_title();
+
     public String getImage();
 
-    @JsonProperty("imageContent")
     public String getImage_content();
 }
