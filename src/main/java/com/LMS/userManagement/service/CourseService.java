@@ -104,8 +104,8 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
 
-    public ResponseEntity<?> saveHtmlCourse(HtmlCourse course) {
-    var htmlCourse=    htmlCourseRepository.save(course);
+    public ResponseEntity<?> saveHtmlCourse(List<HtmlCourse> course) {
+    var htmlCourse=    htmlCourseRepository.saveAll(course);
        return  ResponseEntity.ok(htmlCourse);
     }
 /*

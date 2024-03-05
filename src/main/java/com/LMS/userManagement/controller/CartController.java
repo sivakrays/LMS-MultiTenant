@@ -32,4 +32,9 @@ public class CartController {
     public ResponseEntity<?> deleteCartById(@RequestHeader UUID cartId){
         return cartService.deleteCartById(cartId);
     }
+
+    @DeleteMapping("/deleteCartByUserId")
+    public ResponseEntity<?> deleteCartByUserId(@RequestParam Long userId){
+        return  cartService.deleteCartByUserId(userId);
+    }
 }

@@ -24,5 +24,7 @@ public class HtmlCourse {
     @Column(columnDefinition = "TEXT")
     public String courseContent;
 
+    public String type;
+
     public Boolean isHtmlContent;
 }

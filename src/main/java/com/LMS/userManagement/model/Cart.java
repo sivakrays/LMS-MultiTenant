@@ -22,6 +22,5 @@ public class Cart {
     private UUID cartId;
     private UUID courseId;
     private Long userId;
-    @CurrentTimestamp
     private Timestamp createDate;
 }

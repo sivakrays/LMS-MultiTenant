@@ -86,8 +86,8 @@ public class CourseController {
     }*/
 
     @PostMapping("/saveHtmlCourse")
-    public ResponseEntity<?> saveCourse(@RequestBody HtmlCourse course){
-        return courseService.saveHtmlCourse(course);
+    public ResponseEntity<?> saveCourse(@RequestBody List<HtmlCourse>  courseList){
+        return courseService.saveHtmlCourse(courseList);
     }
 }
 
