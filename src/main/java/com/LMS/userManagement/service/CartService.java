@@ -5,6 +5,8 @@ import com.LMS.userManagement.model.Cart;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.repository.CourseRepository;
+import com.LMS.userManagement.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -102,5 +104,10 @@ public class CartService {
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body("Cart not found");
+    }
+    @Transactional
+    public ResponseEntity<?> deleteCartByUserId(Long userId) {
+        cartRepository.deleteAllByUserId(userId);
+        return ResponseEntity.ok("Your cart is Empty");
     }
 }

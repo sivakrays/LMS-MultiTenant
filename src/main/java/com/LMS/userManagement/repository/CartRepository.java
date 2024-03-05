@@ -2,6 +2,7 @@ package com.LMS.userManagement.repository;
 
 import com.LMS.userManagement.model.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,7 @@ public interface CartRepository extends JpaRepository<Cart, UUID> {
    Cart findByCourseIdAndUserId(UUID courseId, Long userId);
    @Query(value = "SELECT COUNT(cart_id) FROM cart WHERE user_id =?1", nativeQuery = true)
    int cartCountByUserId(@Param("userId") Long userId);
+   @Modifying
+   @Query(value = "DELETE FROM cart WHERE user_id = ?1", nativeQuery = true)
+   void deleteAllByUserId(Long userId);
 }
