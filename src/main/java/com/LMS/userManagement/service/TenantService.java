@@ -45,7 +45,7 @@ public class TenantService {
         Optional<TenantDetails> tenant=tenantRepository.findByTenantId(tenantDetails.getTenantId());
         if(tenant.isEmpty()){
            String tenantId= tenantDetails.getTenantId()
-                    .replace(" ","_")
+                    .replaceAll(" ","_")
                     .toLowerCase();
       var tenantDtls=      TenantDetails.builder()
                     .tenantId(tenantId)

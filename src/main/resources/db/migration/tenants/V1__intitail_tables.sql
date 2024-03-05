@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS html_course
     course_id uuid,
     is_html_content boolean,
     user_id bigint,
+    type character varying(255)
     CONSTRAINT html_course_pkey PRIMARY KEY (id)
 );
 
