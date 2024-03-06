@@ -17,7 +17,6 @@ import com.LMS.userManagement.util.LMSUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +31,6 @@ import java.io.IOException;
 
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private final CustomMapper mapper;
@@ -43,18 +41,29 @@ public class AuthService {
 
     private final CartRepository cartRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
 
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
 
+    public AuthService(CustomMapper mapper, LMSUtil lmsUtil, UserRepository userRepository, QuizRankRepository quizRankRepository, CartRepository cartRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.mapper = mapper;
+        this.lmsUtil = lmsUtil;
+        this.userRepository = userRepository;
+        this.quizRankRepository = quizRankRepository;
+        this.cartRepository = cartRepository;
+       // this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
+
     public CommonResponse<UserDTO> register(RegisterRequest request) {
         UserDTO userDto;
         try {
-            User user=mapper.UserMapper(request);
+            User user=mapper.DtoToUserMapper(request);
             var savedUser= userRepository.save(user);
-            userDto=mapper.UserDTOMapper(savedUser);
+            userDto=mapper.UserDtoToUserMapper(savedUser);
         }catch (Exception e){
             return CommonResponse.<UserDTO>builder()
                     .status(false)

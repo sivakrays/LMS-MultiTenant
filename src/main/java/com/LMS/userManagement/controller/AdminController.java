@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/deleteTenantById")
-    public CommonResponse<Optional<TenantDetails>> deleteTenantById(@RequestParam long id){
+    public CommonResponse<List<TenantDetails>> deleteTenantById(@RequestParam long id){
         return adminService.deleteTenant(id);
     }
 

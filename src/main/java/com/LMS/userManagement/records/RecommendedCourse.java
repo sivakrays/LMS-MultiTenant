@@ -1,12 +1,12 @@
 package com.LMS.userManagement.records;
 
-import com.LMS.userManagement.dto.EducationContent;
+import com.LMS.userManagement.model.Course;
 
 import java.util.List;
 
-public record FeaturedCourse(
+public record RecommendedCourse(
         String title,
-        List<CourseData> data,
+        List<Course> data,
 
         boolean isEducation
 ) {
