@@ -17,10 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -116,23 +113,25 @@ public class AdminService {
 
 
     @Transactional
-    public CommonResponse<Optional<TenantDetails>> deleteTenant(long id) {
-        Optional<TenantDetails> tenant = null;
+    public CommonResponse<List<TenantDetails>> deleteTenant(long id) {
+        List<TenantDetails> tenantList =tenantRepository.findAll();
         try {
-            tenant = tenantRepository.findById(id);
+
+            Optional<TenantDetails>    tenant = tenantRepository.findById(id);
             if (tenant.isEmpty()) {
-                return CommonResponse.<Optional<TenantDetails>>builder()
+                return CommonResponse.<List<TenantDetails>>builder()
                         .status(false)
-                        .statusCode(Constant.NO_CONTENT)
-                        .message(Constant.NO_TENANTS)
-                        .data(null)
+                        .statusCode(Constant.SUCCESS)
+                        .message(null)
+                        .data(tenantList)
                         .build();
             }
             var tenantDtls = tenant.get();
             String schemaName = tenantDtls.getTenantId();
             entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
             tenantRepository.deleteById(id);
-            return CommonResponse.<Optional<TenantDetails>>builder()
+            tenantList=tenantRepository.findAll();
+            return CommonResponse.<List<TenantDetails>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.REMOVED_USER)
@@ -140,11 +139,11 @@ public class AdminService {
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.<Optional<TenantDetails>>builder()
+            return CommonResponse.<List<TenantDetails>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_DELETE_TENANT)
-                    .data(null)
+                    .data(tenantList)
                     .build();
         }
     }

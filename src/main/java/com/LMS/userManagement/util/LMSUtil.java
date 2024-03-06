@@ -2,28 +2,38 @@ package com.LMS.userManagement.util;
 
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.EducationContent;
-import com.LMS.userManagement.model.EduContent;
+import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.Home;
 import com.LMS.userManagement.records.*;
+import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.repository.EduContentRepository;
 import com.LMS.userManagement.repository.HomeRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class LMSUtil {
 
     private final HomeRepository homeRepository;
 
     private final EduContentRepository eduContentRepository;
 
+    private final CourseRepository courseRepository;
+
+    public LMSUtil(HomeRepository homeRepository, EduContentRepository eduContentRepository, CourseRepository courseRepository) {
+        this.homeRepository = homeRepository;
+        this.eduContentRepository = eduContentRepository;
+        this.courseRepository = courseRepository;
+    }
+
     public LoginResponse findHomeScreenByTenantId(String tenantId, AuthenticationResponse auth){
         Home home= homeRepository.findByTenantId(tenantId);
       List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
+
+         List<Course> courseList= courseRepository.findAll();
+
       List<CourseData> educationContentList=new ArrayList<>();
       if (!contentList.isEmpty()) {
           contentList.forEach(n -> {
@@ -47,22 +57,22 @@ public class LMSUtil {
         Banner banner= ExtractBannerDetailFromHome(home);
 
 
-        List<CourseData> popularCourseList=new ArrayList<>();
-        var popularCourse=   new FeaturedCourse(
+      //  List<CourseData> popularCourseList=new ArrayList<>();
+        var popularCourse=   new PopularCourse(
                     home.getCourseTitle(),
-                   popularCourseList,
+                   courseList,
                 false
         );
 
-        List<CourseData> recommendedCourseList=new ArrayList<>();
-        var recommendedCourse=   new FeaturedCourse(
+      //  List<CourseData> recommendedCourseList=new ArrayList<>();
+        var recommendedCourse=   new RecommendedCourse(
                 home.getCourseTitle2(),
-                recommendedCourseList,
+                courseList,
                 false
         );
 
 
-        var educationContent=new FeaturedCourse(
+        var educationContent=new EducationCourse(
                 home.getEducationTitle(),
                 educationContentList,
                 true
@@ -74,7 +84,7 @@ public class LMSUtil {
                 home.getPromoDescription()
         );
 
-        List<FeaturedCourse> featuredCourseList=new ArrayList<>();
+        List<Object> featuredCourseList=new ArrayList<>();
         featuredCourseList.add(popularCourse);
         featuredCourseList.add(recommendedCourse);
         featuredCourseList.add(educationContent);
