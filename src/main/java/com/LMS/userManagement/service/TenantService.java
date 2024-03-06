@@ -42,8 +42,12 @@ public class TenantService {
 
     @Transactional
     public ResponseEntity<?> registerTenant(TenantDto tenantDetails) {
-        Optional<TenantDetails> tenant=tenantRepository.findByTenantId(tenantDetails.getTenantId());
-        if(tenant.isEmpty()){
+        Optional<TenantDetails> tenantByTenantId=tenantRepository.findByTenantId(tenantDetails.getTenantId()
+                .replaceAll(" ","_").toLowerCase());
+        Optional<TenantDetails> tenantByEmail =tenantRepository.findByEmail(tenantDetails.getEmail());
+
+
+        if(tenantByTenantId.isEmpty() && tenantByEmail.isEmpty()){
            String tenantId= tenantDetails.getTenantId()
                     .replaceAll(" ","_")
                     .toLowerCase();
@@ -54,18 +58,22 @@ public class TenantService {
                     .email(tenantDetails.getEmail())
                     .password(tenantDetails.getPassword())
               .createdDate(new Timestamp(System.currentTimeMillis())).build();
-             var savedTenant=   tenantRepository.save(tenantDtls);
-          if (savedTenant!=null){
-              initDatabase(tenantDtls.getTenantId());
-           var t=   TenantDto.builder()
-                      .role(savedTenant.getRole())
-                      .issuer(savedTenant.getIssuer())
-                      .tenantId(savedTenant.getTenantId())
-                      .email(savedTenant.getEmail()).build();
 
-              return ResponseEntity.status(HttpStatus.OK).body(t);
+            try {
+                   initDatabase(tenantId);
 
-          }
+            }catch (Exception e){
+                return ResponseEntity.status(403).body("Tenant Creation failed");
+            }
+
+            var savedTenant=   tenantRepository.save(tenantDtls);
+            var t=   TenantDto.builder()
+                    .role(savedTenant.getRole())
+                    .issuer(savedTenant.getIssuer())
+                    .tenantId(savedTenant.getTenantId())
+                    .email(savedTenant.getEmail()).build();
+            return ResponseEntity.status(HttpStatus.OK).body(t);
+
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tenant already exists");
     }
