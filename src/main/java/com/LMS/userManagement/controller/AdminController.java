@@ -37,11 +37,8 @@ public class AdminController {
 
     @DeleteMapping("/deleteTenantById")
     public ResponseEntity<?> deleteTenantById(@RequestHeader long id){
-        try {
         return adminService.deleteTenant(id);
-    }catch (Exception e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
+
     }
 
 

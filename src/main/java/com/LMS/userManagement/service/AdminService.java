@@ -71,11 +71,16 @@ public class AdminService {
         if (tenant.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body("User Not found");
         }
-        var tenantDtls = tenant.get();
-        String schemaName = tenantDtls.getTenantId();
-        entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
-        tenantRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("User removed successfully");
+        try {
+            var tenantDtls = tenant.get();
+            String schemaName = tenantDtls.getTenantId();
+            entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
+            tenantRepository.deleteById(id);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User delete failed");
+        }
+        List<TenantDetails>  tenantDetails= tenantRepository.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(tenantDetails);
     }
 
 

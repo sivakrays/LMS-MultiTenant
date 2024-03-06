@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,7 @@ public class CartService {
             return ResponseEntity.status(HttpStatus.OK).body("Course already exists");
         }
     }
+   // cart.setCreateDate(new Timestamp(System.currentTimeMillis()));
                 cartRepository.save(cart);
     List<Cart> carts =cartRepository.findByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(carts);
