@@ -109,8 +109,19 @@ CREATE TABLE IF NOT EXISTS html_course
     course_id uuid,
     is_html_content boolean,
     user_id bigint,
-    type character varying(255)
+    type character varying(255),
     CONSTRAINT html_course_pkey PRIMARY KEY (id)
+);
+
+
+CREATE TABLE IF NOT EXISTS purchased_course
+(
+    id bigint NOT NULL,
+    course_id uuid,
+    purchased boolean,
+    purchased_on timestamp(6) without time zone,
+    user_id bigint,
+    CONSTRAINT purchased_course_pkey PRIMARY KEY (id)
 );
 
 

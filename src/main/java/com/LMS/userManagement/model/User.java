@@ -63,6 +63,7 @@ public class User implements UserDetails {
 
     public String country;
 
+
   /* @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
     private List<Token> tokens;*/
 
