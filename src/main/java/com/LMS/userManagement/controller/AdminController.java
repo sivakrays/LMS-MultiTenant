@@ -36,12 +36,11 @@ public class AdminController {
     }
 
     @DeleteMapping("/deleteTenantById")
-    public ResponseEntity<?> deleteTenantById(@RequestHeader long id){
-        try {
-        return adminService.deleteTenant(id);
-    }catch (Exception e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
+    public ResponseEntity<?> deleteTenantById(@RequestHeader long id,
+                                              @RequestHeader(defaultValue ="0") int pageNo,
+                                              @RequestHeader(defaultValue ="100") int pageSize){
+        return adminService.deleteTenant(id,pageNo,pageSize);
+
     }
 
 

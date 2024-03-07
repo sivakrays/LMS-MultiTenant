@@ -22,11 +22,7 @@ public class TenantController {
 
     @PostMapping("/registerTenant")
     public ResponseEntity<?> registerTenant(@RequestBody TenantDto tenantDetails) {
-        try {
         return tenantService.registerTenant(tenantDetails);
-    }catch (Exception e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
     }
 
     @PostMapping("/tenantLogin")

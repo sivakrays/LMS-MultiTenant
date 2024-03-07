@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface TenantRepository extends JpaRepository<TenantDetails,Long> {
-    Optional<TenantDetails> findByTenantId(String tenantId);
+    Optional<TenantDetails> findByTenantId(String  tenantId);
 
     Optional<TenantDetails> findByEmail(String email);
 

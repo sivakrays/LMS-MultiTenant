@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -66,16 +67,26 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteTenant(long id) {
+    public ResponseEntity<?> deleteTenant(long id,int pageNo,int pageSize) {
         Optional<TenantDetails> tenant = tenantRepository.findById(id);
+        Page<TenantDetails>  tenantDetails= tenantRepository
+                .findAll(PageRequest.of(pageNo,pageSize));
         if (tenant.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body("User Not found");
+            return ResponseEntity.status(HttpStatus.OK).body(tenantDetails);
         }
-        var tenantDtls = tenant.get();
-        String schemaName = tenantDtls.getTenantId();
-        entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
-        tenantRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("User removed successfully");
+
+        try {
+            var tenantDtls = tenant.get();
+            String schemaName = tenantDtls.getTenantId();
+            entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
+            tenantRepository.deleteById(id);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(tenantDetails);
+        }
+
+         tenantDetails= tenantRepository
+                .findAll(PageRequest.of(pageNo,pageSize));
+        return ResponseEntity.status(HttpStatus.OK).body(tenantDetails);
     }
 
 
