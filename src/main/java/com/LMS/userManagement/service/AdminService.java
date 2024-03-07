@@ -122,7 +122,6 @@ public class AdminService {
                 return CommonResponse.<List<TenantDetails>>builder()
                         .status(false)
                         .statusCode(Constant.SUCCESS)
-                        .message(null)
                         .data(tenantList)
                         .build();
             }
@@ -135,7 +134,7 @@ public class AdminService {
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.REMOVED_USER)
-                    .data(null)
+                    .data(tenantList)
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
@@ -151,23 +150,12 @@ public class AdminService {
 
     public CommonResponse<Map<String, String>> getAllTenants() {
         Map<String, String> tenantIdMap  = new HashMap<>();
-        List<TenantDetails> tenantList;
-        try {
-            tenantList = tenantRepository.findAll();
-        } catch (Exception e) {
-            // Log the exception or handle it appropriately
-            return CommonResponse.<Map<String, String>>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_TENANT)
-                    .data(tenantIdMap)
-                    .build();
-        }
+        List<TenantDetails> tenantList = tenantRepository.findAll();
         if (tenantList.isEmpty()) {
             return CommonResponse.<Map<String, String>>builder()
                     .status(false)
                     .statusCode(Constant.SUCCESS)
-                    .message(Constant.NO_TENANTS)
+                    .message(Constant.NO_DATA)
                     .data(tenantIdMap)
                     .build();
         }
@@ -179,7 +167,7 @@ public class AdminService {
         return CommonResponse.<Map<String, String>>builder()
                 .status(true)
                 .statusCode(Constant.SUCCESS)
-                .message(Constant.TENANTS_FOUND)
+                .message(Constant.DATA_FOUND)
                 .data(tenantIdMap)
                 .build();
 

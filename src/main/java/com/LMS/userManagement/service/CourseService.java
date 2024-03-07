@@ -180,9 +180,9 @@ public class CourseService {
 
     public CommonResponse<Course> saveCourse(Course course) {
 
-        Course savedCourse = null;
         try {
-            savedCourse = courseRepository.save(course);
+            course.setIsHtmlCourse(false);
+            Course   savedCourse = courseRepository.save(course);
             return CommonResponse.<Course>builder()
                     .status(true)
                     .data(savedCourse)
@@ -192,7 +192,6 @@ public class CourseService {
         } catch (Exception e) {
             return CommonResponse.<Course>builder()
                     .status(false)
-                    .data(savedCourse)
                     .message(Constant.COURSE_SAVE_FAILED)
                     .statusCode(Constant.FORBIDDEN)
                     .build();
