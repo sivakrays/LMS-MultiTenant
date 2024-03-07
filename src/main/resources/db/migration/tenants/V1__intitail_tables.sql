@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS user_details
         role character varying(255) ,
         school character varying(255) ,
         standard integer,
+        profile_image text,
         CONSTRAINT user_details_pkey PRIMARY KEY (id),
         CONSTRAINT uk_4d9rdl7d52k8x3etihxlaujvh UNIQUE (email)
 );
