@@ -122,7 +122,6 @@ public class AdminService {
                 return CommonResponse.<List<TenantDetails>>builder()
                         .status(false)
                         .statusCode(Constant.SUCCESS)
-                        .message(null)
                         .data(tenantList)
                         .build();
             }
@@ -135,7 +134,7 @@ public class AdminService {
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.REMOVED_USER)
-                    .data(null)
+                    .data(tenantList)
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
