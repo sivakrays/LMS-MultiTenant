@@ -90,6 +90,7 @@ public class CustomMapper {
         List<EduContent> eduContentList = new ArrayList<>();
         eduContentDTOList.forEach(eduContentDTO -> {
                     EduContent content = EduContent.builder()
+                            .imageTitle(eduContentDTO.imageTitle())
                             .image(eduContentDTO.image())
                             .imageContent(eduContentDTO.imageContent())
                             .tenantId(eduContentDTO.tenantId())
@@ -108,6 +109,7 @@ public class CustomMapper {
             eduContentDTOList.add(
                     new EduContentDTO(
                             eduContent.getId(),
+                            eduContent.getImageTitle(),
                             eduContent.getImage(),
                             eduContent.getImageContent(),
                             eduContent.getTenantId(),
