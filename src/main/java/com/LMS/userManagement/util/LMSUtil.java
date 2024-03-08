@@ -45,7 +45,7 @@ public class LMSUtil {
                               n.getImage_content()));
           });
       }
-        if (home==null){
+        if (home==null && contentList.isEmpty() && courseList.isEmpty()){
             return new LoginResponse(
                     auth,
                     homeList
@@ -53,8 +53,7 @@ public class LMSUtil {
         }
 
 
-
-        Banner banner= ExtractBannerDetailFromHome(home);
+        Banner banner = ExtractBannerDetailFromHome(home);
 
 
       //  List<CourseData> popularCourseList=new ArrayList<>();

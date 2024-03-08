@@ -102,11 +102,15 @@ public class AuthService {
 
         var user = userRepository.findByEmail(email);
         long userId = user.getId();
+        String profileImage=user.getProfileImage();
          int goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
          int silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
          int bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
          Integer energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
          int cartCount = cartRepository.cartCountByUserId(userId);
+            if(profileImage==null || profileImage.equals(" ")){
+                profileImage=Constant.DEFAULT_PROFILE_IMAGE;
+            }
 
         String jwtToken = jwtService.generateToken(user, tenantId);
         var auth = AuthenticationResponse.builder()
@@ -119,7 +123,7 @@ public class AuthService {
                 .silver(silverCount)
                 .bronze(bronzeCount)
                 .energyPoints(energyPoints)
-                .profileImage(user.getProfileImage())
+                .profileImage(profileImage)
                 .cartCount(cartCount)
                 .build();
 
