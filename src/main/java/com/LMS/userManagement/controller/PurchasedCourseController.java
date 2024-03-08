@@ -21,7 +21,7 @@ public class PurchasedCourseController {
     @Autowired
     private PurchasedCourseService purchasedCourseService;
 
-    @PostMapping("savePurchasedCourse")
+    @PostMapping("/savePurchasedCourse")
     public ResponseEntity<?> savePurchasedCourse(@RequestBody PurchasedCourseDto purchasedCourseDto){
         return purchasedCourseService.savePurchasedCourse(purchasedCourseDto);
     }
