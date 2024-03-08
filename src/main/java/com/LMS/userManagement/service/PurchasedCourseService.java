@@ -46,18 +46,28 @@ public class PurchasedCourseService {
     }
 
     public List<Course> getPurchasedCoursesByUserId(Long userId) {
-        // Find the list of purchased course IDs by user ID
-        List<UUID> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
+        try {
+            // Find the list of purchased course IDs by user ID
+            List<UUID> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
 
-        // Retrieve course data for each course ID
-        List<Course> courses = new ArrayList<>();
-        for (UUID courseId : courseIds) {
-            Optional<Course> courseOptional = courseRepository.findById(courseId);
-            courseOptional.ifPresent(courses::add);
+            // If no course IDs found, return empty list
+            if (courseIds.isEmpty()) {
+                return new ArrayList<>();
+            }
+
+            // Retrieve course data for each course ID
+            List<Course> courses = new ArrayList<>();
+            for (UUID courseId : courseIds) {
+                Optional<Course> courseOptional = courseRepository.findById(courseId);
+                courseOptional.ifPresent(courses::add);
+            }
+            return courses;
+        } catch (Exception e) {
+            // Log the exception or handle it appropriately
+            e.printStackTrace();
+            // You can throw custom exception or return empty list depending on your requirement
+            return new ArrayList<>();
         }
-        return courses;
     }
-
-
 
 }
