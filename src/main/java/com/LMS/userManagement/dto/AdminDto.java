@@ -7,9 +7,15 @@ import lombok.Data;
 @Builder
 public class AdminDto {
 
-    private String email;
+    public String email;
 
-    private String password;
+    public String password;
 
-    private String role;
+    public String role;
+
+    public AdminDto(String email, String password, String role){
+        this.email=email;
+        this.password=password;
+        this.role=role;
+    }
 }

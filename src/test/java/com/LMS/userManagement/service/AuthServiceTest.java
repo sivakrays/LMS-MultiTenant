@@ -53,9 +53,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-
         openMocks(this);
-
     }
 
     @Test
