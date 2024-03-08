@@ -33,6 +33,7 @@ public class LMSUtil {
       List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
 
          List<Course> courseList= courseRepository.findAll();
+        List<HomeData> homeList=new ArrayList<>();
 
       List<CourseData> educationContentList=new ArrayList<>();
       if (!contentList.isEmpty()) {
@@ -47,12 +48,11 @@ public class LMSUtil {
         if (home==null){
             return new LoginResponse(
                     auth,
-                    null
+                    homeList
             );
         }
 
 
-        List<HomeData> homeList=new ArrayList<>();
 
         Banner banner= ExtractBannerDetailFromHome(home);
 

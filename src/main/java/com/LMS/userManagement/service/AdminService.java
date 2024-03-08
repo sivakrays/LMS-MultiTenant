@@ -34,15 +34,13 @@ public class AdminService {
 
 
     public CommonResponse<Admin> adminRegistration(AdminDto adminDto) {
-        Admin savedAdmin = null;
         try {
-            var adminDetails = adminRepository.findAllByEmail(adminDto.getEmail());
+            var adminDetails = adminRepository.findByEmail(adminDto.getEmail());
             if (adminDetails.isPresent()) {
                 return CommonResponse.<Admin>builder()
                         .status(false)
                         .message(Constant.USER_EXISTS)
                         .statusCode(Constant.FORBIDDEN)
-                        .data(savedAdmin)
                         .build();
             }
 
@@ -52,7 +50,7 @@ public class AdminService {
                     .createdDate(new Timestamp(System.currentTimeMillis()))
                     .email(adminDto.getEmail())
                     .build();
-            savedAdmin = adminRepository.save(admin);
+            Admin   savedAdmin = adminRepository.save(admin);
 
             return CommonResponse.<Admin>builder()
                     .status(true)
@@ -64,25 +62,22 @@ public class AdminService {
             // Log the exception or handle it appropriately
             return CommonResponse.<Admin>builder()
                     .status(false)
-                    .message(Constant.FAILED_ADMIN_REGISTER)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .data(savedAdmin)
+                    .statusCode(Constant.FORBIDDEN)
+                    .error(e.getMessage())
                     .build();
         }
     }
 
 
     public CommonResponse<AdminDto> adminLogin(LoginDTO loginDto) {
-        AdminDto adminDto = null;
         try {
             String email = loginDto.email();
             String password = loginDto.password();
-            Optional<Admin> admin = adminRepository.findAllByEmail(email);
+            Optional<Admin> admin = adminRepository.findByEmail(email);
 
             if (admin.isPresent() && admin.get().getPassword().equals(password)) {
                 var ad = admin.get();
-                adminDto = AdminDto.builder()
-                        .password(null)
+                AdminDto  adminDto = AdminDto.builder()
                         .email(ad.getEmail())
                         .role(ad.getRole())
                         .build();
@@ -97,16 +92,14 @@ public class AdminService {
                         .status(false)
                         .message(Constant.USER_EXISTS)
                         .statusCode(Constant.FORBIDDEN)
-                        .data(adminDto)
                         .build();
             }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
             return CommonResponse.<AdminDto>builder()
                     .status(false)
-                    .message(Constant.LOGIN_FAILED)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .data(adminDto)
+                    .statusCode(Constant.FORBIDDEN)
+                    .error(e.getMessage())
                     .build();
         }
     }
