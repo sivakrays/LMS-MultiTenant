@@ -36,6 +36,7 @@ public class PurchasedCourseService {
                 purchasedCourse.setCourseId(courseId);
                 purchasedCourse.setPurchased(true);
                 purchasedCourse.setPurchasedOn(new Timestamp(System.currentTimeMillis()));
+                System.out.println("save::::"+purchasedCourseDto.getCourseId());
                 purchasedCourseRepository.save(purchasedCourse);
             }
             return ResponseEntity.ok("Successfully Saved");
