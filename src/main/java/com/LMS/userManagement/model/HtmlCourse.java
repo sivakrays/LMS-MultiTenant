@@ -23,5 +23,5 @@ HtmlCourse {
     public String content;
     public String image = "false";
     public String orderChanged = "false";
-    public String typed;
+    public String type;
 }

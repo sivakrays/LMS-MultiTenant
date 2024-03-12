@@ -109,10 +109,10 @@ CREATE TABLE IF NOT EXISTS html_course
     user_id bigint,
     course_id character varying(255),
     chapter character varying(255),
-    content character varying(255),
-    image character varying(255),
+    content text,
+    image text,
     order_changed character varying(255),
-    typed character varying(255),
+    type character varying(255),
     CONSTRAINT html_course_pkey PRIMARY KEY (id)
 );
 

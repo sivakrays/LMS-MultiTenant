@@ -91,7 +91,9 @@ public class CourseController {
         return courseService.saveHtmlCourse(htmlCourseDto);
     }
 
-//    @GetMapping(/getAllHtmlCourse)
-//    public ResponseEntity<?> getHtmlCourse(@)
+    @GetMapping("/getHtmlCourseByUserId")
+    public ResponseEntity<?> getHtmlCourseByUserId(@RequestHeader Long userId,@RequestHeader int pageNo,@RequestHeader int pageSize) {
+        return courseService.getHtmlCourseByUserId(userId, pageNo, pageSize);
+    }
 }
 

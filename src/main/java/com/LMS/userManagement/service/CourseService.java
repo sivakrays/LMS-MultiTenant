@@ -134,6 +134,14 @@ public class CourseService {
         }
     }
 
+    public ResponseEntity<?> getHtmlCourseByUserId(Long userId,int pageNo, int pageSize) {
+        Page<HtmlCourse> htmlCourses =htmlCourseRepository.findCourseByUserId(userId,PageRequest.of(pageNo, pageSize));
+        if(!htmlCourses.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body(htmlCourses);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(htmlCourses);
+    }
+
 
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {
