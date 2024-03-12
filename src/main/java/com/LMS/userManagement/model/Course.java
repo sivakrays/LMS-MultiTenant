@@ -35,7 +35,7 @@ public class Course {
     private String whatYouWillLearn;
     private Integer price;
     private Date date;
-private Boolean isHtmlCourse;
+    private Boolean isHtmlCourse;
     @OneToMany(targetEntity = Section.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id",referencedColumnName = "course_id")
     private List<Section> sections;

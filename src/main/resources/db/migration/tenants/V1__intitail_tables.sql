@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS course
     thumb_nail text ,
     title character varying(255) ,
     what_you_will_learn text ,
+    is_html_course boolean,
     CONSTRAINT course_pkey PRIMARY KEY (course_id)
 );
 -- Table: public.section

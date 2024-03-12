@@ -90,5 +90,8 @@ public class CourseController {
     public ResponseEntity<?> saveCourse(@RequestBody List<HtmlCourseDto> htmlCourseDto){
         return courseService.saveHtmlCourse(htmlCourseDto);
     }
+
+//    @GetMapping(/getAllHtmlCourse)
+//    public ResponseEntity<?> getHtmlCourse(@)
 }
 
