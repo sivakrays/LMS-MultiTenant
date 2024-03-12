@@ -120,7 +120,7 @@ public class CourseService {
                     htmlCourse.setContent(chapterContents.getContent());
                     htmlCourse.setImage(chapterContents.getImage());
                     htmlCourse.setOrderChanged(chapterContents.getOrderChanged());
-                    htmlCourse.setTyped(chapterContents.getTyped());
+                    htmlCourse.setType(chapterContents.getTyped());
 
                     // Save the htmlCourse object using your repository
                     HtmlCourse savedHtmlCourse = htmlCourseRepository.save(htmlCourse);
