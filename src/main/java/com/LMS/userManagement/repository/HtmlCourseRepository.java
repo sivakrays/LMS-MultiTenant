@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface HtmlCourseRepository extends JpaRepository<HtmlCourse,String> {
 
     Page<HtmlCourse> findCourseByUserId(Long userId, PageRequest of);
+
+    HtmlCourse findCourseByCourseId(String courseId);
 }

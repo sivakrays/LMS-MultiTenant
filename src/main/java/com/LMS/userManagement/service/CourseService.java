@@ -134,15 +134,27 @@ public class CourseService {
         }
     }
 
-    public ResponseEntity<?> getHtmlCourseByUserId(Long userId,int pageNo, int pageSize) {
-        Page<HtmlCourse> htmlCourses =htmlCourseRepository.findCourseByUserId(userId,PageRequest.of(pageNo, pageSize));
-        if(!htmlCourses.isEmpty()){
+    public ResponseEntity<?> getHtmlCourseByUserId(Long userId, int pageNo, int pageSize) {
+        Page<HtmlCourse> htmlCourses = htmlCourseRepository.findCourseByUserId(userId, PageRequest.of(pageNo, pageSize));
+        if (!htmlCourses.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(htmlCourses);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No HTML courses found for the given user ID");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(htmlCourses);
     }
 
+    public ResponseEntity<?> getAllHtmlCourses(int pageNo, int pageSize) {
+        Page<HtmlCourse> htmlCourse = htmlCourseRepository.findAll(PageRequest.of(pageNo,pageSize));
+        return ResponseEntity.status(HttpStatus.OK).body(htmlCourse);
+    }
 
+    public ResponseEntity<?> getHtmlCourseById(String courseId) {
+        HtmlCourse htmlCourse = htmlCourseRepository.findCourseByCourseId(courseId);
+        if(htmlCourse != null){
+            return ResponseEntity.status(HttpStatus.OK).body(htmlCourse);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(htmlCourse);
+    }
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {
         var courseResponse=   getCourseById(courseId);

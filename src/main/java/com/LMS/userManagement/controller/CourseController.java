@@ -17,68 +17,77 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/lms/api/user")
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Course", description = "Course management APIs")
 
 public class CourseController {
     @Autowired
     CourseService courseService;
+
     @PostMapping("/saveCourse")
-  //  @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> saveCourse(@RequestBody Course course){
-     return courseService.saveCourse(course);
-
+    //  @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> saveCourse(@RequestBody Course course) {
+        return courseService.saveCourse(course);
     }
+
     @GetMapping("/getCourseById")
-   // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getCourseById(@RequestHeader UUID courseId){
-    return courseService.getCourseById(courseId);
+    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
+    public ResponseEntity<?> getCourseById(@RequestHeader UUID courseId) {
+        return courseService.getCourseById(courseId);
+    }
+
+    @GetMapping("/getAllCourse")
+    //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
+    public ResponseEntity<?> getAllCourses(@RequestHeader int pageNo, @RequestHeader int pageSize) throws InterruptedException {
+        return courseService.getAllCourses(pageNo, pageSize);
 
     }
-   @GetMapping("/getAllCourse")
- //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getAllCourses(@RequestHeader int pageNo,@RequestHeader int pageSize) throws InterruptedException {
-        return courseService.getAllCourses(pageNo,pageSize);
 
-    }
     @GetMapping("/searchCourses")
-    public ResponseEntity<?> searchCourses(@RequestParam("search") String search,@RequestHeader(defaultValue = "0") int pageNo,@RequestHeader(defaultValue = "6") int pageSize){
-        return courseService.searchCourses(search,pageNo,pageSize);
+    public ResponseEntity<?> searchCourses(@RequestParam("search") String search, @RequestHeader(defaultValue = "0") int pageNo, @RequestHeader(defaultValue = "6") int pageSize) {
+        return courseService.searchCourses(search, pageNo, pageSize);
 
     }
+
     @PostMapping("/saveSection")
-   // @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> saveSection(@RequestBody List<Section> sections){
+    // @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> saveSection(@RequestBody List<Section> sections) {
         return courseService.saveSection(sections);
     }
+
     @DeleteMapping("/deleteCourseById")
-  //  @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> deleteCourseById(@RequestHeader UUID courseId,@RequestHeader int pageNo,@RequestHeader int pageSize){
-        return courseService.deleteCourseById(courseId,pageNo,pageSize);
+    //  @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> deleteCourseById(@RequestHeader UUID courseId, @RequestHeader int pageNo, @RequestHeader int pageSize) {
+        return courseService.deleteCourseById(courseId, pageNo, pageSize);
     }
+
     @PutMapping("/updateCourse")
-   // @PreAuthorize("hasAuthority('admin')")
-    public  ResponseEntity<?> updateCourse(@RequestBody Course course){
+    // @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> updateCourse(@RequestBody Course course) {
         return courseService.updateCourse(course);
     }
+
     @PutMapping("/updateSection")
-   // @PreAuthorize("hasAuthority('admin')")
-    public  ResponseEntity<?> updateSection(@RequestBody Section section){
+    // @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> updateSection(@RequestBody Section section) {
         return courseService.updateSection(section);
     }
+
     @PutMapping("/updateSubSection")
-   // @PreAuthorize("hasAuthority('admin')")
-    public  ResponseEntity<?> updateSubSection(@RequestBody SubSection subSection){
+    // @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> updateSubSection(@RequestBody SubSection subSection) {
         return courseService.updateSubSection(subSection);
     }
+
     @PutMapping("/updateQuiz")
- //   @PreAuthorize("hasAuthority('admin')")
-    public  ResponseEntity<?> updateQuiz(@RequestBody Quiz quiz){
+    //   @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> updateQuiz(@RequestBody Quiz quiz) {
         return courseService.updateQuiz(quiz);
     }
+
     @GetMapping("/getCourseByUserId")
-    public ResponseEntity<?> getCourseByUserId(@RequestHeader Long userId,@RequestHeader int pageNo,@RequestHeader int pageSize){
-        return courseService.getCourseByUserId(userId,pageNo,pageSize);
+    public ResponseEntity<?> getCourseByUserId(@RequestHeader Long userId, @RequestHeader int pageNo, @RequestHeader int pageSize) {
+        return courseService.getCourseByUserId(userId, pageNo, pageSize);
     }
 
    /* @GetMapping("/getCourseCompletion")
@@ -87,13 +96,25 @@ public class CourseController {
     }*/
 
     @PostMapping("/saveHtmlCourse")
-    public ResponseEntity<?> saveCourse(@RequestBody List<HtmlCourseDto> htmlCourseDto){
+    public ResponseEntity<?> saveCourse(@RequestBody List<HtmlCourseDto> htmlCourseDto) {
         return courseService.saveHtmlCourse(htmlCourseDto);
     }
 
     @GetMapping("/getHtmlCourseByUserId")
-    public ResponseEntity<?> getHtmlCourseByUserId(@RequestHeader Long userId,@RequestHeader int pageNo,@RequestHeader int pageSize) {
+    public ResponseEntity<?> getHtmlCourseByUserId(@RequestHeader Long userId, @RequestHeader int pageNo, @RequestHeader int pageSize) {
         return courseService.getHtmlCourseByUserId(userId, pageNo, pageSize);
     }
+
+    @GetMapping("/getAllHtmlCourse")
+    public ResponseEntity<?> getAllHtmlCourses(@RequestHeader int pageNo, @RequestHeader int pageSize) throws InterruptedException {
+        return courseService.getAllHtmlCourses(pageNo, pageSize);
+
+    }
+
+    @GetMapping("/getHtmlCourseById")
+    public ResponseEntity<?> getHtmlCourseById(@RequestHeader String courseId) {
+        return courseService.getHtmlCourseById(courseId);
+    }
+
 }
 
