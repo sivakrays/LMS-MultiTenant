@@ -62,6 +62,7 @@ public class AuthService {
         UserDTO userDto;
         try {
             User user=mapper.DtoToUserMapper(request);
+            user.setProfileImage(Constant.DEFAULT_PROFILE_IMAGE);
             var savedUser= userRepository.save(user);
             userDto=mapper.UserDtoToUserMapper(savedUser);
         }catch (Exception e){
