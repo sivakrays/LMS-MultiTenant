@@ -21,7 +21,7 @@ public class PurchasedCourse {
     public Long id;
     private  Long userId;
     private UUID courseId;
-    private Boolean purchased;
+    private Boolean purchased ;
     private Timestamp purchasedOn;
 
 }

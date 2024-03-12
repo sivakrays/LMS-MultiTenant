@@ -11,20 +11,17 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HtmlCourse {
+public class
+HtmlCourse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     public String id;
-
-    public UUID courseId;
-
     public Long userId;
-
-    @Column(columnDefinition = "TEXT")
-    public String courseContent;
-
-    public String type;
-
-    public Boolean isHtmlContent;
+    public String courseId;
+    public String chapter;
+    public String content;
+    public String image = "false";
+    public String orderChanged = "false";
+    public String typed;
 }

@@ -1,6 +1,9 @@
 package com.LMS.userManagement.service;
+import com.LMS.userManagement.dto.HtmlCourseDto;
+import com.LMS.userManagement.dto.ChapterContents;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,12 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class CourseService {
     @Autowired
     CourseRepository courseRepository;
@@ -23,9 +24,8 @@ public class CourseService {
     SubSectionRepository subSectionRepository;
     @Autowired
     QuizRepository quizRepository;
-
     @Autowired
-    HtmlCourseRepository htmlCourseRepository;
+    private HtmlCourseRepository htmlCourseRepository;
 
     public ResponseEntity<?> saveSection(List<Section> sections) {
         List<Section> sectionList = sectionRepository.saveAll(sections);
@@ -104,10 +104,37 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
 
-    public ResponseEntity<?> saveHtmlCourse(List<HtmlCourse> course) {
-    var htmlCourse=    htmlCourseRepository.saveAll(course);
-       return  ResponseEntity.ok(htmlCourse);
+    public ResponseEntity<?> saveHtmlCourse(List<HtmlCourseDto> htmlCourseDtoList) {
+        try {
+            List<HtmlCourse> savedHtmlCourses = new ArrayList<>();
+            for (HtmlCourseDto htmlCourseDto : htmlCourseDtoList) {
+                Long userId = htmlCourseDto.getUserId();
+                String courseId = htmlCourseDto.getCourseId();
+                String chapter = htmlCourseDto.getChapter();
+
+                for (ChapterContents chapterContents : htmlCourseDto.getChapterContents()) {
+                    HtmlCourse htmlCourse = new HtmlCourse();
+                    htmlCourse.setUserId(userId);
+                    htmlCourse.setCourseId(courseId);
+                    htmlCourse.setChapter(chapter);
+                    htmlCourse.setContent(chapterContents.getContent());
+                    htmlCourse.setImage(chapterContents.getImage());
+                    htmlCourse.setOrderChanged(chapterContents.getOrderChanged());
+                    htmlCourse.setTyped(chapterContents.getTyped());
+
+                    // Save the htmlCourse object using your repository
+                    HtmlCourse savedHtmlCourse = htmlCourseRepository.save(htmlCourse);
+                    savedHtmlCourses.add(savedHtmlCourse);
+                }
+            }
+            return ResponseEntity.ok(htmlCourseDtoList);
+        } catch (Exception e) {
+            // Handle any exceptions and return an appropriate error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while saving HTML courses");
+        }
     }
+
+
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {
         var courseResponse=   getCourseById(courseId);

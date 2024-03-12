@@ -105,11 +105,13 @@ CREATE TABLE IF NOT EXISTS cart
 CREATE TABLE IF NOT EXISTS html_course
 (
     id character varying(255)  NOT NULL,
-    course_content text ,
-    course_id uuid,
-    is_html_content boolean,
     user_id bigint,
-    type character varying(255),
+    course_id character varying(255),
+    chapter character varying(255),
+    content character varying(255),
+    image character varying(255),
+    order_changed character varying(255),
+    typed character varying(255),
     CONSTRAINT html_course_pkey PRIMARY KEY (id)
 );
 

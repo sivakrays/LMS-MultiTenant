@@ -1,5 +1,6 @@
 package com.LMS.userManagement.controller;
 
+import com.LMS.userManagement.dto.HtmlCourseDto;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -86,8 +87,8 @@ public class CourseController {
     }*/
 
     @PostMapping("/saveHtmlCourse")
-    public ResponseEntity<?> saveCourse(@RequestBody List<HtmlCourse>  courseList){
-        return courseService.saveHtmlCourse(courseList);
+    public ResponseEntity<?> saveCourse(@RequestBody List<HtmlCourseDto> htmlCourseDto){
+        return courseService.saveHtmlCourse(htmlCourseDto);
     }
 }
 
