@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS cart
 CREATE TABLE IF NOT EXISTS html_course
 (
      chapter_order integer,
-         order_changed boolean NOT NULL,
+         order_changed boolean,
          user_id bigint,
          chapter character varying(255) ,
          content text ,

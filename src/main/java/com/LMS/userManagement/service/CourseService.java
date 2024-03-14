@@ -78,42 +78,8 @@ public class CourseService {
     }
 
     public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
-        //Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo, pageSize));
-        List<Course> course=courseRepository.findAll();
-        CourseData courseData = new CourseData();
-        CourseDetails courseDetails = new CourseDetails();
-        List<CourseDetails> courseDetailsList =new ArrayList<>();
-        List<HtmlCourse> htmlCourseList = new ArrayList<>();
-        for (Course course1 : course) {
-            String courseId = course1.getCourseId();
-            Boolean htmlCourse = course1.isHtmlCourse();
-            if (htmlCourse.equals(true)) {
-                List<HtmlCourse> htmlCourse1 = htmlCourseRepository.findAllByCourseId(String.valueOf(courseId));
-                for (HtmlCourse htmlCourse2 : htmlCourse1) {
-                    HtmlCourse chapterContents = new HtmlCourse();
-                    chapterContents.setId(htmlCourse2.getId());
-                    chapterContents.setHtml_course_id(htmlCourse2.getHtml_course_id());
-                    chapterContents.setUserId(htmlCourse2.getUserId());
-                    chapterContents.setContent(htmlCourse2.getContent());
-                    chapterContents.setChapter(htmlCourse2.getChapter());
-                    chapterContents.setContent(htmlCourse2.getContent());
-                    chapterContents.setImage(htmlCourse2.getImage());
-                    chapterContents.setOrderChanged(htmlCourse2.getOrderChanged());
-                    chapterContents.setType(htmlCourse2.getType());
-                    htmlCourseList.add(chapterContents);
-                }
-               courseDetails.setCourseData(course1);
-                courseDetails.setHtmlData(htmlCourseList);
-
-            }else{
-                courseDetails.setCourseData(course1);
-
-            }
-            courseDetailsList.add(courseDetails);
-            courseData.setCourseDetails(courseDetailsList);
-
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(courseData);
+        Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo, pageSize));
+        return ResponseEntity.status(HttpStatus.OK).body(course);
 
     }
 
