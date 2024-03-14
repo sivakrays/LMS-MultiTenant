@@ -14,6 +14,6 @@ public class ChapterContents {
     public String content;
     public String image;
     public Boolean orderChanged;
-    public String typed;
+    public String type;
 
 }

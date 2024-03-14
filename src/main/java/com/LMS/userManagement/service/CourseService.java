@@ -98,7 +98,7 @@ public class CourseService {
                     chapterContents.setChapter(htmlCourse2.getChapter());
                     chapterContents.setContent(htmlCourse2.getContent());
                     chapterContents.setImage(htmlCourse2.getImage());
-                    chapterContents.setOrderChanged(htmlCourse2.isOrderChanged());
+                    chapterContents.setOrderChanged(htmlCourse2.getOrderChanged());
                     chapterContents.setType(htmlCourse2.getType());
                     htmlCourseList.add(chapterContents);
                 }
@@ -156,7 +156,7 @@ public class CourseService {
                     htmlCourse.setContent(chapterContents.getContent());
                     htmlCourse.setImage(chapterContents.getImage());
                     htmlCourse.setOrderChanged(chapterContents.getOrderChanged());
-                    htmlCourse.setType(chapterContents.getTyped());
+                    htmlCourse.setType(chapterContents.getType());
 
                     // Save the htmlCourse object using your repository
                     HtmlCourse savedHtmlCourse = htmlCourseRepository.save(htmlCourse);

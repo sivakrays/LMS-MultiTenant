@@ -22,8 +22,10 @@ HtmlCourse {
     public String html_course_id;
     public String chapter;
     public Integer chapterOrder;
+    @Column(columnDefinition = "TEXT")
     public String content;
+    @Column(columnDefinition = "TEXT")
     public String image;
-    public boolean orderChanged;
+    public Boolean orderChanged;
     public String type;
 }
