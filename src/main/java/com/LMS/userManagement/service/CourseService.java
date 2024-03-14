@@ -86,19 +86,19 @@ public class CourseService {
         List<HtmlCourse> htmlCourseList = new ArrayList<>();
         for (Course course1 : course) {
             String courseId = course1.getCourseId();
-            Boolean htmlCourse = course1.getIsHtmlCourse();
+            Boolean htmlCourse = course1.isHtmlCourse();
             if (htmlCourse.equals(true)) {
                 List<HtmlCourse> htmlCourse1 = htmlCourseRepository.findAllByCourseId(String.valueOf(courseId));
                 for (HtmlCourse htmlCourse2 : htmlCourse1) {
                     HtmlCourse chapterContents = new HtmlCourse();
                     chapterContents.setId(htmlCourse2.getId());
-                    chapterContents.setCourseId(htmlCourse2.getCourseId());
+                    chapterContents.setHtml_course_id(htmlCourse2.getHtml_course_id());
                     chapterContents.setUserId(htmlCourse2.getUserId());
                     chapterContents.setContent(htmlCourse2.getContent());
                     chapterContents.setChapter(htmlCourse2.getChapter());
                     chapterContents.setContent(htmlCourse2.getContent());
                     chapterContents.setImage(htmlCourse2.getImage());
-                    chapterContents.setOrderChanged(htmlCourse2.getOrderChanged());
+                    chapterContents.setOrderChanged(htmlCourse2.isOrderChanged());
                     chapterContents.setType(htmlCourse2.getType());
                     htmlCourseList.add(chapterContents);
                 }
@@ -143,12 +143,16 @@ public class CourseService {
                 //Long userId = htmlCourseDto.getUserId();
                 String courseId = htmlCourseDto.getCourseId();
                 String chapter = htmlCourseDto.getChapter();
+                Integer chapterOrder=htmlCourseDto.getChapterOrder();
+                 long userId=htmlCourseDto.getUserId();
 
                 for (ChapterContents chapterContents : htmlCourseDto.getChapterContents()) {
                     HtmlCourse htmlCourse = new HtmlCourse();
                     //htmlCourse.setUserId(userId);
-                    htmlCourse.setCourseId(courseId);
+                    htmlCourse.setHtml_course_id(courseId);
                     htmlCourse.setChapter(chapter);
+                    htmlCourse.setChapterOrder(chapterOrder);
+                    htmlCourse.setUserId(userId);
                     htmlCourse.setContent(chapterContents.getContent());
                     htmlCourse.setImage(chapterContents.getImage());
                     htmlCourse.setOrderChanged(chapterContents.getOrderChanged());
@@ -167,7 +171,7 @@ public class CourseService {
     }
 
     public ResponseEntity<?> getHtmlCourseByUserId(Long userId, int pageNo, int pageSize) {
-        Page<HtmlCourse> htmlCourses = htmlCourseRepository.findCourseByUserId(userId, PageRequest.of(pageNo, pageSize));
+        Page<HtmlCourse> htmlCourses = htmlCourseRepository.findByUserId(userId, PageRequest.of(pageNo, pageSize));
         if (!htmlCourses.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(htmlCourses);
         } else {
@@ -176,12 +180,12 @@ public class CourseService {
     }
 
     public ResponseEntity<?> getAllHtmlCourses(int pageNo, int pageSize) {
-        Page<HtmlCourse> htmlCourse = htmlCourseRepository.findAll(PageRequest.of(pageNo,pageSize));
+        Page<Course> htmlCourse = courseRepository.findAll(PageRequest.of(pageNo,pageSize));
         return ResponseEntity.status(HttpStatus.OK).body(htmlCourse);
     }
 
     public ResponseEntity<?> getHtmlCourseById(String courseId) {
-        HtmlCourse htmlCourse = htmlCourseRepository.findCourseByCourseId(courseId);
+        Course htmlCourse = courseRepository.findByCourseId(courseId);
         if(htmlCourse != null){
             return ResponseEntity.status(HttpStatus.OK).body(htmlCourse);
         }

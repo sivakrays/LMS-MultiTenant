@@ -13,7 +13,7 @@ public class ChapterContents {
 
     public String content;
     public String image;
-    public String orderChanged;
+    public Boolean orderChanged;
     public String typed;
 
 }

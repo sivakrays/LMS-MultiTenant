@@ -18,11 +18,12 @@ HtmlCourse {
     @GeneratedValue(strategy = GenerationType.UUID)
     public String id;
     public Long userId;
-    public String courseId;
+    @JsonProperty("courseId")
+    public String html_course_id;
     public String chapter;
     public Integer chapterOrder;
     public String content;
-    public String image = "";
-    public String orderChanged = "false";
+    public String image;
+    public boolean orderChanged;
     public String type;
 }

@@ -16,6 +16,7 @@ public class HtmlCourseDto {
     public Long userId;
     public String courseId;
     public String chapter;
+    public Integer chapterOrder;
     public List<ChapterContents> chapterContents;
 
 }

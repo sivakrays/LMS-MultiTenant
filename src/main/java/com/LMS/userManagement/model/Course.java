@@ -19,25 +19,34 @@ public class Course {
     @Column(name = "course_id")
     private String courseId;
     @Column(nullable = false)
-    private Long userId;
+    private long userId;
     private String title;
     private String authorName;
     @Column(columnDefinition = "TEXT")
     private String description;
     @Column(columnDefinition = "TEXT")
     private String thumbNail;
-    private Long enrolled;
+    private long enrolled;
     private String category;
-    private Integer ratings;
+    private int ratings;
     private String language;
     private String overview;
     @Column(columnDefinition = "TEXT")
     private String whatYouWillLearn;
-    private Integer price;
+    private int price;
     private Date date;
-    private Boolean isHtmlCourse;
+    private boolean isHtmlCourse;
     @OneToMany(targetEntity = Section.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id",referencedColumnName = "course_id")
     private List<Section> sections;
+
+    @OneToMany(targetEntity = HtmlCourse.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "html_course_id",referencedColumnName = "course_id")
+    private List<HtmlCourse> htmlCourse;
+
+
+
+
+
 
 }
