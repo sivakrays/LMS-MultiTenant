@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+
 
 @Entity
 @Data
@@ -17,7 +17,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "course_id")
-    private UUID courseId;
+    private String courseId;
     @Column(nullable = false)
     private Long userId;
     private String title;
@@ -39,8 +39,5 @@ public class Course {
     @OneToMany(targetEntity = Section.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id",referencedColumnName = "course_id")
     private List<Section> sections;
-
-
-
 
 }

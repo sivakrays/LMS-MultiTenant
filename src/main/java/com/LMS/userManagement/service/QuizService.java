@@ -26,7 +26,7 @@ public class QuizService {
     //@Transactional
     public ResponseEntity<?> saveBadge(QuizRank quizRank) {
         Long userId = quizRank.getUserId();
-        UUID subSectionId = quizRank.getSubSectionId();
+        String subSectionId = quizRank.getSubSectionId();
         Integer energyPoints = quizRank.getEnergyPoints();
         int badge =quizRank.getBadge();
         Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSubSectionId(userId, subSectionId);

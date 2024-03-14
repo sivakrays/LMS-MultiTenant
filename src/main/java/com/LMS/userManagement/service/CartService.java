@@ -5,7 +5,6 @@ import com.LMS.userManagement.model.Cart;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.repository.CourseRepository;
-import com.LMS.userManagement.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CartService {
@@ -29,7 +27,7 @@ public class CartService {
 
     public ResponseEntity<?> saveCart(Cart cart) {
         Long userId = cart.getUserId();
-        UUID courseId = cart.getCourseId();
+        String courseId = cart.getCourseId();
     List<Cart> cartList = cartRepository.findByUserId(userId);
     if(!cartList.isEmpty()) {
         Cart cart1 = cartRepository.findByCourseIdAndUserId(courseId,userId);
@@ -50,8 +48,8 @@ public class CartService {
       List<Cart> cart= cartRepository.findByUserId(userId);
       if(!cart.isEmpty()){
       for(Cart cart1 : cart) {
-          UUID courseId = cart1.getCourseId();
-          Course course = courseRepository.findCourseByCourseId(courseId);
+          String courseId = cart1.getCourseId();
+          Course course = courseRepository.findByCourseId(courseId);
         if(course != null) {
             CartDetail cartDetail = new CartDetail();
             cartDetail.setCartId(cart1.getCartId());
@@ -74,7 +72,7 @@ public class CartService {
     }
 
 
-    public ResponseEntity<?> deleteCartById(UUID cartId) {
+    public ResponseEntity<?> deleteCartById(String cartId) {
         List<CartDetail> cartDetails = new ArrayList<>();
         if (cartRepository.existsById(cartId)){
        Optional<Cart> cart = cartRepository.findById(cartId);
@@ -83,8 +81,8 @@ public class CartService {
         List<Cart> cartList = cartRepository.findByUserId(userId);
             if(!cartList.isEmpty()) {
                 for (Cart cart1 : cartList) {
-                    UUID courseId = cart1.getCourseId();
-                    Course course = courseRepository.findCourseByCourseId(courseId);
+                    String courseId = cart1.getCourseId();
+                    Course course = courseRepository.findByCourseId(courseId);
                     if (course != null) {
                         CartDetail cartDetail = new CartDetail();
                         cartDetail.setCartId(cart1.getCartId());

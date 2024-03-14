@@ -1,4 +1,6 @@
 package com.LMS.userManagement.service;
+import com.LMS.userManagement.dto.CourseData;
+import com.LMS.userManagement.dto.CourseDetails;
 import com.LMS.userManagement.dto.HtmlCourseDto;
 import com.LMS.userManagement.dto.ChapterContents;
 import com.LMS.userManagement.model.*;
@@ -32,7 +34,7 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).body(sectionList);
     }
 
-    public ResponseEntity<?> deleteCourseById(UUID courseId,int pageNo,int pageSize) {
+    public ResponseEntity<?> deleteCourseById(String courseId,int pageNo,int pageSize) {
 
         if (courseRepository.existsById(courseId)){
             Optional<Course> course = courseRepository.findById(courseId);
@@ -67,8 +69,8 @@ public class CourseService {
 
     }
 
-    public ResponseEntity<?> getCourseById(UUID courseId) {
-        Course course = courseRepository.findCourseByCourseId(courseId);
+    public ResponseEntity<?> getCourseById(String courseId) {
+        Course course = courseRepository.findByCourseId(courseId);
         if(course != null){
             return ResponseEntity.status(HttpStatus.OK).body(course);
         }
@@ -76,12 +78,42 @@ public class CourseService {
     }
 
     public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
-      //  List<Object> courseList=new ArrayList<>();
-        Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo,pageSize));
-      //  Page<HtmlCourse> htmlCourses=htmlCourseRepository.findAll(PageRequest.of(pageNo,pageSize));
-       // courseList.add(course.getContent());
-      //  courseList.add(htmlCourses.getContent());
-        return ResponseEntity.status(HttpStatus.OK).body(course);
+        //Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo, pageSize));
+        List<Course> course=courseRepository.findAll();
+        CourseData courseData = new CourseData();
+        CourseDetails courseDetails = new CourseDetails();
+        List<CourseDetails> courseDetailsList =new ArrayList<>();
+        List<HtmlCourse> htmlCourseList = new ArrayList<>();
+        for (Course course1 : course) {
+            String courseId = course1.getCourseId();
+            Boolean htmlCourse = course1.getIsHtmlCourse();
+            if (htmlCourse.equals(true)) {
+                List<HtmlCourse> htmlCourse1 = htmlCourseRepository.findAllByCourseId(String.valueOf(courseId));
+                for (HtmlCourse htmlCourse2 : htmlCourse1) {
+                    HtmlCourse chapterContents = new HtmlCourse();
+                    chapterContents.setId(htmlCourse2.getId());
+                    chapterContents.setCourseId(htmlCourse2.getCourseId());
+                    chapterContents.setUserId(htmlCourse2.getUserId());
+                    chapterContents.setContent(htmlCourse2.getContent());
+                    chapterContents.setChapter(htmlCourse2.getChapter());
+                    chapterContents.setContent(htmlCourse2.getContent());
+                    chapterContents.setImage(htmlCourse2.getImage());
+                    chapterContents.setOrderChanged(htmlCourse2.getOrderChanged());
+                    chapterContents.setType(htmlCourse2.getType());
+                    htmlCourseList.add(chapterContents);
+                }
+               courseDetails.setCourseData(course1);
+                courseDetails.setHtmlData(htmlCourseList);
+
+            }else{
+                courseDetails.setCourseData(course1);
+
+            }
+            courseDetailsList.add(courseDetails);
+            courseData.setCourseDetails(courseDetailsList);
+
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(courseData);
 
     }
 
@@ -108,13 +140,13 @@ public class CourseService {
         try {
             List<HtmlCourse> savedHtmlCourses = new ArrayList<>();
             for (HtmlCourseDto htmlCourseDto : htmlCourseDtoList) {
-                Long userId = htmlCourseDto.getUserId();
+                //Long userId = htmlCourseDto.getUserId();
                 String courseId = htmlCourseDto.getCourseId();
                 String chapter = htmlCourseDto.getChapter();
 
                 for (ChapterContents chapterContents : htmlCourseDto.getChapterContents()) {
                     HtmlCourse htmlCourse = new HtmlCourse();
-                    htmlCourse.setUserId(userId);
+                    //htmlCourse.setUserId(userId);
                     htmlCourse.setCourseId(courseId);
                     htmlCourse.setChapter(chapter);
                     htmlCourse.setContent(chapterContents.getContent());

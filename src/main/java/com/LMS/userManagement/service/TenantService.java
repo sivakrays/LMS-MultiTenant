@@ -42,32 +42,32 @@ public class TenantService {
 
     @Transactional
     public ResponseEntity<?> registerTenant(TenantDto tenantDetails) {
-        Optional<TenantDetails> tenantByTenantId=tenantRepository.findByTenantId(tenantDetails.getTenantId()
-                .replaceAll(" ","_").toLowerCase());
-        Optional<TenantDetails> tenantByEmail =tenantRepository.findByEmail(tenantDetails.getEmail());
+        Optional<TenantDetails> tenantByTenantId = tenantRepository.findByTenantId(tenantDetails.getTenantId()
+                .replaceAll(" ", "_").toLowerCase());
+        Optional<TenantDetails> tenantByEmail = tenantRepository.findByEmail(tenantDetails.getEmail());
 
 
-        if(tenantByTenantId.isEmpty() && tenantByEmail.isEmpty()){
-           String tenantId= tenantDetails.getTenantId()
-                    .replaceAll(" ","_")
+        if (tenantByTenantId.isEmpty() && tenantByEmail.isEmpty()) {
+            String tenantId = tenantDetails.getTenantId()
+                    .replaceAll(" ", "_")
                     .toLowerCase();
-      var tenantDtls=      TenantDetails.builder()
+            var tenantDtls = TenantDetails.builder()
                     .tenantId(tenantId)
                     .role("manager")
                     .issuer(tenantDetails.getIssuer())
                     .email(tenantDetails.getEmail())
                     .password(tenantDetails.getPassword())
-              .createdDate(new Timestamp(System.currentTimeMillis())).build();
+                    .createdDate(new Timestamp(System.currentTimeMillis())).build();
 
             try {
-                   initDatabase(tenantId);
+                initDatabase(tenantId);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 return ResponseEntity.status(403).body("Tenant Creation failed");
             }
 
-            var savedTenant=   tenantRepository.save(tenantDtls);
-            var t=   TenantDto.builder()
+            var savedTenant = tenantRepository.save(tenantDtls);
+            var t = TenantDto.builder()
                     .role(savedTenant.getRole())
                     .issuer(savedTenant.getIssuer())
                     .tenantId(savedTenant.getTenantId())
@@ -79,10 +79,10 @@ public class TenantService {
     }
 
     public ResponseEntity<?> tenantLogin(String email, String password) {
-        Optional<TenantDetails> tenant=tenantRepository.findByEmail(email);
-        if (tenant.isPresent() && tenant.get().getPassword().equals(password)){
-          var t=  tenant.get();
-         var tenantDto =  TenantDto.builder()
+        Optional<TenantDetails> tenant = tenantRepository.findByEmail(email);
+        if (tenant.isPresent() && tenant.get().getPassword().equals(password)) {
+            var t = tenant.get();
+            var tenantDto = TenantDto.builder()
                     .email(t.getEmail())
                     .role(t.getRole())
                     .issuer(t.getIssuer())
@@ -90,11 +90,10 @@ public class TenantService {
                     .build();
 
 
-           return ResponseEntity.status(HttpStatus.OK).body(tenantDto);
+            return ResponseEntity.status(HttpStatus.OK).body(tenantDto);
         }
         return ResponseEntity.status(403).body("user not found");
     }
-
 
 
 }

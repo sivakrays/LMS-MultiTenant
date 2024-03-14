@@ -1,11 +1,11 @@
 package com.LMS.userManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
 
 @Entity
 @Data
@@ -20,8 +20,9 @@ HtmlCourse {
     public Long userId;
     public String courseId;
     public String chapter;
+    public Integer chapterOrder;
     public String content;
-    public String image = "false";
+    public String image = "";
     public String orderChanged = "false";
     public String type;
 }

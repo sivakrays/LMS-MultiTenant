@@ -30,7 +30,7 @@ public class PurchasedCourseService {
 
     public ResponseEntity<String> savePurchasedCourse(PurchasedCourseDto purchasedCourseDto) {
         try {
-            for (UUID courseId : purchasedCourseDto.getCourseId()) {
+            for (String courseId : purchasedCourseDto.getCourseId()) {
                 PurchasedCourse purchasedCourse = new PurchasedCourse();
                 purchasedCourse.setUserId(purchasedCourseDto.getUserId());
                 purchasedCourse.setCourseId(courseId);
@@ -49,7 +49,7 @@ public class PurchasedCourseService {
     public List<Course> getPurchasedCoursesByUserId(Long userId) {
         try {
             // Find the list of purchased course IDs by user ID
-            List<UUID> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
+            List<String> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
 
             // If no course IDs found, return empty list
             if (courseIds.isEmpty()) {
@@ -58,7 +58,7 @@ public class PurchasedCourseService {
 
             // Retrieve course data for each course ID
             List<Course> courses = new ArrayList<>();
-            for (UUID courseId : courseIds) {
+            for (String courseId : courseIds) {
                 Optional<Course> courseOptional = courseRepository.findById(courseId);
                 courseOptional.ifPresent(courses::add);
             }

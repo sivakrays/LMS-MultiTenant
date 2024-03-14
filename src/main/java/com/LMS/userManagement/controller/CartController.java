@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/lms/api/user")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
@@ -29,7 +27,7 @@ public class CartController {
         return cartService.getCartDetailByUserId(userId);
     }
     @DeleteMapping("/deleteCartById")
-    public ResponseEntity<?> deleteCartById(@RequestHeader UUID cartId){
+    public ResponseEntity<?> deleteCartById(@RequestHeader String cartId){
         return cartService.deleteCartById(cartId);
     }
 

@@ -8,12 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.UUID;
-
 @Repository
-public interface CourseRepository extends JpaRepository<Course, UUID> {
-    Course findCourseByCourseId(UUID courseId);
+public interface CourseRepository extends JpaRepository<Course, String> {
+    Course findByCourseId(String courseId);
     @Query(value = "SELECT * FROM course c WHERE " +
             "c.title iLIKE CONCAT('%',:search, '%')" +
             "OR c.description iLIKE CONCAT('%', :search, '%') " +
@@ -21,6 +18,7 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
     Page<Course> searchAllCourse( @Param("search")String search,PageRequest of);
 
    Page<Course> findCourseByUserId(Long userId, PageRequest of);
+
 
 
 

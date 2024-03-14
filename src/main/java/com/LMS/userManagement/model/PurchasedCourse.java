@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -20,7 +19,7 @@ public class PurchasedCourse {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
     private  Long userId;
-    private UUID courseId;
+    private String courseId;
     private Boolean purchased ;
     private Timestamp purchasedOn;
 
