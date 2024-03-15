@@ -1,6 +1,6 @@
 package com.LMS.userManagement.service;
 
-import com.LMS.userManagement.dto.CartDetail;
+import com.LMS.userManagement.dto.CartDetailDto;
 import com.LMS.userManagement.model.Cart;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.repository.CartRepository;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,14 +43,14 @@ public class CartService {
     }
 
     public ResponseEntity<?> getCartDetailByUserId(Long userId) {
-        List<CartDetail> cartDetails = new ArrayList<>();
+        List<CartDetailDto> cartDetails = new ArrayList<>();
       List<Cart> cart= cartRepository.findByUserId(userId);
       if(!cart.isEmpty()){
       for(Cart cart1 : cart) {
           String courseId = cart1.getCourseId();
           Course course = courseRepository.findByCourseId(courseId);
         if(course != null) {
-            CartDetail cartDetail = new CartDetail();
+            CartDetailDto cartDetail = new CartDetailDto();
             cartDetail.setCartId(cart1.getCartId());
             cartDetail.setCourseId(course.getCourseId());
             cartDetail.setTitle(course.getTitle());
@@ -73,7 +72,7 @@ public class CartService {
 
 
     public ResponseEntity<?> deleteCartById(String cartId) {
-        List<CartDetail> cartDetails = new ArrayList<>();
+        List<CartDetailDto> cartDetails = new ArrayList<>();
         if (cartRepository.existsById(cartId)){
        Optional<Cart> cart = cartRepository.findById(cartId);
         Long userId = cart.get().getUserId();
@@ -84,7 +83,7 @@ public class CartService {
                     String courseId = cart1.getCourseId();
                     Course course = courseRepository.findByCourseId(courseId);
                     if (course != null) {
-                        CartDetail cartDetail = new CartDetail();
+                        CartDetailDto cartDetail = new CartDetailDto();
                         cartDetail.setCartId(cart1.getCartId());
                         cartDetail.setCourseId(course.getCourseId());
                         cartDetail.setTitle(course.getTitle());

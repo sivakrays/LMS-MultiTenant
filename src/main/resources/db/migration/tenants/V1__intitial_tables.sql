@@ -1,29 +1,30 @@
 CREATE TABLE IF NOT EXISTS user_details
 (
-     id bigint NOT NULL,
+        standard integer,
+        created_date timestamp(6) without time zone,
+        id bigint NOT NULL,
         city character varying(255) ,
         confirm_password character varying(255)  NOT NULL,
         country character varying(255) ,
-        created_date timestamp(6) without time zone,
         email character varying(255)  NOT NULL,
         gender character varying(255) ,
-        name character varying(255)  NOT NULL,
-        password character varying(255)  NOT NULL,
+        name character varying(255) ,
+        password character varying(255) ,
         role character varying(255) ,
         school character varying(255) ,
-        standard integer,
         CONSTRAINT user_details_pkey PRIMARY KEY (id),
-        CONSTRAINT uk_4d9rdl7d52k8x3etihxlaujvh UNIQUE (email)
+        CONSTRAINT user_details_email_key UNIQUE (email)
 );
 
 -- Table: public.course
 CREATE TABLE IF NOT EXISTS course
 (
-     is_html_course boolean NOT NULL,
-        price integer NOT NULL,
-        ratings integer NOT NULL,
+        is_free boolean,
+        is_html_course boolean,
+        price integer,
+        ratings integer,
         date timestamp(6) without time zone,
-        enrolled bigint NOT NULL,
+        enrolled bigint,
         user_id bigint NOT NULL,
         author_name character varying(255) ,
         category character varying(255) ,
@@ -100,28 +101,37 @@ CREATE TABLE IF NOT EXISTS cart
         course_id character varying(255) ,
         CONSTRAINT cart_pkey PRIMARY KEY (cart_id)
 );
-
-
-
-CREATE TABLE IF NOT EXISTS html_course
+--Table:public.chapter
+CREATE TABLE IF NOT EXISTS chapter
 (
-     chapter_order integer,
-         order_changed boolean,
-         user_id bigint,
-         chapter character varying(255) ,
-         content text ,
-         html_course_id character varying(255) ,
-         id character varying(255) NOT NULL,
-         image text,
-         type character varying(255) ,
-         CONSTRAINT html_course_pkey PRIMARY KEY (id),
-         CONSTRAINT fk5hpxxy37f1y5iy0d3p191wwqu FOREIGN KEY (html_course_id)
-             REFERENCES course (course_id) MATCH SIMPLE
-             ON UPDATE NO ACTION
-             ON DELETE NO ACTION
+    chapter_order integer,
+    user_id bigint,
+    chapter character varying(255) ,
+    chapter_id character varying(255) ,
+    html_course_id character varying(255) ,
+    CONSTRAINT chapter_pkey PRIMARY KEY (chapter_id),
+    CONSTRAINT fkcbk2o5i1mtbt6byjylminw3hb FOREIGN KEY (html_course_id)
+        REFERENCES course (course_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+--Table:public.chapter_content
+CREATE TABLE IF NOT EXISTS chapter_content
+(
+    order_changed boolean,
+    chapter_id character varying(255) ,
+    content text ,
+    id character varying(255) ,
+    image text ,
+    type character varying(255) ,
+    CONSTRAINT chapter_content_pkey PRIMARY KEY (id),
+    CONSTRAINT fk64p0ov70yngvygwyup0xcy8f0 FOREIGN KEY (chapter_id)
+        REFERENCES chapter (chapter_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 );
 
-
+--Table:public.purchased_course
 CREATE TABLE IF NOT EXISTS purchased_course
 (
       purchased boolean,

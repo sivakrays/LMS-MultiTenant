@@ -1,18 +1,18 @@
 package com.LMS.userManagement.service;
-import com.LMS.userManagement.dto.CourseData;
-import com.LMS.userManagement.dto.CourseDetails;
-import com.LMS.userManagement.dto.HtmlCourseDto;
-import com.LMS.userManagement.dto.ChapterContents;
+import com.LMS.userManagement.dto.CourseDto;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -27,7 +27,9 @@ public class CourseService {
     @Autowired
     QuizRepository quizRepository;
     @Autowired
-    private HtmlCourseRepository htmlCourseRepository;
+    private ChapterRepository chapterRepository;
+
+    @Autowired PurchasedCourseRepository purchasedCourseRepository;
 
     public ResponseEntity<?> saveSection(List<Section> sections) {
         List<Section> sectionList = sectionRepository.saveAll(sections);
@@ -64,22 +66,97 @@ public class CourseService {
 
 
     public ResponseEntity<?> saveCourse(Course course) {
-        Course course1 = courseRepository.save(course);
-        return ResponseEntity.status(HttpStatus.OK).body(course1);
+        course.setDate(new Timestamp(System.currentTimeMillis()));
+        if (course.getPrice()==null){
+            course.setIsFree(true);
+        }
+        course.setIsFree(false);
+        Course courseDetails = courseRepository.save(course);
+        return ResponseEntity.status(HttpStatus.OK).body(courseDetails);
 
     }
 
-    public ResponseEntity<?> getCourseById(String courseId) {
+    public ResponseEntity<?> getCourseById(String courseId,Long userId) {
         Course course = courseRepository.findByCourseId(courseId);
-        if(course != null){
-            return ResponseEntity.status(HttpStatus.OK).body(course);
+        if(course!=null){
+          Boolean purchased=  purchasedCourseRepository.findByCourseIdAndUserId(courseId,userId);
+          if (purchased==null){
+              purchased=false;
+          }
+                return ResponseEntity.ok( CourseDto.builder()
+                        .courseId(course.getCourseId())
+                        .title(course.getTitle())
+                        .description(course.getDescription())
+                        .authorName(course.getAuthorName())
+                        .thumbNail(course.getThumbNail())
+                        .category(course.getCategory())
+                        .enrolled(course.getEnrolled())
+                        .ratings(course.getRatings())
+                        .language(course.getLanguage())
+                        .overview(course.getOverview())
+                        .whatYouWillLearn(course.getWhatYouWillLearn())
+                        .price(course.getPrice())
+                        .date(course.getDate())
+                        .userId(course.getUserId())
+                        .isHtmlCourse(course.getIsHtmlCourse())
+                        .isPurchased(purchased)
+                        .isFree(course.getIsFree())
+                        .chapters(course.getChapters())
+                        .sections(course.getSections())
+                        .build());
+
         }
             return ResponseEntity.status(HttpStatus.OK).body(course);
     }
 
-    public ResponseEntity<?> getAllCourses(int pageNo, int pageSize) {
-        Page<Course> course = courseRepository.findAll(PageRequest.of(pageNo, pageSize));
-        return ResponseEntity.status(HttpStatus.OK).body(course);
+    public ResponseEntity<?> getAllCourses(int pageNo, int pageSize,Long userId) {
+     Pageable pageRequest=   PageRequest.of(pageNo, pageSize);
+        Page<Course> courseDetails = courseRepository.findAll(pageRequest);
+
+        if (courseDetails.getContent().isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body(courseDetails);
+        }
+
+
+
+        List<Course> courseList= courseDetails.getContent();
+        List<CourseDto> courseDtoList=new ArrayList<>();
+        courseList.forEach(course -> {
+                    Boolean purchased = purchasedCourseRepository
+                            .findByCourseIdAndUserId(course.getCourseId(),userId);
+                    if (purchased == null) {
+                        purchased = false;
+                    }
+                     CourseDto courseDto=   CourseDto.builder()
+                                .courseId(course.getCourseId())
+                                .title(course.getTitle())
+                                .description(course.getDescription())
+                                .authorName(course.getAuthorName())
+                                .thumbNail(course.getThumbNail())
+                                .category(course.getCategory())
+                                .enrolled(course.getEnrolled())
+                                .ratings(course.getRatings())
+                                .language(course.getLanguage())
+                                .overview(course.getOverview())
+                                .whatYouWillLearn(course.getWhatYouWillLearn())
+                                .price(course.getPrice())
+                                .date(course.getDate())
+                                .userId(course.getUserId())
+                                .isHtmlCourse(course.getIsHtmlCourse())
+                                .isPurchased(purchased)
+                                .isFree(course.getIsFree())
+                                .chapters(course.getChapters())
+                                .sections(course.getSections())
+                                .build();
+            courseDtoList.add(courseDto);
+
+
+        });
+        int start= (int) pageRequest.getOffset();
+        int end =Math.min(start+pageRequest.getPageSize(),courseDtoList.size());
+        List<CourseDto> pageContent=courseDtoList.subList(start,end);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new PageImpl<>(pageContent,pageRequest,courseDtoList.size()));
 
     }
 
@@ -102,61 +179,13 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
 
-    public ResponseEntity<?> saveHtmlCourse(List<HtmlCourseDto> htmlCourseDtoList) {
-        try {
-            List<HtmlCourse> savedHtmlCourses = new ArrayList<>();
-            for (HtmlCourseDto htmlCourseDto : htmlCourseDtoList) {
-                //Long userId = htmlCourseDto.getUserId();
-                String courseId = htmlCourseDto.getCourseId();
-                String chapter = htmlCourseDto.getChapter();
-                Integer chapterOrder=htmlCourseDto.getChapterOrder();
-                 long userId=htmlCourseDto.getUserId();
-
-                for (ChapterContents chapterContents : htmlCourseDto.getChapterContents()) {
-                    HtmlCourse htmlCourse = new HtmlCourse();
-                    //htmlCourse.setUserId(userId);
-                    htmlCourse.setHtml_course_id(courseId);
-                    htmlCourse.setChapter(chapter);
-                    htmlCourse.setChapterOrder(chapterOrder);
-                    htmlCourse.setUserId(userId);
-                    htmlCourse.setContent(chapterContents.getContent());
-                    htmlCourse.setImage(chapterContents.getImage());
-                    htmlCourse.setOrderChanged(chapterContents.getOrderChanged());
-                    htmlCourse.setType(chapterContents.getType());
-
-                    // Save the htmlCourse object using your repository
-                    HtmlCourse savedHtmlCourse = htmlCourseRepository.save(htmlCourse);
-                    savedHtmlCourses.add(savedHtmlCourse);
-                }
-            }
-            return ResponseEntity.ok(htmlCourseDtoList);
-        } catch (Exception e) {
-            // Handle any exceptions and return an appropriate error response
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while saving HTML courses");
-        }
+    public ResponseEntity<?> saveHtmlCourse(List<Chapter> chapterList) {
+    var chapters= chapterRepository.saveAll(chapterList);
+        return ResponseEntity.ok(chapters);
     }
 
-    public ResponseEntity<?> getHtmlCourseByUserId(Long userId, int pageNo, int pageSize) {
-        Page<HtmlCourse> htmlCourses = htmlCourseRepository.findByUserId(userId, PageRequest.of(pageNo, pageSize));
-        if (!htmlCourses.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(htmlCourses);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No HTML courses found for the given user ID");
-        }
-    }
 
-    public ResponseEntity<?> getAllHtmlCourses(int pageNo, int pageSize) {
-        Page<Course> htmlCourse = courseRepository.findAll(PageRequest.of(pageNo,pageSize));
-        return ResponseEntity.status(HttpStatus.OK).body(htmlCourse);
-    }
 
-    public ResponseEntity<?> getHtmlCourseById(String courseId) {
-        Course htmlCourse = courseRepository.findByCourseId(courseId);
-        if(htmlCourse != null){
-            return ResponseEntity.status(HttpStatus.OK).body(htmlCourse);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(htmlCourse);
-    }
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {
         var courseResponse=   getCourseById(courseId);

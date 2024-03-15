@@ -1,16 +1,12 @@
 package com.LMS.userManagement.controller;
 
-import com.LMS.userManagement.dto.HtmlCourseDto;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,14 +28,17 @@ public class CourseController {
 
     @GetMapping("/getCourseById")
     // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getCourseById(@RequestHeader String courseId) {
-        return courseService.getCourseById(courseId);
+    public ResponseEntity<?> getCourseById(@RequestHeader String courseId,
+                                           @RequestHeader Long userId) {
+        return courseService.getCourseById(courseId,userId);
     }
 
     @GetMapping("/getAllCourse")
     //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public ResponseEntity<?> getAllCourses(@RequestHeader int pageNo, @RequestHeader int pageSize) throws InterruptedException {
-        return courseService.getAllCourses(pageNo, pageSize);
+    public ResponseEntity<?> getAllCourses(@RequestHeader int pageNo,
+                                           @RequestHeader int pageSize,
+                                           @RequestHeader Long userId ) throws InterruptedException {
+        return courseService.getAllCourses(pageNo,pageSize, userId);
 
     }
 
@@ -96,25 +95,11 @@ public class CourseController {
     }*/
 
     @PostMapping("/saveHtmlCourse")
-    public ResponseEntity<?> saveCourse(@RequestBody List<HtmlCourseDto> htmlCourseDto) {
-        return courseService.saveHtmlCourse(htmlCourseDto);
+    public ResponseEntity<?> saveCourse(@RequestBody List<Chapter> chapterList) {
+        return courseService.saveHtmlCourse(chapterList);
     }
 
-    @GetMapping("/getHtmlCourseByUserId")
-    public ResponseEntity<?> getHtmlCourseByUserId(@RequestHeader Long userId, @RequestHeader int pageNo, @RequestHeader int pageSize) {
-        return courseService.getHtmlCourseByUserId(userId, pageNo, pageSize);
-    }
 
-    @GetMapping("/getAllHtmlCourse")
-    public ResponseEntity<?> getAllHtmlCourses(@RequestHeader int pageNo, @RequestHeader int pageSize) throws InterruptedException {
-        return courseService.getAllHtmlCourses(pageNo, pageSize);
-
-    }
-
-    @GetMapping("/getHtmlCourseById")
-    public ResponseEntity<?> getHtmlCourseById(@RequestHeader String courseId) {
-        return courseService.getHtmlCourseById(courseId);
-    }
 
 }
 

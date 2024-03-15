@@ -1,18 +1,25 @@
 package com.LMS.userManagement.dto;
 
+import com.LMS.userManagement.model.Chapter;
+import com.LMS.userManagement.model.Section;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CourseDto {
-    public Integer courseId;
+    public String courseId;
+    public Long userId;
     public String title;
     public String authorName;
     public String description;
@@ -24,6 +31,13 @@ public class CourseDto {
     private String overview;
     private String whatYouWillLearn;
     private Integer price;
-    private Date date;
-    private List<SectionDto> sections;
+    private Timestamp date;
+    @JsonProperty("isHtmlCourse")
+    private Boolean isHtmlCourse;
+    @JsonProperty("isPurchased")
+    private Boolean isPurchased;
+    @JsonProperty("isFree")
+    private Boolean isFree;
+    private List<Chapter> chapters;
+    private List<Section> sections;
 }

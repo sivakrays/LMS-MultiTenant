@@ -20,3 +20,4 @@ CREATE SEQUENCE IF NOT EXISTS purchased_course_seq
     CACHE 1;
 
 
+
