@@ -20,4 +20,6 @@ public class ProfileDto {
     public String city;
 
     public String country;
+
+    public String image;
 }

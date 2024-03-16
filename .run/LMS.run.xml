@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="LMS" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.LMS.userManagement.UserManagementApplication" />
+    <module name="userManagement" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

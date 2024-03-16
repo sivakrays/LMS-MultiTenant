@@ -16,4 +16,5 @@ public interface PurchasedCourseRepository extends JpaRepository<PurchasedCourse
 
     @Query(value = "SELECT PURCHASED FROM PURCHASED_COURSE WHERE COURSE_ID=?1 AND USER_ID=?2 AND PURCHASED=true",nativeQuery = true)
     Boolean findByCourseIdAndUserId(String courseId, Long userId);
+
 }

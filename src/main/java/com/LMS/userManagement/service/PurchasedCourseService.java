@@ -36,13 +36,12 @@ public class PurchasedCourseService {
                 purchasedCourse.setCourseId(courseId);
                 purchasedCourse.setPurchased(true);
                 purchasedCourse.setPurchasedOn(new Timestamp(System.currentTimeMillis()));
-                System.out.println("save::::"+purchasedCourseDto.getCourseId());
                 purchasedCourseRepository.save(purchasedCourse);
             }
-            return ResponseEntity.ok("Successfully Saved");
+            return ResponseEntity.ok("Successfully Purchased");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Couldn't Save");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Couldn't Purchase");
         }
     }
 

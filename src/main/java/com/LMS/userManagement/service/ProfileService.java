@@ -25,6 +25,7 @@ public class ProfileService {
             user1.setStandard(profileRequest.getStandard());
             user1.setCity(profileRequest.getCity());
             user1.setCountry(profileRequest.getCountry());
+            user1.setImage(profileRequest.getImage());
             User user2 = userRepository.save(user1);
             return ResponseEntity.status(HttpStatus.OK).body(user2) ;
         }
