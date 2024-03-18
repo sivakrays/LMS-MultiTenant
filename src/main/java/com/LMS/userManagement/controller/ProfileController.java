@@ -25,5 +25,4 @@ public class ProfileController {
     public ResponseEntity<?> getProfileById(@RequestHeader Long id){
         return profileService.getProfileById(id);
     }
-
 }

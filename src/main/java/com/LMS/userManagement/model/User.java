@@ -64,7 +64,7 @@ public class User implements UserDetails {
     public String country;
 
     @Column(columnDefinition = "TEXT")
-    public String image;
+    public String profileImage;
 
 
   /* @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)

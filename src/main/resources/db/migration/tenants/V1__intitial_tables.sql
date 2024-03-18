@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS user_details
     country character varying(255) ,
     email character varying(255) NOT NULL,
     gender character varying(255) ,
-    image text ,
+    profile_image text ,
     name character varying(255) NOT NULL,
     password character varying(255) NOT NULL,
     role character varying(255) ,
