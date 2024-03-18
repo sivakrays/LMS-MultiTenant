@@ -105,25 +105,38 @@ CREATE TABLE IF NOT EXISTS cart
 
 
 
-CREATE TABLE IF NOT EXISTS chapter_content
+--Table:public.chapter
+CREATE TABLE IF NOT EXISTS chapter
 (
-     chapter_order integer,
-         order_changed boolean,
-         user_id bigint,
-         chapter character varying(255) ,
-         content text ,
-         html_course_id character varying(255) ,
-         id character varying(255) NOT NULL,
-         image text,
-         type character varying(255) ,
-         CONSTRAINT html_course_pkey PRIMARY KEY (id),
-         CONSTRAINT fk5hpxxy37f1y5iy0d3p191wwqu FOREIGN KEY (html_course_id)
-             REFERENCES course (course_id) MATCH SIMPLE
-             ON UPDATE NO ACTION
-             ON DELETE NO ACTION
+    chapter_order integer,
+    user_id bigint,
+    chapter character varying(255) ,
+    chapter_id character varying(255) ,
+    html_course_id character varying(255) ,
+    CONSTRAINT chapter_pkey PRIMARY KEY (chapter_id),
+    CONSTRAINT fkcbk2o5i1mtbt6byjylminw3hb FOREIGN KEY (html_course_id)
+        REFERENCES course (course_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 );
 
+--Table:public.chapter_content
+CREATE TABLE IF NOT EXISTS chapter_content
+(
+     order_changed boolean,
+        chapter_id character varying(255) ,
+        content text ,
+        id character varying(255) ,
+        image text ,
+        type character varying(255) ,
+        CONSTRAINT chapter_content_pkey PRIMARY KEY (id),
+        CONSTRAINT fk64p0ov70yngvygwyup0xcy8f0 FOREIGN KEY (chapter_id)
+            REFERENCES chapter (chapter_id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+);
 
+--Table:purchased_course
 CREATE TABLE IF NOT EXISTS purchased_course
 (
       purchased boolean,
