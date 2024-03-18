@@ -20,22 +20,23 @@ CREATE TABLE IF NOT EXISTS user_details
 -- Table: public.course
 CREATE TABLE IF NOT EXISTS course
 (
-     is_html_course boolean NOT NULL,
-        price integer NOT NULL,
-        ratings integer NOT NULL,
-        date timestamp(6) without time zone,
-        enrolled bigint NOT NULL,
-        user_id bigint NOT NULL,
-        author_name character varying(255) ,
-        category character varying(255) ,
-        course_id character varying(255)  NOT NULL,
-        description text ,
-        language character varying(255) ,
-        overview character varying(255) ,
-        thumb_nail text ,
-        title character varying(255) ,
-        what_you_will_learn text ,
-        CONSTRAINT course_pkey PRIMARY KEY (course_id)
+         is_free boolean,
+         is_html_course boolean,
+         price integer,
+         ratings integer,
+         date timestamp(6) without time zone,
+         enrolled bigint,
+         user_id bigint NOT NULL,
+         author_name character varying(255),
+         category character varying(255) ,
+         course_id character varying(255) NOT NULL,
+         description text ,
+         language character varying(255) ,
+         overview character varying(255),
+         thumb_nail text ,
+         title character varying(255) ,
+         what_you_will_learn text,
+         CONSTRAINT course_pkey PRIMARY KEY (course_id)
 );
 -- Table: public.section
 CREATE TABLE IF NOT EXISTS section
