@@ -21,5 +21,5 @@ public class ProfileDto {
 
     public String country;
 
-    public String image;
+    public String profileImage;
 }
