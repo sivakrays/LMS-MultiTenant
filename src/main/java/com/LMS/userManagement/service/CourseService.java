@@ -67,10 +67,6 @@ public class CourseService {
 
     public ResponseEntity<?> saveCourse(Course course) {
         course.setDate(new Timestamp(System.currentTimeMillis()));
-        if (course.getPrice()==null){
-            course.setIsFree(true);
-        }
-        course.setIsFree(false);
         Course courseDetails = courseRepository.save(course);
         return ResponseEntity.status(HttpStatus.OK).body(courseDetails);
 
