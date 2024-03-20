@@ -176,7 +176,12 @@ public class CourseService {
     }
 
     public ResponseEntity<?> saveHtmlCourse(List<Chapter> chapterList) {
-    var chapters= chapterRepository.saveAll(chapterList);
+        chapterList.sort(Comparator.comparingInt(Chapter::getChapterOrder));
+        chapterList.forEach(chapter -> {
+            chapter.getChapterContent()
+                    .sort(Comparator.comparingInt(ChapterContent::getChapterContentOrder));
+        });
+        var chapters= chapterRepository.saveAll(chapterList);
         return ResponseEntity.ok(chapters);
     }
 

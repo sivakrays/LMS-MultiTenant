@@ -16,6 +16,7 @@ public class ChapterContent {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     public String id;
+    public Integer chapterContentOrder;
     @Column(columnDefinition = "TEXT")
     public String content;
     @Column(columnDefinition = "TEXT")

@@ -109,21 +109,22 @@ CREATE TABLE IF NOT EXISTS cart
 CREATE TABLE IF NOT EXISTS chapter
 (
     chapter_order integer,
-    user_id bigint,
-    chapter character varying(255) ,
-    chapter_id character varying(255) ,
-    html_course_id character varying(255) ,
-    CONSTRAINT chapter_pkey PRIMARY KEY (chapter_id),
-    CONSTRAINT fkcbk2o5i1mtbt6byjylminw3hb FOREIGN KEY (html_course_id)
-        REFERENCES course (course_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        user_id bigint,
+        chapter character varying(255) ,
+        chapter_id character varying(255) ,
+        html_course_id character varying(255) ,
+        CONSTRAINT chapter_pkey PRIMARY KEY (chapter_id),
+        CONSTRAINT fkcbk2o5i1mtbt6byjylminw3hb FOREIGN KEY (html_course_id)
+            REFERENCES course (course_id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
 );
 
 --Table:public.chapter_content
 CREATE TABLE IF NOT EXISTS chapter_content
 (
-     order_changed boolean,
+     chapter_content_order integer,
+        order_changed boolean,
         chapter_id character varying(255) ,
         content text ,
         id character varying(255) ,
