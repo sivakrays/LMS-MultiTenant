@@ -167,12 +167,26 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
 
-    public ResponseEntity<?> getCourseByUserId(Long userId,int pageNo, int pageSize) {
-        Page<Course> courses =courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo, pageSize));
-        if(!courses.isEmpty()){
+    public ResponseEntity<?> getCourseByUserId(Long userId, int pageNo, int pageSize) {
+        Page<Course> courses = courseRepository.findCourseByUserId(userId, PageRequest.of(pageNo, pageSize));
+
+        if (!courses.isEmpty()) {
+            courses.forEach(course -> {
+                // Check if the course has chapters
+                if (course.getChapters() != null && !course.getChapters().isEmpty()) {
+                    // Sort chapters and their content within each course
+                    course.getChapters().sort(Comparator.comparingInt(Chapter::getChapterOrder));
+                    course.getChapters().forEach(chapter -> {
+                        if (chapter.getChapterContent() != null && !chapter.getChapterContent().isEmpty()) {
+                            chapter.getChapterContent().sort(Comparator.comparingInt(ChapterContent::getChapterContentOrder));
+                        }
+                    });
+                }
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(courses);
+        } else {
             return ResponseEntity.status(HttpStatus.OK).body(courses);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
 
     public ResponseEntity<?> saveHtmlCourse(List<Chapter> chapterList) {
