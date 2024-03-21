@@ -1,4 +1,5 @@
 package com.LMS.userManagement.service;
+import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.mapper.CourseMapper;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.CourseDTO;
@@ -231,79 +232,60 @@ public class CourseService {
     }
 
 
-    public CommonResponse<Page<Course>> getAllCourses(int pageNo, int pageSize) {
+    public CommonResponse<List<CourseDetailDto>> getAllCourses() {
+        List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetails();
+        if (courseList.isEmpty()) {
+            return CommonResponse.<List<CourseDetailDto>>builder()
+                    .status(false)
+                    .data(courseList)
+                    .message(Constant.NO_COURSE)
+                    .statusCode(Constant.NO_CONTENT)
+                    .build();
+        }
 
-        Page<Course> coursePage = null;
-        try {
-            coursePage = courseRepository.findAll(PageRequest.of(pageNo, pageSize));
-            if (coursePage != null && coursePage.hasContent()) {
-                return CommonResponse.<Page<Course>>builder()
-                        .status(true)
-                        .data(coursePage)
-                        .message(Constant.COURSES_FOUND)
-                        .statusCode(Constant.SUCCESS)
-                        .build();
-            } else {
-                return CommonResponse.<Page<Course>>builder()
+        return CommonResponse.<List<CourseDetailDto>>builder()
+                .status(true)
+                .data(courseList)
+                .message(Constant.COURSES_FOUND)
+                .statusCode(Constant.SUCCESS)
+                .build();
+            }
+
+
+
+
+    public CommonResponse<List<CourseDetailDto>> searchCourses(String search) {
+      List<CourseDetailDto>   coursesList = courseRepository.searchAllCourse(search);
+
+        if (search.isEmpty()) {
+                // Return an empty list if the search string is empty
+                return CommonResponse.<List<CourseDetailDto> >builder()
                         .status(false)
-                        .data(coursePage)
-                        .message(Constant.NO_COURSE)
+                        .data(new ArrayList<>())
+                        .message(Constant.NO_DATA)
                         .statusCode(Constant.NO_CONTENT)
                         .build();
             }
 
-        } catch (Exception e) {
-            return CommonResponse.<Page<Course>>builder()
-                    .status(false)
-                    .data(coursePage)
-                    .message(Constant.FAILED_COURSE)
-                    .statusCode(Constant.FORBIDDEN)
-                    .build();
-        }
-    }
-
-    public CommonResponse<Page<Course>> searchCourses(String search, int pageNo, int pageSize) {
-
-        Page<Course> courses = null;
-        try {
-            if (search.isEmpty()) {
-                // Return an empty list if the search string is empty
-                return CommonResponse.<Page<Course>>builder()
-                        .status(true)
-                        .data(new PageImpl<>(new ArrayList<>()))
-                        .message(Constant.EMPTY_SEARCH)
-                        .statusCode(Constant.SUCCESS)
-                        .build();
-            }
-
-            courses = courseRepository.searchAllCourse(search, PageRequest.of(pageNo, pageSize));
-            if (courses != null && courses.hasContent()) {
+            if (!coursesList.isEmpty()) {
                 // Return courses if found
-                return CommonResponse.<Page<Course>>builder()
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(true)
-                        .data(courses)
+                        .data(coursesList)
                         .message(Constant.COURSES_FOUND)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
                 // Return an empty list if no courses found
-                return CommonResponse.<Page<Course>>builder()
+                return CommonResponse.<List<CourseDetailDto> >builder()
                         .status(false)
-                        .data(courses)
-                        .message(Constant.NO_COURSE)
+                        .data(coursesList)
+                        .message(Constant.NO_DATA)
                         .statusCode(Constant.NO_CONTENT)
                         .build();
             }
 
-        } catch (Exception e) {
-            // Log the exception or handle it appropriately
-            return CommonResponse.<Page<Course>>builder()
-                    .status(false)
-                    .data(courses)
-                    .message(Constant.SEARCH_FAILED)
-                    .statusCode(Constant.FORBIDDEN)
-                    .build();
-        }
+
     }
 
 

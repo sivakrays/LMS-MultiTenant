@@ -35,6 +35,16 @@ public class AuthenticationResponse {
 
     private int cartCount;
 
+    private String school;
+
+    private String gender;
+
+    private Integer standard;
+
+    private String city;
+
+    private String country;
+
  //   private String refreshToken;
 
 

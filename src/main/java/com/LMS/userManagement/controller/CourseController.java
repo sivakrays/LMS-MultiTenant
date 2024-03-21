@@ -1,5 +1,6 @@
 package com.LMS.userManagement.controller;
 
+import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.Section;
@@ -10,13 +11,9 @@ import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -42,14 +39,13 @@ public class CourseController {
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<Page<Course>> getAllCourses(@RequestParam int pageNo,@RequestParam int pageSize) throws InterruptedException {
-        return courseService.getAllCourses(pageNo,pageSize);
+    public CommonResponse<List<CourseDetailDto>> getAllCourses() throws InterruptedException {
+        return courseService.getAllCourses();
 
     }
     @GetMapping("/searchCourses")
-
-    public CommonResponse<Page<Course>> searchCourses(@RequestParam("search") String search, @RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "6") int pageSize){
-        return courseService.searchCourses(search,pageNo,pageSize);
+    public CommonResponse<List<CourseDetailDto> > searchCourses(@RequestParam("search") String search){
+        return courseService.searchCourses(search);
 
     }
     @PostMapping("/saveSection")

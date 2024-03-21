@@ -1,6 +1,7 @@
 package com.LMS.userManagement.util;
 
 import com.LMS.userManagement.dto.AuthenticationResponse;
+import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.EducationContent;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.Home;
@@ -32,7 +33,7 @@ public class LMSUtil {
         Home home= homeRepository.findByTenantId(tenantId);
       List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
 
-         List<Course> courseList= courseRepository.findAll();
+         List<CourseDetailDto> courseList= courseRepository.findAllCourseDetails();
         List<HomeData> homeList=new ArrayList<>();
 
       List<CourseData> educationContentList=new ArrayList<>();
