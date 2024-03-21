@@ -126,6 +126,11 @@ public class AuthService {
                 .energyPoints(energyPoints)
                 .profileImage(profileImage)
                 .cartCount(cartCount)
+                .city(user.getCity())
+                .country(user.getCountry())
+                .gender(user.getGender())
+                .school(user.getSchool())
+                .standard(user.getStandard())
                 .build();
 
         var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth);

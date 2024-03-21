@@ -31,17 +31,13 @@ public class User implements UserDetails {
     public Long id;
 
     @Column(nullable = false)
-    @NotBlank(message = "Username cannot be empty")
     public String name;
 
     @Column(nullable = false,unique = true)
-    @NotBlank(message = "email cannot be empty")
    // @Email(message = "Invalid email Format")
     public String email;
 
     @Column(nullable = false)
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 6, message = "Password must have at least 6 characters")
     @JsonIgnore
     public String password;
 
