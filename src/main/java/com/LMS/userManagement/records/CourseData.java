@@ -1,5 +1,7 @@
 package com.LMS.userManagement.records;
 
-public record CourseData(String image,
-                         String imageContent) {
+public record CourseData(
+        String title,
+        String image,
+        String imageContent) {
 }

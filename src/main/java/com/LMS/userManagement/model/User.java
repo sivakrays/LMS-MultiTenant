@@ -31,17 +31,13 @@ public class User implements UserDetails {
     public Long id;
 
     @Column(nullable = false)
-    @NotBlank(message = "Username cannot be empty")
     public String name;
 
     @Column(nullable = false,unique = true)
-    @NotBlank(message = "email cannot be empty")
    // @Email(message = "Invalid email Format")
     public String email;
 
     @Column(nullable = false)
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 6, message = "Password must have at least 6 characters")
     @JsonIgnore
     public String password;
 
@@ -53,20 +49,18 @@ public class User implements UserDetails {
 
     public String role;
 
-    @JsonView(Views.MyResponseViews.class)
     public String gender;
 
-    @JsonView(Views.MyResponseViews.class)
     public String school;
 
-    @JsonView(Views.MyResponseViews.class)
     public Integer standard;
 
-    @JsonView(Views.MyResponseViews.class)
     public String city;
 
-    @JsonView(Views.MyResponseViews.class)
     public String country;
+
+    @Column(columnDefinition = "TEXT")
+    public String profileImage;
 
   /* @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
     private List<Token> tokens;*/

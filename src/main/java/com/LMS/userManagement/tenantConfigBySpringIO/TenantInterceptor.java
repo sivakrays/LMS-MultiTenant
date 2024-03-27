@@ -23,7 +23,7 @@ public class TenantInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        var tenantId=tenantResolver.resolveTenantId(request);
+        String tenantId=tenantResolver.resolveTenantId(request);
         if(tenantId==null){
             tenantId="public";
         }

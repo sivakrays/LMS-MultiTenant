@@ -95,6 +95,7 @@ public class Constant {
 
     //Common Data
     public static final String CREATED_DATE="createdDate";
+    public static final String DEFAULT_PROFILE_IMAGE="https://t4.ftcdn.net/jpg/05/89/93/27/360_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg";
 
 
 }

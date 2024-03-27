@@ -1,6 +1,12 @@
 package com.LMS.userManagement.service;
+import com.LMS.userManagement.dto.CourseDetailDto;
+import com.LMS.userManagement.mapper.CourseMapper;
 import com.LMS.userManagement.model.*;
-import com.LMS.userManagement.repository.*;
+import com.LMS.userManagement.records.CourseDTO;
+import com.LMS.userManagement.repository.CourseRepository;
+import com.LMS.userManagement.repository.QuizRepository;
+import com.LMS.userManagement.repository.SectionRepository;
+import com.LMS.userManagement.repository.SubSectionRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +31,11 @@ public class CourseService {
     @Autowired
     QuizRepository quizRepository;
 
-    @Autowired
-    DurationRepository durationRepository;
+    private final CourseMapper mapper;
+
+    public CourseService(CourseMapper mapper) {
+        this.mapper = mapper;
+    }
 
     public CommonResponse<List<Section>> saveSection(List<Section> sections) {
 
@@ -172,9 +181,9 @@ public class CourseService {
 
     public CommonResponse<Course> saveCourse(Course course) {
 
-        Course savedCourse = null;
         try {
-            savedCourse = courseRepository.save(course);
+            course.setIsHtmlCourse(false);
+            Course   savedCourse = courseRepository.save(course);
             return CommonResponse.<Course>builder()
                     .status(true)
                     .data(savedCourse)
@@ -184,7 +193,6 @@ public class CourseService {
         } catch (Exception e) {
             return CommonResponse.<Course>builder()
                     .status(false)
-                    .data(savedCourse)
                     .message(Constant.COURSE_SAVE_FAILED)
                     .statusCode(Constant.FORBIDDEN)
                     .build();
@@ -192,31 +200,31 @@ public class CourseService {
     }
 
 
-    public CommonResponse<Course> getCourseById(UUID courseId) {
+    public CommonResponse<CourseDTO> getCourseById(UUID courseId) {
 
-        Course course = null;
         try {
-            course = courseRepository.findCourseByCourseId(courseId);
-            if(course != null){
-                return CommonResponse.<Course>builder()
+            Course  courseDetails = courseRepository.findCourseByCourseId(courseId);
+            if(courseDetails != null){
+                String profileImage=courseRepository.findUserProfileByUserId(courseDetails.getUserId());
+                CourseDTO courseDTO=mapper.CourseToCourseDtoMapper(courseDetails,profileImage);
+
+                return CommonResponse.<CourseDTO>builder()
                         .status(true)
-                        .data(course)
+                        .data(courseDTO)
                         .message(Constant.COURSES_FOUND)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
-                return CommonResponse.<Course>builder()
+                return CommonResponse.<CourseDTO>builder()
                         .status(false)
-                        .data(course)
                         .message(Constant.NO_COURSE)
                         .statusCode(Constant.NO_CONTENT)
                         .build();
             }
 
         } catch (Exception e) {
-            return CommonResponse.<Course>builder()
+            return CommonResponse.<CourseDTO>builder()
                     .status(false)
-                    .data(course)
                     .message(Constant.FAILED_COURSE)
                     .statusCode(Constant.FORBIDDEN)
                     .build();
@@ -224,79 +232,60 @@ public class CourseService {
     }
 
 
-    public CommonResponse<Page<Course>> getAllCourses(int pageNo, int pageSize) {
-
-        Page<Course> coursePage = null;
-        try {
-            coursePage = courseRepository.findAll(PageRequest.of(pageNo, pageSize));
-            if (coursePage != null && coursePage.hasContent()) {
-                return CommonResponse.<Page<Course>>builder()
-                        .status(true)
-                        .data(coursePage)
-                        .message(Constant.COURSES_FOUND)
-                        .statusCode(Constant.SUCCESS)
-                        .build();
-            } else {
-                return CommonResponse.<Page<Course>>builder()
-                        .status(false)
-                        .data(coursePage)
-                        .message(Constant.NO_COURSE)
-                        .statusCode(Constant.NO_CONTENT)
-                        .build();
-            }
-
-        } catch (Exception e) {
-            return CommonResponse.<Page<Course>>builder()
+    public CommonResponse<List<CourseDetailDto>> getAllCourses() {
+        List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetails();
+        if (courseList.isEmpty()) {
+            return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(false)
-                    .data(coursePage)
-                    .message(Constant.FAILED_COURSE)
-                    .statusCode(Constant.FORBIDDEN)
+                    .data(courseList)
+                    .message(Constant.NO_COURSE)
+                    .statusCode(Constant.NO_CONTENT)
                     .build();
         }
-    }
 
-    public CommonResponse<Page<Course>> searchCourses(String search, int pageNo, int pageSize) {
+        return CommonResponse.<List<CourseDetailDto>>builder()
+                .status(true)
+                .data(courseList)
+                .message(Constant.COURSES_FOUND)
+                .statusCode(Constant.SUCCESS)
+                .build();
+            }
 
-        Page<Course> courses = null;
-        try {
-            if (search.isEmpty()) {
+
+
+
+    public CommonResponse<List<CourseDetailDto>> searchCourses(String search) {
+      List<CourseDetailDto>   coursesList = courseRepository.searchAllCourse(search);
+
+        if (search.isEmpty()) {
                 // Return an empty list if the search string is empty
-                return CommonResponse.<Page<Course>>builder()
-                        .status(true)
-                        .data(new PageImpl<>(new ArrayList<>()))
-                        .message(Constant.EMPTY_SEARCH)
-                        .statusCode(Constant.SUCCESS)
+                return CommonResponse.<List<CourseDetailDto> >builder()
+                        .status(false)
+                        .data(new ArrayList<>())
+                        .message(Constant.NO_DATA)
+                        .statusCode(Constant.NO_CONTENT)
                         .build();
             }
 
-            courses = courseRepository.searchAllCourse(search, PageRequest.of(pageNo, pageSize));
-            if (courses != null && courses.hasContent()) {
+            if (!coursesList.isEmpty()) {
                 // Return courses if found
-                return CommonResponse.<Page<Course>>builder()
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(true)
-                        .data(courses)
+                        .data(coursesList)
                         .message(Constant.COURSES_FOUND)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
                 // Return an empty list if no courses found
-                return CommonResponse.<Page<Course>>builder()
+                return CommonResponse.<List<CourseDetailDto> >builder()
                         .status(false)
-                        .data(courses)
-                        .message(Constant.NO_COURSE)
+                        .data(coursesList)
+                        .message(Constant.NO_DATA)
                         .statusCode(Constant.NO_CONTENT)
                         .build();
             }
 
-        } catch (Exception e) {
-            // Log the exception or handle it appropriately
-            return CommonResponse.<Page<Course>>builder()
-                    .status(false)
-                    .data(courses)
-                    .message(Constant.SEARCH_FAILED)
-                    .statusCode(Constant.FORBIDDEN)
-                    .build();
-        }
+
     }
 
 
@@ -330,43 +319,6 @@ public class CourseService {
                     .build();
         }
     }
-
-    public CommonResponse<Duration> saveCourseVideoDuration(Duration videoDuration) {
-        Duration existingDuration = null;
-        try {
-            Optional<Duration> existingDurationOptional = durationRepository.findById(videoDuration.getDurationId());
-
-            if (existingDurationOptional.isPresent()) {
-                existingDuration = existingDurationOptional.get();
-                // Update the existing duration with the new data
-                existingDuration.setDurationId(videoDuration.getDurationId());
-                // Save the updated duration
-                Duration updatedDuration = durationRepository.save(existingDuration);
-                return CommonResponse.<Duration>builder()
-                        .status(true)
-                        .data(updatedDuration)
-                        .message(Constant.UPDATED_VIDEO_DURATION)
-                        .statusCode(Constant.SUCCESS)
-                        .build();
-            } else {
-                Duration savedDuration = durationRepository.save(videoDuration);
-                return CommonResponse.<Duration>builder()
-                        .status(true)
-                        .message(Constant.SAVED_VIDEO_DURATION)
-                        .data(savedDuration)
-                        .statusCode(Constant.SUCCESS)
-                        .build();
-            }
-        } catch (Exception e) {
-            return CommonResponse.<Duration>builder()
-                    .status(false)
-                    .data(existingDuration)
-                    .message(Constant.FAILED_VIDEO_DURATION)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .build();
-        }
-    }
-
 
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {

@@ -4,8 +4,9 @@ import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.LoginResponse;
+import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.util.Constant;
-import com.LMS.userManagement.util.CustomMapper;
+import com.LMS.userManagement.mapper.CustomMapper;
 import com.LMS.userManagement.records.UserDTO;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.repository.QuizRankRepository;
@@ -16,8 +17,6 @@ import com.LMS.userManagement.util.LMSUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,32 +29,42 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static software.amazon.awssdk.services.s3.model.IntelligentTieringConfiguration.builder;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private final CustomMapper mapper;
 
     private final LMSUtil lmsUtil;
-    @Autowired
-    private  UserRepository userRepository;
-    @Autowired
-    QuizRankRepository quizRankRepository;
+    private final UserRepository userRepository;
+    private final QuizRankRepository quizRankRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    private final CartRepository cartRepository;
+
+    //private final PasswordEncoder passwordEncoder;
 
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
 
+    public AuthService(CustomMapper mapper, LMSUtil lmsUtil, UserRepository userRepository, QuizRankRepository quizRankRepository, CartRepository cartRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.mapper = mapper;
+        this.lmsUtil = lmsUtil;
+        this.userRepository = userRepository;
+        this.quizRankRepository = quizRankRepository;
+        this.cartRepository = cartRepository;
+       // this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
+
     public CommonResponse<UserDTO> register(RegisterRequest request) {
         UserDTO userDto;
         try {
-            User user=mapper.UserMapper(request);
+            User user=mapper.DtoToUserMapper(request);
+            user.setProfileImage(Constant.DEFAULT_PROFILE_IMAGE);
             var savedUser= userRepository.save(user);
-            userDto=mapper.UserDTOMapper(savedUser);
+            userDto=mapper.UserDtoToUserMapper(savedUser);
         }catch (Exception e){
             return CommonResponse.<UserDTO>builder()
                     .status(false)
@@ -94,16 +103,15 @@ public class AuthService {
 
         var user = userRepository.findByEmail(email);
         long userId = user.getId();
-        int goldCount;
-        int silverCount;
-        int bronzeCount;
-        Integer energyPoints;
-
-            goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
-            silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
-            bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
-            energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
-
+        String profileImage=user.getProfileImage();
+         int goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
+         int silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
+         int bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
+         Integer energyPoints = quizRankRepository.sumOfEnergyPoints(userId);
+         int cartCount = cartRepository.cartCountByUserId(userId);
+            if(profileImage==null || profileImage.equals(" ")){
+                profileImage=Constant.DEFAULT_PROFILE_IMAGE;
+            }
 
         String jwtToken = jwtService.generateToken(user, tenantId);
         var auth = AuthenticationResponse.builder()
@@ -116,6 +124,13 @@ public class AuthService {
                 .silver(silverCount)
                 .bronze(bronzeCount)
                 .energyPoints(energyPoints)
+                .profileImage(profileImage)
+                .cartCount(cartCount)
+                .city(user.getCity())
+                .country(user.getCountry())
+                .gender(user.getGender())
+                .school(user.getSchool())
+                .standard(user.getStandard())
                 .build();
 
         var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth);

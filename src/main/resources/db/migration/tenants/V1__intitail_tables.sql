@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS user_details
         role character varying(255) ,
         school character varying(255) ,
         standard integer,
+        profile_image text,
         CONSTRAINT user_details_pkey PRIMARY KEY (id),
         CONSTRAINT uk_4d9rdl7d52k8x3etihxlaujvh UNIQUE (email)
 );
@@ -33,6 +34,7 @@ CREATE TABLE IF NOT EXISTS course
     thumb_nail text ,
     title character varying(255) ,
     what_you_will_learn text ,
+    is_html_course boolean,
     CONSTRAINT course_pkey PRIMARY KEY (course_id)
 );
 -- Table: public.section
@@ -98,6 +100,37 @@ CREATE TABLE IF NOT EXISTS cart
     cart_id uuid NOT NULL,
     course_id uuid,
     CONSTRAINT cart_pkey PRIMARY KEY (cart_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS edu_content
+(
+    id bigint NOT NULL,
+    image text ,
+    image_content text ,
+    standard character varying(255) ,
+    tenant_id character varying(255) ,
+    image_title character varying(255) ,
+    CONSTRAINT edu_content_pkey PRIMARY KEY (id)
+);
+
+
+CREATE TABLE IF NOT EXISTS home
+(
+    id bigint NOT NULL,
+    banner_image text,
+    course_title character varying(255) ,
+    course_title2 character varying(255) ,
+    education_title character varying(255) ,
+    home_title character varying(255) ,
+    promo_description text,
+    promo_title text ,
+    promo_video text ,
+    standard character varying(255) ,
+    support_number character varying(255),
+    tenant_id character varying(255) ,
+    theme text ,
+    CONSTRAINT home_pkey PRIMARY KEY (id)
 );
 
 

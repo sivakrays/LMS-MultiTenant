@@ -6,7 +6,7 @@ public record HomeData(
 
         Banner bannerDetails,
 
-        List<FeaturedCourse> courseDetails,
+        List<?> courseDetails,
 
         PromoData promoDetails
 

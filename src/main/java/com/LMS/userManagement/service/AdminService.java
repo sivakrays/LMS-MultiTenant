@@ -17,10 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,15 +34,13 @@ public class AdminService {
 
 
     public CommonResponse<Admin> adminRegistration(AdminDto adminDto) {
-        Admin savedAdmin = null;
         try {
-            var adminDetails = adminRepository.findAllByEmail(adminDto.getEmail());
+            var adminDetails = adminRepository.findByEmail(adminDto.getEmail());
             if (adminDetails.isPresent()) {
                 return CommonResponse.<Admin>builder()
                         .status(false)
                         .message(Constant.USER_EXISTS)
                         .statusCode(Constant.FORBIDDEN)
-                        .data(savedAdmin)
                         .build();
             }
 
@@ -55,7 +50,7 @@ public class AdminService {
                     .createdDate(new Timestamp(System.currentTimeMillis()))
                     .email(adminDto.getEmail())
                     .build();
-            savedAdmin = adminRepository.save(admin);
+            Admin   savedAdmin = adminRepository.save(admin);
 
             return CommonResponse.<Admin>builder()
                     .status(true)
@@ -67,25 +62,22 @@ public class AdminService {
             // Log the exception or handle it appropriately
             return CommonResponse.<Admin>builder()
                     .status(false)
-                    .message(Constant.FAILED_ADMIN_REGISTER)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .data(savedAdmin)
+                    .statusCode(Constant.FORBIDDEN)
+                    .error(e.getMessage())
                     .build();
         }
     }
 
 
     public CommonResponse<AdminDto> adminLogin(LoginDTO loginDto) {
-        AdminDto adminDto = null;
         try {
             String email = loginDto.email();
             String password = loginDto.password();
-            Optional<Admin> admin = adminRepository.findAllByEmail(email);
+            Optional<Admin> admin = adminRepository.findByEmail(email);
 
             if (admin.isPresent() && admin.get().getPassword().equals(password)) {
                 var ad = admin.get();
-                adminDto = AdminDto.builder()
-                        .password(null)
+                AdminDto  adminDto = AdminDto.builder()
                         .email(ad.getEmail())
                         .role(ad.getRole())
                         .build();
@@ -100,51 +92,50 @@ public class AdminService {
                         .status(false)
                         .message(Constant.USER_EXISTS)
                         .statusCode(Constant.FORBIDDEN)
-                        .data(adminDto)
                         .build();
             }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
             return CommonResponse.<AdminDto>builder()
                     .status(false)
-                    .message(Constant.LOGIN_FAILED)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .data(adminDto)
+                    .statusCode(Constant.FORBIDDEN)
+                    .error(e.getMessage())
                     .build();
         }
     }
 
 
     @Transactional
-    public CommonResponse<Optional<TenantDetails>> deleteTenant(long id) {
-        Optional<TenantDetails> tenant = null;
+    public CommonResponse<List<TenantDetails>> deleteTenant(long id) {
+        List<TenantDetails> tenantList =tenantRepository.findAll();
         try {
-            tenant = tenantRepository.findById(id);
+
+            Optional<TenantDetails>    tenant = tenantRepository.findById(id);
             if (tenant.isEmpty()) {
-                return CommonResponse.<Optional<TenantDetails>>builder()
+                return CommonResponse.<List<TenantDetails>>builder()
                         .status(false)
-                        .statusCode(Constant.NO_CONTENT)
-                        .message(Constant.NO_TENANTS)
-                        .data(null)
+                        .statusCode(Constant.SUCCESS)
+                        .data(tenantList)
                         .build();
             }
             var tenantDtls = tenant.get();
             String schemaName = tenantDtls.getTenantId();
             entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
             tenantRepository.deleteById(id);
-            return CommonResponse.<Optional<TenantDetails>>builder()
+            tenantList=tenantRepository.findAll();
+            return CommonResponse.<List<TenantDetails>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.REMOVED_USER)
-                    .data(null)
+                    .data(tenantList)
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.<Optional<TenantDetails>>builder()
+            return CommonResponse.<List<TenantDetails>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_DELETE_TENANT)
-                    .data(null)
+                    .data(tenantList)
                     .build();
         }
     }
@@ -152,23 +143,12 @@ public class AdminService {
 
     public CommonResponse<Map<String, String>> getAllTenants() {
         Map<String, String> tenantIdMap  = new HashMap<>();
-        List<TenantDetails> tenantList;
-        try {
-            tenantList = tenantRepository.findAll();
-        } catch (Exception e) {
-            // Log the exception or handle it appropriately
-            return CommonResponse.<Map<String, String>>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_TENANT)
-                    .data(tenantIdMap)
-                    .build();
-        }
+        List<TenantDetails> tenantList = tenantRepository.findAll();
         if (tenantList.isEmpty()) {
             return CommonResponse.<Map<String, String>>builder()
                     .status(false)
                     .statusCode(Constant.SUCCESS)
-                    .message(Constant.NO_TENANTS)
+                    .message(Constant.NO_DATA)
                     .data(tenantIdMap)
                     .build();
         }
@@ -180,7 +160,7 @@ public class AdminService {
         return CommonResponse.<Map<String, String>>builder()
                 .status(true)
                 .statusCode(Constant.SUCCESS)
-                .message(Constant.TENANTS_FOUND)
+                .message(Constant.DATA_FOUND)
                 .data(tenantIdMap)
                 .build();
 
