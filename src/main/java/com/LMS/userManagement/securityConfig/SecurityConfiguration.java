@@ -17,13 +17,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
-public class SecurityConfiguration {
+@EnableWebMvc
+public class SecurityConfiguration implements WebMvcConfigurer {
 
    /* @Autowired
     @Qualifier("handlerExceptionResolver")
@@ -38,6 +42,15 @@ public class SecurityConfiguration {
  public JwtAuthenticationFilter jwtAuthFilter(){
         return new JwtAuthenticationFilter(handlerExceptionResolver);
     }*/
+    private String allowedRequest = "/**";
+    private String allowedOrigins = "*";
+    private String[] allowedMethods = {"GET", "POST", "DELETE","PUT", "OPTIONS"};
+
+    @Override
+    public void addCorsMappings(final CorsRegistry registry) {
+        registry.addMapping(allowedRequest).allowedOrigins(allowedOrigins)
+                .allowedMethods(allowedMethods);
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
