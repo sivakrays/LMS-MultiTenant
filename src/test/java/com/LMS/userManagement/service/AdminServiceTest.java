@@ -24,7 +24,7 @@ class AdminServiceTest {
 
     //classed to be mocked ,injecting the dependencies
     @InjectMocks
-   private AdminService adminService;
+    private AdminService adminService;
 
     // declaring all the dependencies
     @Mock
@@ -33,8 +33,8 @@ class AdminServiceTest {
     @Mock
     private  TenantRepository tenantRepository;
 
-     @Mock
-     private  TenantService tenantService;
+    @Mock
+    private  TenantService tenantService;
     @BeforeEach
     void setUp() {
 
@@ -54,7 +54,7 @@ class AdminServiceTest {
         when(adminRepository.findByEmail(adminDto.getEmail())).thenReturn(Optional.empty());
         when(adminRepository.save(any(Admin.class))).thenReturn(new Admin());
         //when
-      CommonResponse<Admin> response =adminService.adminRegistration(adminDto);
+        CommonResponse<Admin> response =adminService.adminRegistration(adminDto);
         //then
         assertTrue(response.getStatus());
         assertNotNull(response.getData());
@@ -108,7 +108,7 @@ class AdminServiceTest {
                 .build();
 
         //mock the api calls
-      when(adminRepository.findByEmail(loginDTO.email())).thenReturn(Optional.of(admin));
+        when(adminRepository.findByEmail(loginDTO.email())).thenReturn(Optional.of(admin));
 
         //when
 
@@ -149,5 +149,4 @@ class AdminServiceTest {
 
     }
 
-    }
-
+}

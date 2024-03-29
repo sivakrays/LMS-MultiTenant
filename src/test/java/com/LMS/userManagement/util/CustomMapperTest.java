@@ -36,7 +36,7 @@ class CustomMapperTest {
                 "siva@123",
                 "siva@123",
                 "admin"
-                );
+        );
 
         User user=customMapper.DtoToUserMapper(request);
 

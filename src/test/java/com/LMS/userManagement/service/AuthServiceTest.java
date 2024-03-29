@@ -32,9 +32,9 @@ class AuthServiceTest {
     @InjectMocks
     private   AuthService authService;
 
-  //declare dependency
+    //declare dependency
     @Mock
-     private CustomMapper mapper;
+    private CustomMapper mapper;
     @Mock
     private  LMSUtil lmsUtil;
 
@@ -57,26 +57,26 @@ class AuthServiceTest {
     }
 
     @Test
-  public  void should_save_a_user(){
+    public  void should_save_a_user(){
 
-      //Given
-      RegisterRequest request=new RegisterRequest(
-              "siva",
-              "siva@gmail.com",
-              "siva@123",
-              "siva@123",
-              "admin"
-      );
+        //Given
+        RegisterRequest request=new RegisterRequest(
+                "siva",
+                "siva@gmail.com",
+                "siva@123",
+                "siva@123",
+                "admin"
+        );
 
-      User user =new User();
-      user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-      user.setRole("admin");
-      user.setEmail("siva@gmail.com");
-      user.setName("siva");
-      user.setPassword("siva@123");
-      user.setConfirmPassword("siva@123");
+        User user =new User();
+        user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        user.setRole("admin");
+        user.setEmail("siva@gmail.com");
+        user.setName("siva");
+        user.setPassword("siva@123");
+        user.setConfirmPassword("siva@123");
 
-      //mock the calls
+        //mock the calls
         //mocked dto to user mapper
         when(mapper.DtoToUserMapper(request))
                 .thenReturn(user);
@@ -91,18 +91,18 @@ class AuthServiceTest {
                 "siva@gmail.com",
                 "admin",
                 new Timestamp(System.currentTimeMillis())));
-      //when
-       CommonResponse<UserDTO> userDto= authService.register(request);
+        //when
+        CommonResponse<UserDTO> userDto= authService.register(request);
 
-       //then
-      assertEquals(request.getName(),userDto.getData().name());
-      assertEquals(request.getEmail(),userDto.getData().email());
+        //then
+        assertEquals(request.getName(),userDto.getData().name());
+        assertEquals(request.getEmail(),userDto.getData().email());
 
-      //to verify the calls
-      verify(mapper,times(1))
-              .DtoToUserMapper(request);
-      verify(userRepository,times(1))
-              .save(user);
+        //to verify the calls
+        verify(mapper,times(1))
+                .DtoToUserMapper(request);
+        verify(userRepository,times(1))
+                .save(user);
         verify(mapper,times(1))
                 .UserDtoToUserMapper(user);
 
