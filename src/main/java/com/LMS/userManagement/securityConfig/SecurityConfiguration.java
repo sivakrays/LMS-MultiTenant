@@ -48,9 +48,9 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
-        registry.addMapping(allowedRequest).allowedOrigins(allowedOrigins)
+        registry.addMapping(allowedRequest)
+                .allowedOrigins(allowedOrigins)
                 .allowedMethods(allowedMethods)
-                .allowCredentials(true)
                 .allowedHeaders("*")
                 .maxAge(168000);
 
@@ -60,7 +60,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
        http.cors(AbstractHttpConfigurer::disable)
-               .csrf(csrf ->csrf.disable())
+               .csrf(AbstractHttpConfigurer::disable)
                         .authorizeHttpRequests(auth->
                             auth   .requestMatchers("/lms/api/auth/**").permitAll()
                                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
