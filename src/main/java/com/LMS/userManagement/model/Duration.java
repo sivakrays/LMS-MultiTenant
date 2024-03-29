@@ -1,3 +1,4 @@
+/*
 package com.LMS.userManagement.model;
 
 import jakarta.persistence.*;
@@ -27,3 +28,4 @@ public class Duration {
 
 
 }
+*/

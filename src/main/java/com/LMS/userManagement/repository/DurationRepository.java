@@ -1,3 +1,4 @@
+/*
 package com.LMS.userManagement.repository;
 
 import com.LMS.userManagement.model.Duration;
@@ -10,3 +11,4 @@ public interface DurationRepository extends JpaRepository<Duration,Integer>{
 
 
 }
+*/
