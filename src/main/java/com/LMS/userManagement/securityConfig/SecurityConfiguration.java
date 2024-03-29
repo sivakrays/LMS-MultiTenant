@@ -44,12 +44,17 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     }*/
     private String allowedRequest = "/**";
     private String allowedOrigins = "*";
-    private String[] allowedMethods = {"GET", "POST", "DELETE","PUT", "OPTIONS"};
+    private final String[] allowedMethods = {"GET", "POST", "DELETE","PUT", "OPTIONS"};
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping(allowedRequest).allowedOrigins(allowedOrigins)
-                .allowedMethods(allowedMethods);
+                .allowedMethods(allowedMethods)
+                .allowCredentials(true)
+                .allowedHeaders("*")
+                .maxAge(168000);
+
+
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
