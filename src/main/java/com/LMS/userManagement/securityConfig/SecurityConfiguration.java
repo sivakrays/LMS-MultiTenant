@@ -27,8 +27,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
-@EnableWebMvc
-public class SecurityConfiguration implements WebMvcConfigurer {
+//@EnableWebMvc
+public class SecurityConfiguration  {
 
    /* @Autowired
     @Qualifier("handlerExceptionResolver")
