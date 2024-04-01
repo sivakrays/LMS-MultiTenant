@@ -42,20 +42,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
  public JwtAuthenticationFilter jwtAuthFilter(){
         return new JwtAuthenticationFilter(handlerExceptionResolver);
     }*/
-    private String allowedRequest = "/**";
-    private String allowedOrigins = "*";
-    private final String[] allowedMethods = {"GET", "POST", "DELETE","PUT", "OPTIONS"};
-
-    @Override
-    public void addCorsMappings(final CorsRegistry registry) {
-        registry.addMapping(allowedRequest)
-                .allowedOrigins(allowedOrigins)
-                .allowedMethods(allowedMethods)
-                .allowedHeaders("*")
-                .maxAge(168000);
-
-
-    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
