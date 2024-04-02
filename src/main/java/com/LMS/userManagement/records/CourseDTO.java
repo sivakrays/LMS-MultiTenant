@@ -3,10 +3,9 @@ package com.LMS.userManagement.records;
 import com.LMS.userManagement.model.Section;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public record CourseDTO(
-        UUID courseId,
+        String courseId,
         Long userId,
         String profileImage,
         String title,

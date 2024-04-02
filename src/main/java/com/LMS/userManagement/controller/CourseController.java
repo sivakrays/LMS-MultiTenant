@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 
 @RestController
@@ -33,7 +32,7 @@ public class CourseController {
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<CourseDTO> getCourseById(@RequestParam UUID courseId){
+    public CommonResponse<CourseDTO> getCourseById(@RequestParam String courseId){
     return courseService.getCourseById(courseId);
 
     }
@@ -55,7 +54,7 @@ public class CourseController {
     }
     @DeleteMapping("/deleteCourseById")
   //  @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse< Page<Course>> deleteCourseById(@RequestParam UUID courseId,@RequestParam int pageNo,@RequestParam int pageSize){
+    public CommonResponse< Page<Course>> deleteCourseById(@RequestParam String courseId,@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.deleteCourseById(courseId,pageNo,pageSize);
     }
     @PutMapping("/updateCourse")

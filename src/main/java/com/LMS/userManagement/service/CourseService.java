@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
 @Service
 public class CourseService {
     @Autowired
@@ -60,7 +58,7 @@ public class CourseService {
 
     }
 
-    public CommonResponse<Page<Course>> deleteCourseById(UUID courseId,int pageNo,int pageSize) {
+    public CommonResponse<Page<Course>> deleteCourseById(String courseId,int pageNo,int pageSize) {
 
         try {
             Page<Course> courses = null;
@@ -200,7 +198,7 @@ public class CourseService {
     }
 
 
-    public CommonResponse<CourseDTO> getCourseById(UUID courseId) {
+    public CommonResponse<CourseDTO> getCourseById(String courseId) {
 
         try {
             Course  courseDetails = courseRepository.findCourseByCourseId(courseId);

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/lms/api/user")
@@ -31,7 +30,7 @@ public class CartController {
         return cartService.getCartDetailByUserId(userId);
     }
     @DeleteMapping("/deleteCartById")
-    public CommonResponse<List<CartDetail>> deleteCartById(@RequestParam UUID cartId){
+    public CommonResponse<List<CartDetail>> deleteCartById(@RequestParam String cartId){
         return cartService.deleteCartById(cartId);
     }
 }

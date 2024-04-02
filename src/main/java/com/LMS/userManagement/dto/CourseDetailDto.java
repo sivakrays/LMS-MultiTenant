@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 
 import java.util.Date;
-import java.util.UUID;
 
 public interface CourseDetailDto {
 
     @JsonProperty("courseId")
-    public UUID getCourse_id();
+    public String getCourse_id();
     @JsonProperty("userId")
     public Long getUser_id();
     @JsonProperty("title")

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -17,7 +16,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "course_id")
-    private UUID courseId;
+    private String courseId;
     @Column(nullable = false)
     private Long userId;
     private String title;
