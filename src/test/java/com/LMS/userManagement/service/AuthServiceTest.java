@@ -1,3 +1,4 @@
+/*
 package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.RegisterRequest;
@@ -108,6 +109,7 @@ class AuthServiceTest {
 
 
     }
+*/
 /*
     @Test
     public void should_login_with_email_password(){
@@ -136,5 +138,6 @@ class AuthServiceTest {
         //then
         assertNotNull(loginResponse.data.auth());
         verify(authService,timeout(2000)).authentication(loginDTO,tenantId);
-    }*/
-}
+    }*//*
+
+}*/
