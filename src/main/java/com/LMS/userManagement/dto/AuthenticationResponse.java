@@ -31,6 +31,20 @@ public class AuthenticationResponse {
 
     private Integer energyPoints;
 
+    private String profileImage;
+
+    private int cartCount;
+
+    private String school;
+
+    private String gender;
+
+    private Integer standard;
+
+    private String city;
+
+    private String country;
+
  //   private String refreshToken;
 
 

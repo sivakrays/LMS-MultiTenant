@@ -21,14 +21,15 @@ public class ProfileService {
         User savedUser = null;
         try {
             if (user.isPresent()) {
-                User user1 = user.get();
-                user1.setName(profileRequest.getName());
-                user1.setGender(profileRequest.getGender());
-                user1.setSchool(profileRequest.getSchool());
-                user1.setStandard(profileRequest.getStandard());
-                user1.setCity(profileRequest.getCity());
-                user1.setCountry(profileRequest.getCountry());
-                savedUser = userRepository.save(user1);
+                User userDetails = user.get();
+                userDetails.setName(profileRequest.getName());
+                userDetails.setGender(profileRequest.getGender());
+                userDetails.setSchool(profileRequest.getSchool());
+                userDetails.setStandard(profileRequest.getStandard());
+                userDetails.setCity(profileRequest.getCity());
+                userDetails.setCountry(profileRequest.getCountry());
+                userDetails.setProfileImage(profileRequest.getProfileImage());
+                savedUser = userRepository.save(userDetails);
                 return CommonResponse.<User>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
@@ -38,7 +39,7 @@ public class ProfileService {
             } else {
                 return CommonResponse.<User>builder()
                         .status(false)
-                        .statusCode(Constant.NOT_FOUND)
+                        .statusCode(Constant.NO_CONTENT)
                         .message(Constant.USER_NOT_FOUND)
                         .data(savedUser)
                         .build();
@@ -68,7 +69,7 @@ public class ProfileService {
             } else {
                 return CommonResponse.<User>builder()
                         .status(false)
-                        .statusCode(Constant.NOT_FOUND)
+                        .statusCode(Constant.NO_CONTENT)
                         .message(Constant.PROFILE_NOT_FOUND)
                         .data(null)
                         .build();

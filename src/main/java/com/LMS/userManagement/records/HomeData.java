@@ -1,12 +1,14 @@
 package com.LMS.userManagement.records;
 
+import java.util.List;
+
 public record HomeData(
 
-        Banner banner,
+        Banner bannerDetails,
 
-        FeaturedCourse featuredCourse,
+        List<?> courseDetails,
 
-        PromoData promo
+        PromoData promoDetails
 
 ) {
 }

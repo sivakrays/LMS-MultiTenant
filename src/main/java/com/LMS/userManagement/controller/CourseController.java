@@ -1,6 +1,11 @@
 package com.LMS.userManagement.controller;
 
-import com.LMS.userManagement.model.*;
+import com.LMS.userManagement.dto.CourseDetailDto;
+import com.LMS.userManagement.model.Course;
+import com.LMS.userManagement.model.Quiz;
+import com.LMS.userManagement.model.Section;
+import com.LMS.userManagement.model.SubSection;
+import com.LMS.userManagement.records.CourseDTO;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 
 @RestController
@@ -28,20 +32,19 @@ public class CourseController {
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<Course> getCourseById(@RequestParam UUID courseId){
+    public CommonResponse<CourseDTO> getCourseById(@RequestParam String courseId){
     return courseService.getCourseById(courseId);
 
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<Page<Course>> getAllCourses(@RequestParam int pageNo,@RequestParam int pageSize) throws InterruptedException {
-        return courseService.getAllCourses(pageNo,pageSize);
+    public CommonResponse<List<CourseDetailDto>> getAllCourses() throws InterruptedException {
+        return courseService.getAllCourses();
 
     }
     @GetMapping("/searchCourses")
-
-    public CommonResponse<Page<Course>> searchCourses(@RequestParam("search") String search, @RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "6") int pageSize){
-        return courseService.searchCourses(search,pageNo,pageSize);
+    public CommonResponse<List<CourseDetailDto> > searchCourses(@RequestParam("search") String search){
+        return courseService.searchCourses(search);
 
     }
     @PostMapping("/saveSection")
@@ -51,7 +54,7 @@ public class CourseController {
     }
     @DeleteMapping("/deleteCourseById")
   //  @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse< Page<Course>> deleteCourseById(@RequestParam UUID courseId,@RequestParam int pageNo,@RequestParam int pageSize){
+    public CommonResponse< Page<Course>> deleteCourseById(@RequestParam String courseId,@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.deleteCourseById(courseId,pageNo,pageSize);
     }
     @PutMapping("/updateCourse")
@@ -77,11 +80,6 @@ public class CourseController {
     @GetMapping("/getCourseByUserId")
     public CommonResponse<Page<Course>> getCourseByUserId(@RequestParam Long userId,@RequestParam int pageNo,@RequestParam int pageSize){
         return courseService.getCourseByUserId(userId,pageNo,pageSize);
-    }
-
-    @PostMapping("/saveCourseVideoDuration")
-    public CommonResponse<Duration> saveCourseVideoDuration(@RequestBody Duration videoDuration){
-        return courseService.saveCourseVideoDuration(videoDuration);
     }
 
    /* @GetMapping("/getCourseCompletion")

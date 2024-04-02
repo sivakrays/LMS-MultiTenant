@@ -9,9 +9,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class CommonResponse<T> {
 
-    public boolean status=false;
+    public Boolean status;
     public String message;
     public T data;
-    public int statusCode;
+    public Integer statusCode;
     public String error;
 }

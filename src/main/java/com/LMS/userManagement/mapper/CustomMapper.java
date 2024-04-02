@@ -1,4 +1,4 @@
-package com.LMS.userManagement.util;
+package com.LMS.userManagement.mapper;
 
 import com.LMS.userManagement.dto.RegisterRequest;
 import com.LMS.userManagement.model.EduContent;
@@ -7,7 +7,6 @@ import com.LMS.userManagement.model.User;
 import com.LMS.userManagement.records.EduContentDTO;
 import com.LMS.userManagement.records.HomeDTO;
 import com.LMS.userManagement.records.UserDTO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +14,20 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Component
 public class CustomMapper {
 
     private final PasswordEncoder passwordEncoder;
 
+    public CustomMapper(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     // user register details mapper
-    public User UserMapper(RegisterRequest request){
-        User user=User.builder()
+    public User DtoToUserMapper(RegisterRequest request){
+
+        return User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -33,25 +35,23 @@ public class CustomMapper {
                 .role(request.getRole().toLowerCase())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .build();
-
-        return user;
     }
 
     //saved user in user registration using records
-    public UserDTO UserDTOMapper(User savedUser){
-        UserDTO userDto= new UserDTO(
+    public UserDTO UserDtoToUserMapper(User savedUser){
+
+        return new UserDTO(
+                savedUser.getId(),
                 savedUser.getName(),
                 savedUser.getEmail(),
-                savedUser.role,
-                savedUser.createdDate
+                savedUser.getRole(),
+                savedUser.getCreatedDate()
         );
-
-        return userDto;
     }
 
     public Home DTOToHomeMapper(HomeDTO homeDTO,
                                 String promoVideo){
-        Home home=Home.builder()
+        return Home.builder()
                 .homeTitle(homeDTO.homeTitle())
                 .courseTitle(homeDTO.courseTitle())
                 .courseTitle2(homeDTO.courseTitle2())
@@ -65,12 +65,11 @@ public class CustomMapper {
                 .promoTitle(homeDTO.promoTitle())
                 .supportNumber(homeDTO.supportNumber())
                 .build();
-        return home;
     }
 
     public HomeDTO homeToDTOMapper(Home savedHome){
 
-        HomeDTO homeDTO=   new HomeDTO(
+        return new HomeDTO(
                 savedHome.getId(),
                 savedHome.getTenantId(),
                 savedHome.getHomeTitle(),
@@ -85,13 +84,13 @@ public class CustomMapper {
                 savedHome.getBannerImage(),
                 savedHome.getSupportNumber()
         );
-        return homeDTO;
     }
 
     public List<EduContent> DTOToEduContentMappper(List<EduContentDTO> eduContentDTOList){
         List<EduContent> eduContentList = new ArrayList<>();
         eduContentDTOList.forEach(eduContentDTO -> {
                     EduContent content = EduContent.builder()
+                            .imageTitle(eduContentDTO.imageTitle())
                             .image(eduContentDTO.image())
                             .imageContent(eduContentDTO.imageContent())
                             .tenantId(eduContentDTO.tenantId())
@@ -110,6 +109,7 @@ public class CustomMapper {
             eduContentDTOList.add(
                     new EduContentDTO(
                             eduContent.getId(),
+                            eduContent.getImageTitle(),
                             eduContent.getImage(),
                             eduContent.getImageContent(),
                             eduContent.getTenantId(),

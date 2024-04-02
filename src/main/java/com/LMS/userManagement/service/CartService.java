@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CartService {
@@ -28,7 +27,7 @@ public class CartService {
         List<Cart> carts = null;
         try {
             Long userId = cart.getUserId();
-            UUID courseId = cart.getCourseId();
+            String courseId = cart.getCourseId();
 
             List<Cart> cartList = cartRepository.findByUserId(userId);
 
@@ -73,7 +72,7 @@ public class CartService {
 
             if (!carts.isEmpty()) {
                 for (Cart cart : carts) {
-                    UUID courseId = cart.getCourseId();
+                    String courseId = cart.getCourseId();
                     Course course = courseRepository.findCourseByCourseId(courseId);
 
                     if (course != null) {
@@ -97,7 +96,7 @@ public class CartService {
             } else {
                 return CommonResponse.<List<CartDetail>>builder()
                         .status(false)
-                        .statusCode(Constant.NOT_FOUND)
+                        .statusCode(Constant.NO_CONTENT)
                         .message(Constant.EMPTY_CART)
                         .data(cartDetails)
                         .build();
@@ -115,7 +114,7 @@ public class CartService {
 
 
 
-    public CommonResponse<List<CartDetail>> deleteCartById(UUID cartId) {
+    public CommonResponse<List<CartDetail>> deleteCartById(String cartId) {
         List<CartDetail> cartDetails = null;
         try {
             cartDetails = new ArrayList<>();
@@ -127,7 +126,7 @@ public class CartService {
 
                 if (!cartList.isEmpty()) {
                     for (Cart cart1 : cartList) {
-                        UUID courseId = cart1.getCourseId();
+                        String courseId = cart1.getCourseId();
                         Course course = courseRepository.findCourseByCourseId(courseId);
 
                         if (course != null) {
@@ -159,8 +158,8 @@ public class CartService {
             }
             return CommonResponse.<List<CartDetail>>builder()
                     .status(false)
-                    .statusCode(Constant.NOT_FOUND)
-                    .message(Constant.NO_CART)
+                    .statusCode(Constant.NO_CONTENT)
+                    .message(Constant.NO_DATA)
                     .data(cartDetails)
                     .build();
         } catch (Exception e) {
