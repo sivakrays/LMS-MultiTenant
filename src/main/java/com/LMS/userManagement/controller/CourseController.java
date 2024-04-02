@@ -99,7 +99,17 @@ public class CourseController {
         return courseService.saveHtmlCourse(chapterList);
     }
 
+    @PutMapping("/updateChapter")
+    // @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> updateChapter(@RequestBody Chapter chapter) {
+        return courseService.updateChapter(chapter);
+    }
 
+    @PutMapping("/updateChapterContent")
+    // @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> updateChapterContent(@RequestBody ChapterContent chapterContent) {
+        return courseService.updateChapterContent(chapterContent);
+    }
 
 }
 

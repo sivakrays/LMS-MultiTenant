@@ -28,6 +28,8 @@ public class CourseService {
     QuizRepository quizRepository;
     @Autowired
     private ChapterRepository chapterRepository;
+    @Autowired
+    private ChapterContentRepository chapterContentRepository;
 
     @Autowired PurchasedCourseRepository purchasedCourseRepository;
 
@@ -197,6 +199,94 @@ public class CourseService {
         });
         var chapters= chapterRepository.saveAll(chapterList);
         return ResponseEntity.ok(chapters);
+    }
+
+    public ResponseEntity<?> updateChapter(Chapter chapter) {
+        Optional<Chapter> existingChapterOptional = chapterRepository.findById(chapter.getChapterId());
+        if (existingChapterOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Chapter Not Found");
+        }
+
+        // Get the existing chapter
+        Chapter existingChapter = existingChapterOptional.get();
+
+        // Update fields of the existing chapter with values provided in the request
+        if (chapter.getUserId() != null) {
+            existingChapter.setUserId(chapter.getUserId());
+        }
+        if (chapter.getHtml_course_id() != null) {
+            existingChapter.setHtml_course_id(chapter.getHtml_course_id());
+        }
+        if (chapter.getChapter() != null) {
+            existingChapter.setChapter(chapter.getChapter());
+        }
+        if (chapter.getChapterOrder() != null) {
+            existingChapter.setChapterOrder(chapter.getChapterOrder());
+        }
+        if (chapter.getChapterContent() != null) {
+            List<ChapterContent> existingChapterContent = existingChapter.getChapterContent();
+            List<ChapterContent> updatedChapterContent = chapter.getChapterContent();
+            if (existingChapterContent != null && updatedChapterContent != null) {
+                for (int i = 0; i < Math.min(existingChapterContent.size(), updatedChapterContent.size()); i++) {
+                    ChapterContent existingContent = existingChapterContent.get(i);
+                    ChapterContent updatedContent = updatedChapterContent.get(i);
+                    if (updatedContent != null) {
+                        if (updatedContent.getChapterContentOrder() != null) {
+                            existingContent.setChapterContentOrder(updatedContent.getChapterContentOrder());
+                        }
+                        if (updatedContent.getContent() != null) {
+                            existingContent.setContent(updatedContent.getContent());
+                        }
+                        if (updatedContent.getImage() != null) {
+                            existingContent.setImage(updatedContent.getImage());
+                        }
+                        if (updatedContent.getOrderChanged() != null) {
+                            existingContent.setOrderChanged(updatedContent.getOrderChanged());
+                        }
+                        if (updatedContent.getType() != null) {
+                            existingContent.setType(updatedContent.getType());
+                        }
+                    }
+                }
+            }
+        }
+
+        // Save the updated chapter in the database
+        chapterRepository.save(existingChapter);
+
+        // Return 200 OK status with the updated chapter
+        return ResponseEntity.status(HttpStatus.OK).body(existingChapter);
+    }
+
+    public ResponseEntity<?> updateChapterContent(ChapterContent chapterContent) {
+        Optional<ChapterContent> existingChapterContentOptional = chapterContentRepository.findById(chapterContent.getId());
+        if (existingChapterContentOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Chapter Content not found");
+        }
+        ChapterContent existingChapterContent = existingChapterContentOptional.get();
+
+        // Update fields only if they are not null in the incoming chapterContent
+        if (chapterContent.getId() != null) {
+            existingChapterContent.setId(chapterContent.getId());
+        }
+        if (chapterContent.getChapterContentOrder() != null) {
+            existingChapterContent.setChapterContentOrder(chapterContent.getChapterContentOrder());
+        }
+        if (chapterContent.getContent() != null) {
+            existingChapterContent.setContent(chapterContent.getContent());
+        }
+        if (chapterContent.getOrderChanged() != null) {
+            existingChapterContent.setOrderChanged(chapterContent.getOrderChanged());
+        }
+        if (chapterContent.getType() != null) {
+            existingChapterContent.setType(chapterContent.getType());
+        }
+        if (chapterContent.getImage() != null) {
+            existingChapterContent.setImage(chapterContent.getImage());
+        }
+
+        chapterContentRepository.save(existingChapterContent);
+        return ResponseEntity.status(HttpStatus.OK).body(existingChapterContent);
     }
 
 
