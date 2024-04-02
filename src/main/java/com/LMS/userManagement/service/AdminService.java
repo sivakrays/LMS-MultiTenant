@@ -108,7 +108,7 @@ public class AdminService {
     @Transactional
     public CommonResponse<List<TenantDetails>> deleteTenant(long id) {
         List<TenantDetails> tenantList =tenantRepository.findAll();
-        try {
+                try {
 
             Optional<TenantDetails>    tenant = tenantRepository.findById(id);
             if (tenant.isEmpty()) {
