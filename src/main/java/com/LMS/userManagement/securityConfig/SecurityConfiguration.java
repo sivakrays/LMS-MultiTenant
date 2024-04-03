@@ -82,7 +82,7 @@ public class SecurityConfiguration  {
     }
 
 
-    @Bean
+   /* @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -91,5 +91,5 @@ public class SecurityConfiguration  {
                 registry.addMapping("/**").allowedMethods("*").allowedOriginPatterns("http://localhost:3000");
             }
         };
-    }
+    }*/
 }
