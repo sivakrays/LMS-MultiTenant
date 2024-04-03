@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+//@CrossOrigin(origins = "*",allowedHeaders = "*")
 @RequestMapping("/lms/api/admin")
 @RequiredArgsConstructor
 @Tag(name = "Admin", description = "Admin management APIs")
