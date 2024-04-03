@@ -1,15 +1,17 @@
 package com.LMS.userManagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
 public interface CourseDetailDto {
 
     @JsonProperty("courseId")
-    public UUID getCourse_id();
+    public String  getCourse_id();
     @JsonProperty("userId")
     public Long getUser_id();
     @JsonProperty("title")
@@ -25,9 +27,14 @@ public interface CourseDetailDto {
     @JsonProperty("language")
     public String getLanguage();
     @JsonProperty("price")
-    public Integer getPrice();
+    public int getPrice();
     @JsonProperty("date")
-    public Date getDate();
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    public Timestamp getCreatedDate();
     @JsonProperty("IsHtmlCourse")
-    public Boolean getIs_html_course();
+    public boolean getIs_html_course();
+    @JsonProperty("IsFree")
+    public boolean getIs_free();
+
+
 }

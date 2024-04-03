@@ -10,12 +10,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface CourseRepository extends JpaRepository<Course, UUID> {
-    Course findCourseByCourseId(UUID courseId);
+public interface CourseRepository extends JpaRepository<Course, String> {
+    Course findCourseByCourseId(String courseId);
     @Query(value = "SELECT c.user_id,c.course_id,c.title,c.is_html_course,c.thumb_nail,c.ratings,c.price,c.language,c.date,c.category,c.author_name FROM course c WHERE " +
             "c.title iLIKE CONCAT('%',:search, '%')" +
             "OR c.description iLIKE CONCAT('%', :search, '%') " +

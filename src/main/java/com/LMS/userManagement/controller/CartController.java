@@ -34,4 +34,9 @@ public class CartController {
     public CommonResponse<List<CartDetail>> deleteCartById(@RequestParam UUID cartId){
         return cartService.deleteCartById(cartId);
     }
+
+    @DeleteMapping("/deleteCartByUserId")
+    public CommonResponse<List<Cart>> deleteCartByUserId(@RequestParam Long userId){
+        return  cartService.deleteCartByUserId(userId);
+    }
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID quizId;
+    private String quizId;
     private String title;
     private Integer key;
     @Column(columnDefinition = "TEXT")
