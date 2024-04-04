@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+
 public record CourseDTO(
         String courseId,
         Long userId,

@@ -8,11 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface CartRepository extends JpaRepository<Cart, UUID> {
+public interface CartRepository extends JpaRepository<Cart, String> {
    List<Cart>  findByUserId(Long userId);
 
    Cart findByCourseIdAndUserId(String courseId, Long userId);

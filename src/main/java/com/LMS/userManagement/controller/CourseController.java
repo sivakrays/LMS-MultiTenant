@@ -32,6 +32,7 @@ public class CourseController {
     public CommonResponse<CourseDTO> getCourseById(@RequestParam String courseId,@RequestParam Long userId){
     return courseService.getCourseById(courseId,userId);
 
+
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")

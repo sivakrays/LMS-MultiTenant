@@ -23,10 +23,12 @@ public interface CourseRepository extends JpaRepository<Course, String> {
    Page<Course> findCourseByUserId(Long userId, PageRequest of);
 
 
-   @Query(value = "SELECT PROFILE_IMAGE FROM USER_DETAILS WHERE ID=?1",nativeQuery = true)
-   String findUserProfileByUserId(Long userId);
+    @Query(value = "SELECT PROFILE_IMAGE FROM USER_DETAILS WHERE ID=?1", nativeQuery = true)
+    default String findUserProfileByUserId(Long userId) {
+        return null;
+    }
 
-   @Query(value = "SELECT user_id,course_id,title,is_html_course,thumb_nail,ratings,price,language,date,category,author_name FROM course",nativeQuery = true)
+    @Query(value = "SELECT user_id,course_id,title,is_html_course,thumb_nail,ratings,price,language,date,category,author_name FROM course",nativeQuery = true)
    List<CourseDetailDto> findAllCourseDetails();
 
 

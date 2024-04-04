@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CartService {
@@ -32,7 +31,7 @@ public class CartService {
             Long userId = cart.getUserId();
             String courseId = cart.getCourseId();
             cart.setCreateDate(new Timestamp(System.currentTimeMillis()));
-            List<Cart> cartList = cartRepository.findByUserId(userId);
+          List<Cart> cartList = cartRepository.findByUserId(userId);
 
             if (!cartList.isEmpty()) {
                 Cart existingCart = cartRepository.findByCourseIdAndUserId(courseId, userId);
@@ -117,7 +116,7 @@ public class CartService {
 
 
 
-    public CommonResponse<List<CartDetail>> deleteCartById(UUID cartId) {
+    public CommonResponse<List<CartDetail>> deleteCartById(String cartId) {
         List<CartDetail> cartDetails = null;
         try {
             cartDetails = new ArrayList<>();
