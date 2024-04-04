@@ -1,10 +1,7 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
-import com.LMS.userManagement.model.Course;
-import com.LMS.userManagement.model.Quiz;
-import com.LMS.userManagement.model.Section;
-import com.LMS.userManagement.model.SubSection;
+import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.CourseDTO;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
@@ -32,14 +29,15 @@ public class CourseController {
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<CourseDTO> getCourseById(@RequestParam String courseId){
-    return courseService.getCourseById(courseId);
+    public CommonResponse<CourseDTO> getCourseById(@RequestParam String courseId,@RequestParam Long userId){
+    return courseService.getCourseById(courseId,userId);
+
 
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<List<CourseDetailDto>> getAllCourses() throws InterruptedException {
-        return courseService.getAllCourses();
+    public CommonResponse<List<CourseDetailDto>> getAllCourses(@RequestParam Long userId) throws InterruptedException {
+        return courseService.getAllCourses(userId);
 
     }
     @GetMapping("/searchCourses")
@@ -82,6 +80,19 @@ public class CourseController {
         return courseService.getCourseByUserId(userId,pageNo,pageSize);
     }
 
+    @PostMapping("/saveHtmlCourse")
+    public CommonResponse<List<Chapter>> saveCourse(@RequestBody List<Chapter> chapterList) {
+        return courseService.saveHtmlCourse(chapterList);
+    }
+    @PutMapping("/updateChapter")
+    public CommonResponse<Chapter> updateChapter(@RequestBody Chapter chapter) {
+        return courseService.updateChapter(chapter);
+    }
+
+    @PutMapping("/updateChapterContent")
+    public CommonResponse<ChapterContent> updateChapterContent(@RequestBody ChapterContent chapterContent) {
+        return courseService.updateChapterContent(chapterContent);
+    }
    /* @GetMapping("/getCourseCompletion")
     public ResponseEntity<?> getCourseCompletion(@RequestHeader int courseId){
         return courseService.getCourseCompletion(courseId);

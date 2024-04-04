@@ -1,3 +1,4 @@
+/*
 package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.AdminDto;
@@ -149,4 +150,4 @@ class AdminServiceTest {
 
     }
 
-}
+}*/

@@ -15,5 +15,5 @@ public class CartDetail {
     public String authorName;
     public String thumbNail;
     public String category;
-    private Integer price;
+    private int price;
 }
