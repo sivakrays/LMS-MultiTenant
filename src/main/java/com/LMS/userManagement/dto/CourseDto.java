@@ -23,6 +23,6 @@ public class CourseDto {
     private String overview;
     private String whatYouWillLearn;
     private Integer price;
-    private Date date;
+    private Date createdDate;
     private ArrayList<SectionDto> sections;
 }
