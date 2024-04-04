@@ -37,10 +37,33 @@ public class Constant {
     public static final String QUIZ_CSV_UPLOAD = "Quiz CSV uploaded successfully";
     public static final String QUIZ_CSV_DOWNLOAD = "Quiz CSV template downloaded successfully";
     public static final String CART_EMPTY_DELETION = "Cart is empty after deletion";
+    public static final String COURSE_PURCHASED = "Course purchased successfully";
+    public static final String COURSE_IDS_EMPTY = "Course ids are empty";
+    public static final String RETRIEVED_PURCHASED_COURSE = "Purchased courses found";
+    public static final String SAVE_HTML_COURSE = "Html course save successfully";
+    public static final String CHAPTER_NOT_FOUND = "Chapter not found";
+    public static final String UPDATED_CHAPTER = "Chapter updated successfully";
+    public static final String CHAPTER_CONTENT_NOT_FOUND = "Chapter content not found";
+    public static final String UPDATED_CHAPTER_CONTENT = "Chapter content updated successfully";
+
+
+
+
+
+
 
 
     //NEGATIVE Message
     public static final String NO_COURSE = "No Courses Found";
+    public static final String FAILED_PURCHASE_COURSE = "Failed to purchase course";
+    public static final String FAILED_RETRIEVED_PURCHASED_COURSE = "Failed to retrieve purchased course";
+    public static final String FAILED_SAVE_HTML_COURSE = "Failed to save html course";
+
+    public static final String FAILED_UPDATE_CHAPTER = "Failed to update chapter details";
+    public static final String FAILED_UPDATE_CHAPTER_CONTENT = "Failed to update chapter content details";
+
+
+
     public static final String EMPTY_CART = "Cart is empty";
     public static final String NO_CARTNO_CART = "Cart not found";
     public static final String NO_DATA = "No data found";

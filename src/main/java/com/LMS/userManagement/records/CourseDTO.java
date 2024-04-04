@@ -1,12 +1,15 @@
 package com.LMS.userManagement.records;
 
+import com.LMS.userManagement.model.Chapter;
 import com.LMS.userManagement.model.Section;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
 
 public record CourseDTO(
-        UUID courseId,
+        String courseId,
         Long userId,
         String profileImage,
         String title,
@@ -20,8 +23,13 @@ public record CourseDTO(
         String overview,
         String whatYouWillLearn,
         Integer price,
-        Date date,
-        List<Section> sections
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+        Timestamp createdDate,
+        boolean isFree,
+        boolean isHtmlCourse,
+        boolean isPurchased,
+        ArrayList<Section> sections,
+        ArrayList<Chapter> chapters
 
 ) {
 }

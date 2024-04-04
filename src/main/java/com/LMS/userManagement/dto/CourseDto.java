@@ -1,18 +1,17 @@
 package com.LMS.userManagement.dto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseDto {
-    public Integer courseId;
+    public String courseId;
     public String title;
     public String authorName;
     public String description;
@@ -24,6 +23,6 @@ public class CourseDto {
     private String overview;
     private String whatYouWillLearn;
     private Integer price;
-    private Date date;
-    private List<SectionDto> sections;
+    private Date createdDate;
+    private ArrayList<SectionDto> sections;
 }

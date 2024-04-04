@@ -7,13 +7,14 @@ import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CartService {
@@ -28,9 +29,9 @@ public class CartService {
         List<Cart> carts = null;
         try {
             Long userId = cart.getUserId();
-            UUID courseId = cart.getCourseId();
-
-            List<Cart> cartList = cartRepository.findByUserId(userId);
+            String courseId = cart.getCourseId();
+            cart.setCreateDate(new Timestamp(System.currentTimeMillis()));
+          List<Cart> cartList = cartRepository.findByUserId(userId);
 
             if (!cartList.isEmpty()) {
                 Cart existingCart = cartRepository.findByCourseIdAndUserId(courseId, userId);
@@ -73,7 +74,7 @@ public class CartService {
 
             if (!carts.isEmpty()) {
                 for (Cart cart : carts) {
-                    UUID courseId = cart.getCourseId();
+                    String courseId = cart.getCourseId();
                     Course course = courseRepository.findCourseByCourseId(courseId);
 
                     if (course != null) {
@@ -115,7 +116,7 @@ public class CartService {
 
 
 
-    public CommonResponse<List<CartDetail>> deleteCartById(UUID cartId) {
+    public CommonResponse<List<CartDetail>> deleteCartById(String cartId) {
         List<CartDetail> cartDetails = null;
         try {
             cartDetails = new ArrayList<>();
@@ -127,7 +128,7 @@ public class CartService {
 
                 if (!cartList.isEmpty()) {
                     for (Cart cart1 : cartList) {
-                        UUID courseId = cart1.getCourseId();
+                        String courseId = cart1.getCourseId();
                         Course course = courseRepository.findCourseByCourseId(courseId);
 
                         if (course != null) {
@@ -172,6 +173,32 @@ public class CartService {
                     .data(cartDetails)
                     .build();
         }
+    }
+    @Transactional
+    public CommonResponse<List<Cart>> deleteCartByUserId(Long userId) {
+        List<Cart> cartList = null;
+        try{
+            cartList = new ArrayList<>();
+            cartRepository.deleteAllByUserId(userId);
+            cartList = cartRepository.findByUserId(userId);
+            return CommonResponse.<List<Cart>>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.CART_DELETED)
+                    .data(cartList)
+                    .build();
+
+        } catch (Exception e) {
+        // Log the exception or handle it appropriately
+       return CommonResponse.<List<Cart>>builder()
+               .status(false)
+               .statusCode(Constant.INTERNAL_SERVER_ERROR)
+               .message(Constant.FAILED_DELETE_CART)
+               .data(cartList)
+               .build();
+
+    }
+
     }
 
 }
