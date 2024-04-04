@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String> {
     Course findCourseByCourseId(String courseId);
-    @Query(value = "SELECT c.user_id,c.course_id,c.title,c.is_html_course,c.thumb_nail,c.ratings,c.price,c.language,c.date,c.category,c.author_name FROM course c WHERE " +
+    @Query(value = "SELECT c.user_id,c.course_id,c.title,c.is_html_course,c.thumb_nail,c.ratings,c.price,c.language,c.created_date,c.category,c.author_name FROM course c WHERE " +
             "c.title iLIKE CONCAT('%',:search, '%')" +
             "OR c.description iLIKE CONCAT('%', :search, '%') " +
             "OR c.category iLIKE CONCAT ('%', :search, '%')",nativeQuery = true)
@@ -28,7 +28,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
         return null;
     }
 
-    @Query(value = "SELECT user_id,course_id,title,is_html_course,thumb_nail,ratings,price,language,date,category,author_name FROM course",nativeQuery = true)
+    @Query(value = "SELECT user_id,course_id,title,is_html_course,thumb_nail,ratings,price,language,created_date,category,author_name FROM course",nativeQuery = true)
    List<CourseDetailDto> findAllCourseDetails();
 
 

@@ -23,7 +23,7 @@ public class CourseMapper {
                 course.getOverview(),
                 course.getWhatYouWillLearn(),
                 course.getPrice(),
-                course.getDate(),
+                course.getCreatedDate(),
                 course.isFree(),
                 course.isHtmlCourse(),
                 isPurchased,
