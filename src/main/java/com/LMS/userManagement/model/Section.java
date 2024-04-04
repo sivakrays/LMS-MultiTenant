@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class Section {
     private String title;
     @OneToMany(targetEntity = SubSection.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "section_id",referencedColumnName = "section_id")
-    private List<SubSection> subSections;
+    private ArrayList<SubSection> subSections;
 
 
 

@@ -4,17 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.ArrayList;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubSectionDto {
-    private Integer subSectionId;
-    private Integer sectionId;
+    private String subSectionId;
+    private String sectionId;
     private Integer key;
     private String title;
     private String description;
     private String link;
-    private List<QuizDto> quizList;
+    private ArrayList<QuizDto> quizList;
 
 }
