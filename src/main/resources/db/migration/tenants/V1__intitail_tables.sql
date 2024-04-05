@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS user_details
     password character varying(255) NOT NULL,
     profile_image text,
     role character varying(255),
-    school character varying(255)",
+    school character varying(255),
     CONSTRAINT user_details_pkey PRIMARY KEY (id),
     CONSTRAINT user_details_email_key UNIQUE (email)
 );
@@ -132,8 +132,52 @@ CREATE TABLE IF NOT EXISTS home
     support_number character varying(255),
     tenant_id character varying(255),
     theme text,
+    banner_heading text ,
+    banner_paragraph text ,
+    banner_sub_heading text ,
     CONSTRAINT home_pkey PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS chapter
+(
+    chapter_order integer,
+    user_id bigint,
+    chapter character varying(255) ,
+    chapter_id character varying(255)  NOT NULL,
+    html_course_id character varying(255) ,
+    CONSTRAINT chapter_pkey PRIMARY KEY (chapter_id),
+    CONSTRAINT fkcbk2o5i1mtbt6byjylminw3hb FOREIGN KEY (html_course_id)
+        REFERENCES course (course_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS chapter_content
+(
+    chapter_content_order integer,
+    order_changed boolean,
+    chapter_content_id character varying(255)  NOT NULL,
+    chapter_id character varying(255) ,
+    content text  ,
+    image text ,
+    type character varying(255),
+    CONSTRAINT chapter_content_pkey PRIMARY KEY (chapter_content_id),
+    CONSTRAINT fk64p0ov70yngvygwyup0xcy8f0 FOREIGN KEY (chapter_id)
+        REFERENCES chapter (chapter_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS purchased_course
+(
+    purchased boolean NOT NULL,
+    purchased_id bigint NOT NULL,
+    purchased_on timestamp(6) without time zone,
+    user_id bigint,
+    course_id character varying(255),
+    CONSTRAINT purchased_course_pkey PRIMARY KEY (purchased_id)
+);
+
 
 
 

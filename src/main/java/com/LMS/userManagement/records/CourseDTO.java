@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public record CourseDTO(
@@ -28,8 +29,8 @@ public record CourseDTO(
         boolean isFree,
         boolean isHtmlCourse,
         boolean isPurchased,
-        ArrayList<Section> sections,
-        ArrayList<Chapter> chapters
+        List<Section> sections,
+        List<Chapter> chapters
 
 ) {
 }

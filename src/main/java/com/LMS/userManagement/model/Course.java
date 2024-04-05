@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 @Entity
@@ -49,11 +49,11 @@ public class Course {
 
     @OneToMany(targetEntity = Section.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id",referencedColumnName = "course_id")
-    private ArrayList<Section> sections;
+    private List<Section> sections;
 
     @OneToMany(targetEntity = Chapter.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "html_course_id",referencedColumnName = "course_id")
-    private ArrayList<Chapter> chapters;
+    private List<Chapter> chapters;
 
 
 

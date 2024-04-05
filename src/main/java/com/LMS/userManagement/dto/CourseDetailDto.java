@@ -27,12 +27,12 @@ public interface CourseDetailDto {
     public String getLanguage();
     @JsonProperty("price")
     public int getPrice();
-    @JsonProperty("date")
+    @JsonProperty("CreatedDate")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    public Timestamp getCreatedDate();
-    @JsonProperty("IsHtmlCourse")
+    public Timestamp getCreated_date();
+    @JsonProperty("isHtmlCourse")
     public boolean getIs_html_course();
-    @JsonProperty("IsFree")
+    @JsonProperty("isFree")
     public boolean getIs_free();
 
 

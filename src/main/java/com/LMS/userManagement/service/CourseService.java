@@ -327,14 +327,13 @@ public class CourseService {
         }
     }
     public CommonResponse<List<Chapter>> saveHtmlCourse(List<Chapter> chapterList) {
-        List<Chapter> chapters = null;
+        List<Chapter> chapters;
        try {
-           chapters = new ArrayList<>();
-           chapterList.sort(Comparator.comparingInt(Chapter::getChapterOrder));
+         /*  chapterList.sort(Comparator.comparingInt(Chapter::getChapterOrder));
            chapterList.forEach(chapter -> {
                chapter.getChapterContent()
                        .sort(Comparator.comparingInt(ChapterContent::getChapterContentOrder));
-           });
+           });*/
             chapters = chapterRepository.saveAll(chapterList);
            return CommonResponse.<List<Chapter>>builder()
                    .status(true)
@@ -347,7 +346,7 @@ public class CourseService {
                    .status(false)
                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
                    .message(Constant.FAILED_SAVE_HTML_COURSE)
-                   .data(chapters)
+                   .data(new ArrayList<>())
                    .build();
        }
     }
