@@ -84,7 +84,7 @@ public class AuthService {
 
 
 
-    public CommonResponse<LoginResponse> authentication(LoginDTO loginDto, String tenantId) {
+    public CommonResponse<LoginResponse> authentication(LoginDTO loginDto, String tenantId,String type) {
         String email = loginDto.email();
         String password = loginDto.password();
         try {
@@ -133,7 +133,7 @@ public class AuthService {
                 .standard(user.getStandard())
                 .build();
 
-        var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth);
+        var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth,type);
 
         return CommonResponse.<LoginResponse>builder()
                 .status(true)

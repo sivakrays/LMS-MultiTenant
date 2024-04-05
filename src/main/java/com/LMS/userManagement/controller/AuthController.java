@@ -36,12 +36,22 @@ public class AuthController {
 
     }
 
-    @PostMapping("/login")
+    @PostMapping("/mobile/login")
     // @PreAuthorize("hasAuthority('user')")
-    public CommonResponse<LoginResponse> authentication (
+    public CommonResponse<LoginResponse> mobileAuthentication (
             @RequestBody LoginDTO loginDto,
             @RequestHeader String tenantId) {
-        return authService.authentication(loginDto,tenantId);
+        String type="mob";
+        return authService.authentication(loginDto,tenantId,type);
+
+    }
+    @PostMapping("/login")
+    // @PreAuthorize("hasAuthority('user')")
+    public CommonResponse<LoginResponse> WebAuthentication (
+            @RequestBody LoginDTO loginDto,
+            @RequestHeader String tenantId) {
+        String type="web";
+        return authService.authentication(loginDto,tenantId,type);
 
     }
 

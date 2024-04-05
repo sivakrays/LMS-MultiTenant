@@ -29,7 +29,7 @@ public class LMSUtil {
         this.courseRepository = courseRepository;
     }
 
-    public LoginResponse findHomeScreenByTenantId(String tenantId, AuthenticationResponse auth){
+    public LoginResponse findHomeScreenByTenantId(String tenantId, AuthenticationResponse auth,String type){
         Home home= homeRepository.findByTenantId(tenantId);
       List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
 
@@ -54,35 +54,58 @@ public class LMSUtil {
         }
 
 
-        Banner banner = ExtractBannerDetailFromHome(home);
+        String courseTitle="";
+        String courseTitle2="";
+        String educationTitle="";
+        Banner banner=new Banner("","","","","","","");
+        PromoData promo =new PromoData("","","");
 
+        if (home!=null){
+            courseTitle=home.getCourseTitle();
+            courseTitle2=home.getCourseTitle2();
+            educationTitle= home.getEducationTitle();
+            if(type.equalsIgnoreCase("web")){
+                banner = ExtractWebBannerDetailFromHome(home);
+            }else{
+                banner= new Banner(
+                        home.getBannerImage(),
+                        home.getHomeTitle(),
+                        home.getTheme(),
+                       "",
+                        "",
+                        "",
+                        home.getSupportNumber()
+                );
+            }
+             promo= new PromoData(
+                    home.getPromoTitle(),
+                    home.getPromoVideo(),
+                    home.getPromoDescription()
+            );
+        }
 
       //  List<CourseData> popularCourseList=new ArrayList<>();
         var popularCourse=   new PopularCourse(
-                    home.getCourseTitle(),
+                   courseTitle,
                    courseList,
                 false
         );
 
       //  List<CourseData> recommendedCourseList=new ArrayList<>();
         var recommendedCourse=   new RecommendedCourse(
-                home.getCourseTitle2(),
+                courseTitle2,
                 courseList,
                 false
         );
 
 
         var educationContent=new EducationCourse(
-                home.getEducationTitle(),
+                educationTitle,
                 educationContentList,
                 true
         );
 
-        var promo= new PromoData(
-                home.getPromoTitle(),
-                home.getPromoVideo(),
-                home.getPromoDescription()
-        );
+
 
         List<Object> featuredCourseList=new ArrayList<>();
         featuredCourseList.add(popularCourse);
@@ -101,11 +124,14 @@ public class LMSUtil {
         );
     }
 
-    private Banner ExtractBannerDetailFromHome(Home home) {
+    private Banner ExtractWebBannerDetailFromHome(Home home) {
         return  new Banner(
                 home.getBannerImage(),
                 home.getHomeTitle(),
                 home.getTheme(),
+                home.getBannerHeading(),
+                home.getBannerSubHeading(),
+                home.getBannerParagraph(),
                 home.getSupportNumber()
         );
     }

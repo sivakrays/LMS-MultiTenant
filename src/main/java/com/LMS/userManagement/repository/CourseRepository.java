@@ -28,7 +28,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
         return null;
     }
 
-    @Query(value = "SELECT user_id,course_id,title,is_html_course,thumb_nail,ratings,price,language,created_date,category,author_name FROM course",nativeQuery = true)
+    @Query(value = "SELECT user_id,course_id,title,is_html_course,is_free,thumb_nail,ratings,price,language,created_date,category,author_name FROM course",nativeQuery = true)
    List<CourseDetailDto> findAllCourseDetails();
 
 
