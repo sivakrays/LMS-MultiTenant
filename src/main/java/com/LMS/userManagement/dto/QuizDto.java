@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +15,6 @@ public class QuizDto {
     private String title;
     private Integer key;
     private String question;
-    private ArrayList<String> options;
+    private List<String> options;
     private  int answer;
 }

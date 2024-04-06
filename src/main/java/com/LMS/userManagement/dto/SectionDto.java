@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,5 +15,5 @@ public class SectionDto {
     private String courseId;
     private Integer key;
     private String title;
-    private ArrayList<SubSectionDto> subSections;
+    private List<SubSectionDto> subSections;
 }

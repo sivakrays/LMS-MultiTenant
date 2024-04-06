@@ -24,7 +24,7 @@ public class Section {
     private String title;
     @OneToMany(targetEntity = SubSection.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "section_id",referencedColumnName = "section_id")
-    private ArrayList<SubSection> subSections;
+    private List<SubSection> subSections;
 
 
 
