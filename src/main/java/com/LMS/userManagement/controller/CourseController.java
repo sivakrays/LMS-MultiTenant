@@ -52,8 +52,8 @@ public class CourseController {
     }
     @DeleteMapping("/deleteCourseById")
   //  @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse< Page<Course>> deleteCourseById(@RequestParam String courseId,@RequestParam int pageNo,@RequestParam int pageSize){
-        return courseService.deleteCourseById(courseId,pageNo,pageSize);
+    public CommonResponse<List<Course>> deleteCourseById(@RequestParam String courseId){
+        return courseService.deleteCourseById(courseId);
     }
     @PutMapping("/updateCourse")
    // @PreAuthorize("hasAuthority('admin')")
@@ -76,8 +76,8 @@ public class CourseController {
         return courseService.updateQuiz(quiz);
     }
     @GetMapping("/getCourseByUserId")
-    public CommonResponse<Page<Course>> getCourseByUserId(@RequestParam Long userId,@RequestParam int pageNo,@RequestParam int pageSize){
-        return courseService.getCourseByUserId(userId,pageNo,pageSize);
+    public CommonResponse<List<Course>> getCourseByUserId(@RequestParam Long userId){
+        return courseService.getCourseByUserId(userId);
     }
 
     @PostMapping("/saveHtmlCourse")
