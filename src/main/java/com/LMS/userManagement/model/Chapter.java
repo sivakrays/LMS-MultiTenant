@@ -28,5 +28,5 @@ Chapter {
     public Integer chapterOrder;
     @OneToMany(targetEntity = ChapterContent.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "chapter_id",referencedColumnName = "chapter_id")
-    private List<ChapterContent> chapterContent;
+    public List<ChapterContent> chapterContent;
 }

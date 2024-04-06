@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +17,6 @@ public class SubSectionDto {
     private String title;
     private String description;
     private String link;
-    private ArrayList<QuizDto> quizList;
+    private List<QuizDto> quizList;
 
 }

@@ -26,7 +26,7 @@ public class SubSection {
 
     @OneToMany(targetEntity = Quiz.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "sub_section_id",referencedColumnName = "sub_section_id")
-    private ArrayList<Quiz> quizList;
+    private List<Quiz> quizList;
 
 
 

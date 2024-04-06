@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 public class PurchasedCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long purchasedId;
+    private Long purchasedId;
     private  Long userId;
     private String courseId;
     private boolean purchased ;
