@@ -20,7 +20,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "OR c.category iLIKE CONCAT ('%', :search, '%')",nativeQuery = true)
     List<CourseDetailDto> searchAllCourse( @Param("search")String search);
 
-   Page<Course> findCourseByUserId(Long userId, PageRequest of);
+   List<Course> findCourseByUserId(Long userId);
 
 
     @Query(value = "SELECT PROFILE_IMAGE FROM USER_DETAILS WHERE ID=?1", nativeQuery = true)

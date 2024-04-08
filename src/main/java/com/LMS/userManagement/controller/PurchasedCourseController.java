@@ -21,7 +21,7 @@ public class PurchasedCourseController {
     private PurchasedCourseService purchasedCourseService;
 
     @PostMapping("/savePurchasedCourse")
-    public CommonResponse<PurchasedCourse> savePurchasedCourse(@RequestBody PurchasedCourseDto purchasedCourseDto){
+    public CommonResponse<List<PurchasedCourse>> savePurchasedCourse(@RequestBody PurchasedCourseDto purchasedCourseDto){
         return purchasedCourseService.savePurchasedCourse(purchasedCourseDto);
     }
 

@@ -23,27 +23,30 @@ public class PurchasedCourseService {
     @Autowired
     private CourseRepository courseRepository;
 
-    public CommonResponse<PurchasedCourse> savePurchasedCourse(PurchasedCourseDto purchasedCourseDto) {
-        PurchasedCourse purchasedCourseDetail = null;
+    public CommonResponse<List<PurchasedCourse>> savePurchasedCourse(PurchasedCourseDto purchasedCourseDto) {
+        List<PurchasedCourse> purchasedCourseDetail = null;
         try {
+            Long userId = purchasedCourseDto.getUserId();
             for (String courseId : purchasedCourseDto.getCourseId()) {
                 PurchasedCourse purchasedCourse = new PurchasedCourse();
-                purchasedCourse.setUserId(purchasedCourseDto.getUserId());
+                purchasedCourse.setUserId(userId);
                 purchasedCourse.setCourseId(courseId);
                 purchasedCourse.setPurchased(true);
                 purchasedCourse.setPurchasedOn(new Timestamp(System.currentTimeMillis()));
 
-               purchasedCourseDetail = purchasedCourseRepository.save(purchasedCourse);
+               purchasedCourseRepository.save(purchasedCourse);
+               purchasedCourseDetail = purchasedCourseRepository.findByUserId(userId);
+
 
             }
-            return CommonResponse.<PurchasedCourse>builder()
+            return CommonResponse.<List<PurchasedCourse>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.COURSE_PURCHASED)
                     .data(purchasedCourseDetail)
                     .build();
         } catch (Exception e) {
-            return CommonResponse.<PurchasedCourse>builder()
+            return CommonResponse.<List<PurchasedCourse>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_PURCHASE_COURSE)
