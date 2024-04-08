@@ -1,5 +1,6 @@
 package com.LMS.userManagement.controller;
 
+import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.PurchasedCourseDto;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.PurchasedCourse;
@@ -26,7 +27,7 @@ public class PurchasedCourseController {
     }
 
     @GetMapping("/getPurchasedCourse")
-    public CommonResponse<List<Course>> getPurchasedCourseByUserId(@RequestParam Long userId){
+    public CommonResponse<List<CourseDetailDto>> getPurchasedCourseByUserId(@RequestParam Long userId){
         return purchasedCourseService.getPurchasedCoursesByUserId(userId);
     }
 

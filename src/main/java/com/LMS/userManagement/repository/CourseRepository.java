@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String> {
@@ -30,6 +31,10 @@ public interface CourseRepository extends JpaRepository<Course, String> {
 
     @Query(value = "SELECT user_id,course_id,title,is_html_course,is_free,thumb_nail,ratings,price,language,created_date,category,author_name FROM course",nativeQuery = true)
    List<CourseDetailDto> findAllCourseDetails();
+
+
+    @Query(value = "SELECT user_id,course_id,title,is_html_course,is_free,thumb_nail,ratings,price,language,created_date,category,author_name FROM course WHERE course_id IN :courseId",nativeQuery = true)
+    List<CourseDetailDto> findAllCourseDetailsById(List<String> courseId);
 
 
 

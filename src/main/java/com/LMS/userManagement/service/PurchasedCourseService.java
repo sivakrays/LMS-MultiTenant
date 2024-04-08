@@ -1,5 +1,6 @@
 package com.LMS.userManagement.service;
 
+import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.PurchasedCourseDto;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.PurchasedCourse;
@@ -52,39 +53,41 @@ public class PurchasedCourseService {
         }
     }
 
-    public CommonResponse<List<Course>> getPurchasedCoursesByUserId(Long userId) {
-        List<Course> courses = null;
+    public CommonResponse<List<CourseDetailDto>> getPurchasedCoursesByUserId(Long userId) {
+        List<CourseDetailDto> courseList = new ArrayList<>();
         try {
-            courses = new ArrayList<>();
-            // Find the list of purchased course IDs by user ID
+         // Find the list of purchased course IDs by user ID
             List<String> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
 
             // If no course IDs found, return empty list
             if (courseIds.isEmpty()) {
-                return CommonResponse.<List<Course>>builder()
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(false)
                         .statusCode(Constant.NO_CONTENT)
-                        .message(Constant.COURSE_IDS_EMPTY)
-                        .data(courses)
+                        .message(Constant.NO_COURSE)
+                        .data(courseList)
                         .build();
             }
             // Retrieve course data for each course ID
-            for (String courseId : courseIds) {
-                Optional<Course> courseOptional = courseRepository.findById(courseId);
-                courseOptional.ifPresent(courses::add);
-            }
-            return CommonResponse.<List<Course>>builder()
+           /* for (String courseId : courseIds) {
+                Optional<CourseDetailDto> courseList = courseRepository.findAllCourseDetailsById(courseId);
+                courseList.ifPresent(courses::add);
+            }*/
+
+             courseList = courseRepository.findAllCourseDetailsById(courseIds);
+
+            return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.RETRIEVED_PURCHASED_COURSE)
-                    .data(courses)
+                    .data(courseList)
                     .build();
         } catch (Exception e) {
-            return CommonResponse.<List<Course>>builder()
+            return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_RETRIEVED_PURCHASED_COURSE)
-                    .data(courses)
+                    .message(Constant.NO_COURSE)
+                    .data(courseList)
                     .build();
         }
     }
