@@ -211,8 +211,10 @@ public class CourseService {
 
             if(courseDetails != null){
                 String profileImage=courseRepository.findUserProfileByUserId(userId);
-                boolean purchased=  purchasedCourseRepository.findByCourseIdAndUserId(courseId,userId);
-
+                Boolean purchased=  purchasedCourseRepository.findByCourseIdAndUserId(courseId,userId);
+                if (purchased==null){
+                    purchased=false;
+                }
                 CourseDTO courseDTO=mapper.CourseToCourseDtoMapper(courseDetails,profileImage,purchased);
 
                 return CommonResponse.<CourseDTO>builder()
@@ -240,7 +242,7 @@ public class CourseService {
 
 
     public CommonResponse<List<CourseDetailDto>> getAllCourses(Long userId) {
-        List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetails();
+        List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetailsByUserId(userId);
         if (courseList.isEmpty()) {
             return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(false)
