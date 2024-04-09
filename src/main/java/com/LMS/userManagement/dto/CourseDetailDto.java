@@ -34,7 +34,7 @@ public interface CourseDetailDto {
     public boolean getIs_html_course();
     @JsonProperty("isFree")
     public boolean getIs_free();
-    @JsonProperty("purchased")
+    @JsonProperty("isPurchased")
     public boolean getPurchased();
 
 
