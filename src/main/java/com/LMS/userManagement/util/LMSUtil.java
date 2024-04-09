@@ -32,8 +32,8 @@ public class LMSUtil {
     public LoginResponse findHomeScreenByTenantId(String tenantId, AuthenticationResponse auth,String type){
         Home home= homeRepository.findByTenantId(tenantId);
       List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
-
-         List<CourseDetailDto> courseList= courseRepository.findAllCourseDetails();
+        Long userId = auth.getUserId();
+         List<CourseDetailDto> courseList= courseRepository.findAllCourseDetailsByUserId(userId);
         List<HomeData> homeList=new ArrayList<>();
 
       List<CourseData> educationContentList=new ArrayList<>();
