@@ -29,6 +29,18 @@ public class PurchasedCourseService {
         try {
             Long userId = purchasedCourseDto.getUserId();
             for (String courseId : purchasedCourseDto.getCourseId()) {
+                List<PurchasedCourse>   purchasedCourseDetailList = purchasedCourseRepository.findByUserId(userId);
+            if(!purchasedCourseDetailList.isEmpty()) {
+                PurchasedCourse existingCourse = purchasedCourseRepository.findByUserIdAndCourseId(userId, courseId);
+                if (existingCourse != null) {
+                    return CommonResponse.<List<PurchasedCourse>>builder()
+                            .status(false)
+                            .statusCode(Constant.SUCCESS)
+                            .message(Constant.COURSE_ALREADY_PURCHASED)
+                            .data(purchasedCourseDetail)
+                            .build();
+                }
+            }
                 PurchasedCourse purchasedCourse = new PurchasedCourse();
                 purchasedCourse.setUserId(userId);
                 purchasedCourse.setCourseId(courseId);
@@ -60,10 +72,10 @@ public class PurchasedCourseService {
         List<CourseDetailDto> courseList = new ArrayList<>();
         try {
          // Find the list of purchased course IDs by user ID
-            List<String> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
-
+          //  List<String> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
+            courseList = purchasedCourseRepository.findPurchasedCourseByUserId(userId);
             // If no course IDs found, return empty list
-            if (courseIds.isEmpty()) {
+            if (courseList.isEmpty()) {
                 return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(false)
                         .statusCode(Constant.NO_CONTENT)
@@ -77,14 +89,13 @@ public class PurchasedCourseService {
                 courseList.ifPresent(courses::add);
             }*/
 
-             courseList = courseRepository.findAllCourseDetailsById(courseIds);
-
             return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.RETRIEVED_PURCHASED_COURSE)
                     .data(courseList)
                     .build();
+
         } catch (Exception e) {
             return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(false)
