@@ -2,8 +2,10 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.PurchasedCourseDto;
+import com.LMS.userManagement.model.Cart;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.PurchasedCourse;
+import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.repository.PurchasedCourseRepository;
 import com.LMS.userManagement.response.CommonResponse;
@@ -23,6 +25,8 @@ public class PurchasedCourseService {
     private PurchasedCourseRepository purchasedCourseRepository;
     @Autowired
     private CourseRepository courseRepository;
+    @Autowired
+    CartRepository cartRepository;
 
     public CommonResponse<List<PurchasedCourse>> savePurchasedCourse(PurchasedCourseDto purchasedCourseDto) {
         List<PurchasedCourse> purchasedCourseDetail = null;
@@ -49,7 +53,7 @@ public class PurchasedCourseService {
 
                purchasedCourseRepository.save(purchasedCourse);
                purchasedCourseDetail = purchasedCourseRepository.findByUserId(userId);
-
+            removePurchasedCoursesFromCart(userId,purchasedCourseDto.getCourseId());
 
             }
             return CommonResponse.<List<PurchasedCourse>>builder()
@@ -66,6 +70,10 @@ public class PurchasedCourseService {
                     .data(purchasedCourseDetail)
                     .build();
         }
+    }
+    public void  removePurchasedCoursesFromCart(Long userId,List<String> courseIds){
+        List<Cart> purchasedCartList =cartRepository.findByUserIdAndCourseId(userId,courseIds);
+        cartRepository.deleteAll(purchasedCartList);
     }
 
     public CommonResponse<List<CourseDetailDto>> getPurchasedCoursesByUserId(Long userId) {

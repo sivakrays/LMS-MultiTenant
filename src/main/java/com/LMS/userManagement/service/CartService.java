@@ -31,6 +31,7 @@ public class CartService {
             Long userId = cart.getUserId();
             String courseId = cart.getCourseId();
             cart.setCreateDate(new Timestamp(System.currentTimeMillis()));
+
           List<Cart> cartList = cartRepository.findByUserId(userId);
 
             if (!cartList.isEmpty()) {
@@ -200,5 +201,4 @@ public class CartService {
     }
 
     }
-
-}
+    }

@@ -22,4 +22,7 @@ public interface CartRepository extends JpaRepository<Cart, String> {
     @Modifying
     @Query(value = "DELETE FROM cart WHERE user_id = ?1", nativeQuery = true)
     void deleteAllByUserId(Long userId);
+
+    @Query(value="SELECT * FROM cart WHERE user_id=:userId AND course_id IN (:courseIds)",nativeQuery = true)
+    List<Cart> findByUserIdAndCourseId(Long userId, List<String> courseIds);
 }
