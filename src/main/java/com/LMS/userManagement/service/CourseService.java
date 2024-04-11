@@ -63,23 +63,23 @@ public class CourseService {
 
     }
 
-    public CommonResponse<Page<Course>> deleteCourseById(String courseId,int pageNo,int pageSize) {
+    public CommonResponse<List<Course>> deleteCourseById(String courseId) {
 
         try {
-            Page<Course> courses = null;
+            List<Course> courses = null;
             if (courseRepository.existsById(courseId)) {
                 Optional<Course> course = courseRepository.findById(courseId);
                 Long userId = course.get().getUserId();
                 courseRepository.deleteById(courseId);
-                 courses = courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo,pageSize));
-                return CommonResponse.<Page<Course>>builder()
+                 courses = courseRepository.findCourseByUserId(userId);
+                return CommonResponse.<List<Course>>builder()
                         .status(true)
                         .message(Constant.DELETE_COURSE)
                         .data(courses)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
-                return CommonResponse.<Page<Course>>builder()
+                return CommonResponse.<List<Course>>builder()
                         .status(false)
                         .message(Constant.NO_COURSE)
                         .data(courses)
@@ -88,7 +88,7 @@ public class CourseService {
             }
 
         } catch (Exception e) {
-            return CommonResponse.<Page<Course>>builder()
+            return CommonResponse.<List<Course>>builder()
                     .status(false)
                     .message(Constant.DELETE_COURSE_FAILED)
                     .data(null)
@@ -211,8 +211,10 @@ public class CourseService {
 
             if(courseDetails != null){
                 String profileImage=courseRepository.findUserProfileByUserId(userId);
-                boolean purchased=  purchasedCourseRepository.findByCourseIdAndUserId(courseId,userId);
-
+                Boolean purchased=  purchasedCourseRepository.findByCourseIdAndUserId(courseId,userId);
+                if (purchased==null){
+                    purchased=false;
+                }
                 CourseDTO courseDTO=mapper.CourseToCourseDtoMapper(courseDetails,profileImage,purchased);
 
                 return CommonResponse.<CourseDTO>builder()
@@ -240,7 +242,7 @@ public class CourseService {
 
 
     public CommonResponse<List<CourseDetailDto>> getAllCourses(Long userId) {
-        List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetails();
+        List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetailsByUserId(userId);
         if (courseList.isEmpty()) {
             return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(false)
@@ -296,20 +298,20 @@ public class CourseService {
     }
 
 
-    public CommonResponse<Page<Course>> getCourseByUserId(Long userId, int pageNo, int pageSize) {
+    public CommonResponse<List<Course>> getCourseByUserId(Long userId) {
 
-        Page<Course> courses = null;
+        List<Course> courses = null;
         try {
-            courses = courseRepository.findCourseByUserId(userId, PageRequest.of(pageNo, pageSize));
-            if (courses != null && courses.hasContent()) {
-                return CommonResponse.<Page<Course>>builder()
+            courses = courseRepository.findCourseByUserId(userId);
+            if (!courses.isEmpty()) {
+                return CommonResponse.<List<Course>>builder()
                         .status(true)
                         .data(courses)
                         .message(Constant.COURSES_FOUND)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
-                return CommonResponse.<Page<Course>>builder()
+                return CommonResponse.<List<Course>>builder()
                         .status(false)
                         .data(courses)
                         .message(Constant.NO_COURSE)
@@ -318,7 +320,7 @@ public class CourseService {
             }
 
         } catch (Exception e) {
-            return CommonResponse.<Page<Course>>builder()
+            return CommonResponse.<List<Course>>builder()
                     .status(false)
                     .data(courses)
                     .message(Constant.FAILED_COURSES_FETCH)

@@ -46,6 +46,8 @@ public class Constant {
     public static final String CHAPTER_CONTENT_NOT_FOUND = "Chapter content not found";
     public static final String UPDATED_CHAPTER_CONTENT = "Chapter content updated successfully";
 
+    public static final String COURSE_ALREADY_PURCHASED = "Course already purchased";
+
 
 
 

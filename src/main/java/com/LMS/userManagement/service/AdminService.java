@@ -168,19 +168,19 @@ public class AdminService {
 
 
 
-    public CommonResponse<Page<TenantDetails>> findAllTenants(int pageNo, int pageSize) {
-        Page<TenantDetails> tenantList = null;
+    public CommonResponse<List<TenantDetails>> findAllTenants() {
+        List<TenantDetails> tenantList = null;
         try {
-            tenantList = tenantRepository.findAll(PageRequest.of(pageNo, pageSize));
+            tenantList = tenantRepository.findAll();
             if (tenantList.isEmpty()) {
-                return CommonResponse.<Page<TenantDetails>>builder()
+                return CommonResponse.<List<TenantDetails>>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.NO_TENANTS)
                         .data(tenantList)
                         .build();
             }
-            return CommonResponse.<Page<TenantDetails>>builder()
+            return CommonResponse.<List<TenantDetails>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.TENANTS_FOUND)
@@ -188,7 +188,7 @@ public class AdminService {
                     .build();
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.<Page<TenantDetails>>builder()
+            return CommonResponse.<List<TenantDetails>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_TENANT)

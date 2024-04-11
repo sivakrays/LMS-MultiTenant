@@ -53,8 +53,8 @@ public class AdminController {
 
 
     @GetMapping("/viewAllTenants")
-    public CommonResponse<Page<TenantDetails>> findAllTenants(@RequestParam int pageNo, @RequestParam int pageSize) {
-        return adminService.findAllTenants(pageNo,pageSize);
+    public CommonResponse<List<TenantDetails>> findAllTenants() {
+        return adminService.findAllTenants();
     }
 
     @PutMapping("/updateSchemaByTenant")

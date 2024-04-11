@@ -2,8 +2,10 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.PurchasedCourseDto;
+import com.LMS.userManagement.model.Cart;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.PurchasedCourse;
+import com.LMS.userManagement.repository.CartRepository;
 import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.repository.PurchasedCourseRepository;
 import com.LMS.userManagement.response.CommonResponse;
@@ -23,28 +25,45 @@ public class PurchasedCourseService {
     private PurchasedCourseRepository purchasedCourseRepository;
     @Autowired
     private CourseRepository courseRepository;
+    @Autowired
+    CartRepository cartRepository;
 
-    public CommonResponse<PurchasedCourse> savePurchasedCourse(PurchasedCourseDto purchasedCourseDto) {
-        PurchasedCourse purchasedCourseDetail = null;
+    public CommonResponse<List<PurchasedCourse>> savePurchasedCourse(PurchasedCourseDto purchasedCourseDto) {
+        List<PurchasedCourse> purchasedCourseDetail = null;
         try {
+            Long userId = purchasedCourseDto.getUserId();
             for (String courseId : purchasedCourseDto.getCourseId()) {
+                List<PurchasedCourse>   purchasedCourseDetailList = purchasedCourseRepository.findByUserId(userId);
+            if(!purchasedCourseDetailList.isEmpty()) {
+                PurchasedCourse existingCourse = purchasedCourseRepository.findByUserIdAndCourseId(userId, courseId);
+                if (existingCourse != null) {
+                    return CommonResponse.<List<PurchasedCourse>>builder()
+                            .status(false)
+                            .statusCode(Constant.SUCCESS)
+                            .message(Constant.COURSE_ALREADY_PURCHASED)
+                            .data(purchasedCourseDetail)
+                            .build();
+                }
+            }
                 PurchasedCourse purchasedCourse = new PurchasedCourse();
-                purchasedCourse.setUserId(purchasedCourseDto.getUserId());
+                purchasedCourse.setUserId(userId);
                 purchasedCourse.setCourseId(courseId);
                 purchasedCourse.setPurchased(true);
                 purchasedCourse.setPurchasedOn(new Timestamp(System.currentTimeMillis()));
 
-               purchasedCourseDetail = purchasedCourseRepository.save(purchasedCourse);
+               purchasedCourseRepository.save(purchasedCourse);
+               purchasedCourseDetail = purchasedCourseRepository.findByUserId(userId);
+            removePurchasedCoursesFromCart(userId,purchasedCourseDto.getCourseId());
 
             }
-            return CommonResponse.<PurchasedCourse>builder()
+            return CommonResponse.<List<PurchasedCourse>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.COURSE_PURCHASED)
                     .data(purchasedCourseDetail)
                     .build();
         } catch (Exception e) {
-            return CommonResponse.<PurchasedCourse>builder()
+            return CommonResponse.<List<PurchasedCourse>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_PURCHASE_COURSE)
@@ -52,15 +71,19 @@ public class PurchasedCourseService {
                     .build();
         }
     }
+    public void  removePurchasedCoursesFromCart(Long userId,List<String> courseIds){
+        List<Cart> purchasedCartList =cartRepository.findByUserIdAndCourseId(userId,courseIds);
+        cartRepository.deleteAll(purchasedCartList);
+    }
 
     public CommonResponse<List<CourseDetailDto>> getPurchasedCoursesByUserId(Long userId) {
         List<CourseDetailDto> courseList = new ArrayList<>();
         try {
          // Find the list of purchased course IDs by user ID
-            List<String> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
-
+          //  List<String> courseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
+            courseList = purchasedCourseRepository.findPurchasedCourseByUserId(userId);
             // If no course IDs found, return empty list
-            if (courseIds.isEmpty()) {
+            if (courseList.isEmpty()) {
                 return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(false)
                         .statusCode(Constant.NO_CONTENT)
@@ -74,14 +97,13 @@ public class PurchasedCourseService {
                 courseList.ifPresent(courses::add);
             }*/
 
-             courseList = courseRepository.findAllCourseDetailsById(courseIds);
-
             return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.RETRIEVED_PURCHASED_COURSE)
                     .data(courseList)
                     .build();
+
         } catch (Exception e) {
             return CommonResponse.<List<CourseDetailDto>>builder()
                     .status(false)
