@@ -3,7 +3,6 @@ package com.LMS.userManagement.util;
 import com.LMS.userManagement.dto.AuthenticationResponse;
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.EducationContent;
-import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.Home;
 import com.LMS.userManagement.records.*;
 import com.LMS.userManagement.repository.CourseRepository;

@@ -369,9 +369,10 @@ public class CourseService {
         Chapter existingChapter = existingChapterOptional.get();
 
         // Update fields of the existing chapter with values provided in the request
-        if (chapter.getUserId() != null) {
+            //commented bby siva
+      ///  if (chapter.getUserId() != null) {
             existingChapter.setUserId(chapter.getUserId());
-        }
+   //     }
         if (chapter.getHtml_course_id() != null) {
             existingChapter.setHtml_course_id(chapter.getHtml_course_id());
         }

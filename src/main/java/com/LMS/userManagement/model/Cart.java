@@ -20,7 +20,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String cartId;
     private String courseId;
-    private Long userId;
+    private long userId;
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Timestamp createDate;
 }
