@@ -47,4 +47,13 @@ public class Home {
      public String bannerImage;
 
     public String supportNumber;
+
+    @Column(columnDefinition = "TEXT")
+    public String bannerHeading;
+
+    @Column(columnDefinition = "TEXT")
+    public String bannerSubHeading;
+
+    @Column(columnDefinition = "TEXT")
+    public String bannerParagraph;
 }

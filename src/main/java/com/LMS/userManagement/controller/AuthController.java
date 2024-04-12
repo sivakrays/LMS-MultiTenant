@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/lms/api/auth")
@@ -36,12 +37,22 @@ public class AuthController {
 
     }
 
-    @PostMapping("/login")
+    @PostMapping("/mobile/login")
     // @PreAuthorize("hasAuthority('user')")
-    public CommonResponse<LoginResponse> authentication (
+    public CommonResponse<LoginResponse> mobileAuthentication (
             @RequestBody LoginDTO loginDto,
             @RequestHeader String tenantId) {
-        return authService.authentication(loginDto,tenantId);
+        String type="mob";
+        return authService.authentication(loginDto,tenantId,type);
+
+    }
+    @PostMapping("/login")
+    // @PreAuthorize("hasAuthority('user')")
+    public CommonResponse<LoginResponse> WebAuthentication (
+            @RequestBody LoginDTO loginDto,
+            @RequestHeader String tenantId) {
+        String type="web";
+        return authService.authentication(loginDto,tenantId,type);
 
     }
 
@@ -53,15 +64,12 @@ public class AuthController {
     }
 
     @GetMapping("/getAllUser")
-    private CommonResponse<Page<User>> getAllUser(@RequestParam int pageNo,
-                                                  @RequestParam int pageSize){
-
-        return   authService.getAllUser(pageNo,pageSize);
+    private CommonResponse<List<User>> getAllUser(){
+        return   authService.getAllUser();
     }
     @DeleteMapping("/deleteUserById")
-    public CommonResponse<Page<User>> deleteUserById(@RequestParam Long userId,@RequestParam int pageNo,
-                                            @RequestParam int pageSize){
-        return authService.deleteUserById(userId,pageNo,pageSize);
+    public CommonResponse<List<User>> deleteUserById(@RequestParam Long userId){
+        return authService.deleteUserById(userId);
     }
 
 

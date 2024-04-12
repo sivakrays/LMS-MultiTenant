@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -17,7 +16,7 @@ import java.util.UUID;
 public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID quizId;
+    private String quizId;
     private String title;
     private Integer key;
     @Column(columnDefinition = "TEXT")

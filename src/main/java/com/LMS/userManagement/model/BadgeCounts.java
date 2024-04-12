@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BadgeCounts {
     private Long userId;
-    private Integer gold;
-    private Integer silver;
-    private Integer bronze;
-    private Integer energyPoints;
+    private int gold;
+    private int silver;
+    private int bronze;
+    private int energyPoints;
 
 
 

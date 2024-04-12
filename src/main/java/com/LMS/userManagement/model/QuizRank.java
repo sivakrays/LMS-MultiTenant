@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 
 @Entity
 @Data
@@ -17,9 +15,9 @@ public class QuizRank {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "rank_id")
-    private UUID rankId;
-    private Long userId;
-    private UUID subSectionId;
+    private String rankId;
+    private long userId;
+    private String subSectionId;
     private Integer energyPoints;
     private int badge;
 
