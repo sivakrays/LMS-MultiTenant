@@ -1,6 +1,7 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
+import com.LMS.userManagement.dto.CourseDto;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.CourseDTO;
 import com.LMS.userManagement.response.CommonResponse;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -36,7 +38,7 @@ public class CourseController {
     }
    @GetMapping("/getAllCourse")
  //  @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
-    public CommonResponse<List<CourseDetailDto>> getAllCourses(@RequestParam Long userId) throws InterruptedException {
+    public CommonResponse<LinkedList<CourseDto>> getAllCourses(@RequestParam Long userId) throws InterruptedException {
         return courseService.getAllCourses(userId);
 
     }

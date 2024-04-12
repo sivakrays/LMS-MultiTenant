@@ -16,7 +16,7 @@ public class QuizRank {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "rank_id")
     private String rankId;
-    private Long userId;
+    private long userId;
     private String subSectionId;
     private Integer energyPoints;
     private int badge;

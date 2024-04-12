@@ -2,15 +2,12 @@ package com.LMS.userManagement.repository;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.model.Course;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String> {
@@ -21,20 +18,23 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "OR c.category iLIKE CONCAT ('%', :search, '%')",nativeQuery = true)
     List<CourseDetailDto> searchAllCourse( @Param("search")String search);
 
-   List<Course> findCourseByUserId(Long userId);
+   List<Course> findByUserId(Long userId);
 
 
     @Query(value = "SELECT PROFILE_IMAGE FROM USER_DETAILS WHERE ID=?1", nativeQuery = true)
-    default String findUserProfileByUserId(Long userId) {
-        return null;
-    }
+     String findUserProfileByUserId(Long userId) ;
 
-    @Query(value = "SELECT user_id,course_id,title,is_html_course,is_free,thumb_nail,ratings,price,language,created_date,category,author_name FROM course",nativeQuery = true)
+    //to get specific detail ,query wrote by siva ,no parameter passed in this query
+    @Query(value = "SELECT u.profile_image,c.user_id,c.course_id,c.title,c.is_html_course,c.is_free,c.thumb_nail,c.ratings,c.price,c.language,c.created_date,c.category,c.author_name FROM course c RIGHT JOIN user_details u ON  u.id=c.user_id",nativeQuery = true)
    List<CourseDetailDto> findAllCourseDetails();
+
+
+
     @Query(value = "SELECT c.user_id,c.course_id,c.title,c.is_html_course,c.is_free,c.thumb_nail,c.ratings,c.price,c.language,c.created_date," +
             "c.category,c.author_name,CASE WHEN EXISTS (SELECT pc.purchased FROM purchased_course pc WHERE pc.course_id = c.course_id " +
             "AND pc.user_id = c.user_id) THEN true ELSE false END AS purchased FROM course c  WHERE c.user_id = ?1",nativeQuery = true)
     List<CourseDetailDto> findAllCourseDetailsByUserId(Long userId);
+
     @Query(value = "SELECT user_id,course_id,title,is_html_course,is_free,thumb_nail,ratings,price,language,created_date,category,author_name FROM course WHERE course_id IN :courseId",nativeQuery = true)
     List<CourseDetailDto> findAllCourseDetailsById(List<String> courseId);
 

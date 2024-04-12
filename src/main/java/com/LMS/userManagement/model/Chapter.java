@@ -21,7 +21,7 @@ Chapter {
     @Column(name = "chapter_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     public String chapterId;
-    public Long userId;
+    public long userId;
     @JsonProperty("courseId")
     public String html_course_id;
     public String chapter;

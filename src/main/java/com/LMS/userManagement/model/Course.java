@@ -22,16 +22,16 @@ public class Course {
     @Column(name = "course_id")
     private String courseId;
     @Column(nullable = false)
-    private Long userId;
+    private long userId;
     private String title;
     private String authorName;
     @Column(columnDefinition = "TEXT")
     private String description;
     @Column(columnDefinition = "TEXT")
     private String thumbNail;
-    private Long enrolled;
+    private long enrolled;
     private String category;
-    private Integer ratings;
+    private int ratings;
     private String language;
     private String overview;
     @Column(columnDefinition = "TEXT")
