@@ -24,7 +24,7 @@ public record CourseDTO(
         String overview,
         String whatYouWillLearn,
         Integer price,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         Timestamp createdDate,
         boolean isFree,
         boolean isHtmlCourse,

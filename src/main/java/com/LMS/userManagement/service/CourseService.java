@@ -1,5 +1,6 @@
 package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.CourseDetailDto;
+import com.LMS.userManagement.dto.CourseDto;
 import com.LMS.userManagement.mapper.CourseMapper;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.CourseDTO;
@@ -7,14 +8,13 @@ import com.LMS.userManagement.repository.*;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.*;
+
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -71,7 +71,7 @@ public class CourseService {
                 Optional<Course> course = courseRepository.findById(courseId);
                 Long userId = course.get().getUserId();
                 courseRepository.deleteById(courseId);
-                 courses = courseRepository.findCourseByUserId(userId);
+                 courses = courseRepository.findByUserId(userId);
                 return CommonResponse.<List<Course>>builder()
                         .status(true)
                         .message(Constant.DELETE_COURSE)
@@ -241,20 +241,51 @@ public class CourseService {
     }
 
 
-    public CommonResponse<List<CourseDetailDto>> getAllCourses(Long userId) {
-        List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetailsByUserId(userId);
-        if (courseList.isEmpty()) {
-            return CommonResponse.<List<CourseDetailDto>>builder()
+    public CommonResponse<LinkedList<CourseDto>> getAllCourses(Long userId) {
+
+        //not by siva
+      //  List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetailsByUserId(userId);
+        // added by siva
+        LinkedList<CourseDto> courseDtoList=new LinkedList<>();
+
+        List<CourseDetailDto> courseList = courseRepository.findAllCourseDetails();
+        if (courseList.isEmpty()){
+               return CommonResponse.<LinkedList<CourseDto>>builder()
                     .status(false)
-                    .data(courseList)
+                    .data(courseDtoList)
                     .message(Constant.NO_COURSE)
                     .statusCode(Constant.NO_CONTENT)
                     .build();
         }
+       courseList.forEach(course -> {
+            Boolean purchased = purchasedCourseRepository
+                    .findByCourseIdAndUserId(course.getCourse_id(),userId);
+            if (purchased == null) {
+                purchased = false;
+            }
 
-        return CommonResponse.<List<CourseDetailDto>>builder()
+           CourseDto c=       CourseDto.builder()
+                   .isHtmlCourse(course.getIs_html_course())
+                   .courseId(course.getCourse_id())
+                   .price(course.getPrice())
+                   .category(course.getCategory())
+                   .title(course.getTitle())
+                   .createdDate(course.getCreated_date())
+                   .isFree(course.getIs_free())
+                   .isPurchased(purchased)
+                   .ratings(course.getRatings())
+                   .language(course.getLanguage())
+                   .authorName(course.getAuthor_name())
+                   .thumbNail(course.getThumb_nail())
+                   .profileImage(course.getProfile_image())
+                   .userId(course.getUser_id())
+                   .build();
+           courseDtoList.add(c);
+        });
+
+        return CommonResponse.<LinkedList<CourseDto>>builder()
                 .status(true)
-                .data(courseList)
+                .data(courseDtoList)
                 .message(Constant.COURSES_FOUND)
                 .statusCode(Constant.SUCCESS)
                 .build();
@@ -302,7 +333,7 @@ public class CourseService {
 
         List<Course> courses = null;
         try {
-            courses = courseRepository.findCourseByUserId(userId);
+            courses = courseRepository.findByUserId(userId);
             if (!courses.isEmpty()) {
                 return CommonResponse.<List<Course>>builder()
                         .status(true)
