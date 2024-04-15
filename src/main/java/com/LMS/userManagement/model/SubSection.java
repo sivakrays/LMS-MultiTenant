@@ -24,9 +24,7 @@ public class SubSection {
     @Column(columnDefinition = "text")
     private String link;
 
-    @OneToMany(targetEntity = Quiz.class,cascade = CascadeType.ALL)
-    @JoinColumn(name = "sub_section_id",referencedColumnName = "sub_section_id")
-    private List<Quiz> quizList;
+
 
 
 
