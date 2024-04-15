@@ -17,6 +17,5 @@ public class SubSectionDto {
     private String title;
     private String description;
     private String link;
-    private List<QuizDto> quizList;
 
 }

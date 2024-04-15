@@ -16,4 +16,6 @@ public class SectionDto {
     private Integer key;
     private String title;
     private List<SubSectionDto> subSections;
+    private List<QuizDto> quizList;
+
 }
