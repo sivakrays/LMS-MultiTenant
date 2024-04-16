@@ -1,6 +1,7 @@
 package com.LMS.userManagement.util;
 
 import com.LMS.userManagement.dto.AuthenticationResponse;
+import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.CourseDto;
 import com.LMS.userManagement.dto.EducationContent;
 import com.LMS.userManagement.model.Home;
@@ -8,6 +9,8 @@ import com.LMS.userManagement.records.*;
 import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.repository.EduContentRepository;
 import com.LMS.userManagement.repository.HomeRepository;
+import com.LMS.userManagement.repository.PurchasedCourseRepository;
+import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +27,15 @@ public class LMSUtil {
 
     private final CourseService courseService;
 
+    private final PurchasedCourseRepository purchasedCourseRepository;
+
     private final CourseRepository courseRepository;
 
-    public LMSUtil(HomeRepository homeRepository, EduContentRepository eduContentRepository, CourseService courseService, CourseRepository courseRepository) {
+    public LMSUtil(HomeRepository homeRepository, EduContentRepository eduContentRepository, CourseService courseService, PurchasedCourseRepository purchasedCourseRepository, CourseRepository courseRepository) {
         this.homeRepository = homeRepository;
         this.eduContentRepository = eduContentRepository;
         this.courseService = courseService;
+        this.purchasedCourseRepository = purchasedCourseRepository;
         this.courseRepository = courseRepository;
     }
 
@@ -38,12 +44,7 @@ public class LMSUtil {
       List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
         Long userId = auth.getUserId();
 
-        LinkedList<CourseDto> courseList=new LinkedList<>();
-
-       /* CommonResponse<LinkedList<CourseDto>> courseResponse= courseService.getAllCourses(userId);
-        LinkedList<CourseDto> courseList= courseResponse.getData();*/
-
-
+        LinkedList<CourseDto> courseList= getAllCoursesForHome(userId);
         List<HomeData> homeList=new ArrayList<>();
 
       List<CourseData> educationContentList=new ArrayList<>();
@@ -151,4 +152,49 @@ public class LMSUtil {
                 home.getSupportNumber()
         );
     }
+
+    public LinkedList<CourseDto> getAllCoursesForHome(Long userId){
+
+
+        //not by siva
+        //  List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetailsByUserId(userId);
+        // added by siva
+        LinkedList<CourseDto> courseDtoList=new LinkedList<>();
+
+        List<CourseDetailDto> courseList = courseRepository.findAllCourseDetails();
+        if (courseList.isEmpty()){
+            return courseDtoList;
+        }
+        courseList.forEach(course -> {
+            Boolean purchased = purchasedCourseRepository
+                    .findByCourseIdAndUserId(course.getCourse_id(),userId);
+            if (purchased == null) {
+                purchased = false;
+            }
+
+            CourseDto c=       CourseDto.builder()
+                    .isHtmlCourse(course.getIs_html_course())
+                    .courseId(course.getCourse_id())
+                    .price(course.getPrice())
+                    .category(course.getCategory())
+                    .title(course.getTitle())
+                    .createdDate(course.getCreated_date())
+                    .isFree(course.getIs_free())
+                    .isPurchased(purchased)
+                    .ratings(course.getRatings())
+                    .language(course.getLanguage())
+                    .authorName(course.getAuthor_name())
+                    .thumbNail(course.getThumb_nail())
+                    .profileImage(course.getProfile_image())
+                    .userId(course.getUser_id())
+                    .build();
+            courseDtoList.add(c);
+        });
+
+        return courseDtoList;
+
+    }
+
+
+
 }
