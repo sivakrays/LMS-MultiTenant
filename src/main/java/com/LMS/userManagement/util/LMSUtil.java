@@ -1,7 +1,6 @@
 package com.LMS.userManagement.util;
 
 import com.LMS.userManagement.dto.AuthenticationResponse;
-import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.CourseDto;
 import com.LMS.userManagement.dto.EducationContent;
 import com.LMS.userManagement.model.Home;
@@ -9,7 +8,6 @@ import com.LMS.userManagement.records.*;
 import com.LMS.userManagement.repository.CourseRepository;
 import com.LMS.userManagement.repository.EduContentRepository;
 import com.LMS.userManagement.repository.HomeRepository;
-import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +24,13 @@ public class LMSUtil {
 
     private final CourseService courseService;
 
-    public LMSUtil(HomeRepository homeRepository, EduContentRepository eduContentRepository, CourseService courseService) {
+    private final CourseRepository courseRepository;
+
+    public LMSUtil(HomeRepository homeRepository, EduContentRepository eduContentRepository, CourseService courseService, CourseRepository courseRepository) {
         this.homeRepository = homeRepository;
         this.eduContentRepository = eduContentRepository;
         this.courseService = courseService;
+        this.courseRepository = courseRepository;
     }
 
     public LoginResponse findHomeScreenByTenantId(String tenantId, AuthenticationResponse auth,String type){
@@ -37,8 +38,12 @@ public class LMSUtil {
       List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
         Long userId = auth.getUserId();
 
-        CommonResponse<LinkedList<CourseDto>> courseResponse= courseService.getAllCourses(userId);
-        LinkedList<CourseDto> courseList= courseResponse.getData();
+        LinkedList<CourseDto> courseList=new LinkedList<>();
+
+       /* CommonResponse<LinkedList<CourseDto>> courseResponse= courseService.getAllCourses(userId);
+        LinkedList<CourseDto> courseList= courseResponse.getData();*/
+
+
         List<HomeData> homeList=new ArrayList<>();
 
       List<CourseData> educationContentList=new ArrayList<>();
