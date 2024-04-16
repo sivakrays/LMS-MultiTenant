@@ -18,6 +18,12 @@ public record HomeDTO(
                       String promoDescription,
                       String bannerImage,
 
-                      String supportNumber
-                      ) {
+                      String supportNumber,
+
+                     String bannerHeading,
+
+                     String bannerSubHeading,
+                      String bannerParagraph
+
+) {
 }

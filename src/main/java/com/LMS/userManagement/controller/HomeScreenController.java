@@ -26,7 +26,7 @@ public class HomeScreenController {
 
  @PostMapping(value = "/saveHomeScreen",consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     public CommonResponse<HomeDTO> saveHomeScreen(@RequestPart("data") HomeDTO homeDTO,
-                                                  @RequestPart("file") MultipartFile file){
+                                                  @RequestPart(value = "file",required = false)  MultipartFile file){
    return homeService.saveHomeScreen(homeDTO,file);
  }
 
