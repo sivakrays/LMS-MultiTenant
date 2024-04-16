@@ -56,7 +56,14 @@ public class LMSUtil {
                               n.getImage_content()));
           });
       }
+        Banner banner=new Banner("","","","","","","");
+        PromoData promo =new PromoData("","","");
         if (home==null && contentList.isEmpty() && courseList.isEmpty()){
+            homeList.add(new HomeData(
+                    banner,
+                    new ArrayList<>(),
+                    promo
+            ))   ;
             return new LoginResponse(
                     auth,
                     homeList
@@ -67,8 +74,7 @@ public class LMSUtil {
         String courseTitle="";
         String courseTitle2="";
         String educationTitle="";
-        Banner banner=new Banner("","","","","","","");
-        PromoData promo =new PromoData("","","");
+
 
         if (home!=null){
             courseTitle=home.getCourseTitle();
