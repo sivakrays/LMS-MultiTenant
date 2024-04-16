@@ -206,11 +206,11 @@ public class CourseService {
     public CommonResponse<CourseDTO> getCourseById(String courseId,Long userId) {
 
 
-        try {
-            Course  courseDetails = courseRepository.findCourseByCourseId(courseId);
+            Course  courseDetails = courseRepository.findByCourseId(courseId);
 
             if(courseDetails != null){
-                String profileImage=courseRepository.findUserProfileByUserId(userId);
+                //userId of the person who published the course
+                String profileImage=courseRepository.findUserProfileByUserId(courseDetails.getUserId());
                 Boolean purchased=  purchasedCourseRepository.findByCourseIdAndUserId(courseId,userId);
                 if (purchased==null){
                     purchased=false;
@@ -231,13 +231,6 @@ public class CourseService {
                         .build();
             }
 
-        } catch (Exception e) {
-            return CommonResponse.<CourseDTO>builder()
-                    .status(false)
-                    .message(Constant.FAILED_COURSE)
-                    .statusCode(Constant.FORBIDDEN)
-                    .build();
-        }
     }
 
 

@@ -76,7 +76,7 @@ public class CartService {
             if (!carts.isEmpty()) {
                 for (Cart cart : carts) {
                     String courseId = cart.getCourseId();
-                    Course course = courseRepository.findCourseByCourseId(courseId);
+                    Course course = courseRepository.findByCourseId(courseId);
 
                     if (course != null) {
                         CartDetail cartDetail = new CartDetail();
@@ -130,7 +130,7 @@ public class CartService {
                 if (!cartList.isEmpty()) {
                     for (Cart cart1 : cartList) {
                         String courseId = cart1.getCourseId();
-                        Course course = courseRepository.findCourseByCourseId(courseId);
+                        Course course = courseRepository.findByCourseId(courseId);
 
                         if (course != null) {
                             CartDetail cartDetail = new CartDetail();
