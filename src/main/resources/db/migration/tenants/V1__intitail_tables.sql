@@ -72,17 +72,17 @@ CREATE TABLE IF NOT EXISTS sub_section
 CREATE TABLE IF NOT EXISTS quiz
 (
     key integer,
-    answer character varying(255),
-    question text,
-    quiz_id character varying(255) NOT NULL,
-    sub_section_id character varying(255),
-    title character varying(255),
-    options character varying(255)[],
+    answer character varying(255) ,
+    question text ,
+    quiz_id character varying(255) ,
+    section_id character varying(255) ,
+    title character varying(255) ,
+    options character varying(255)[] ,
     CONSTRAINT quiz_pkey PRIMARY KEY (quiz_id),
-    CONSTRAINT fkbq87nt5wprr78k7d6mqwrenjf FOREIGN KEY (sub_section_id)
-        REFERENCES sub_section (sub_section_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    CONSTRAINT fkmlx8xst0rbhivy6wu01xn9mb0 FOREIGN KEY (section_id)
+    REFERENCES section (section_id) MATCH SIMPLE
+          ON UPDATE NO ACTION
+          ON DELETE NO ACTION
 );
 -- Table: quiz_rank
 CREATE TABLE IF NOT EXISTS quiz_rank
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS quiz_rank
     energy_points integer,
     user_id bigint,
     rank_id character varying(255) NOT NULL,
-    sub_section_id character varying(255),
+    section_id character varying(255),
     CONSTRAINT quiz_rank_pkey PRIMARY KEY (rank_id)
 );
 -- Table: cart

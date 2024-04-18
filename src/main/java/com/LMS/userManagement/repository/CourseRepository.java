@@ -11,7 +11,9 @@ import java.util.List;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String> {
-    Course findCourseByCourseId(String courseId);
+    Course findByCourseId(String courseId);
+
+
     @Query(value = "SELECT c.user_id,c.course_id,c.title,c.is_html_course,c.thumb_nail,c.ratings,c.price,c.language,c.created_date,c.category,c.author_name FROM course c WHERE " +
             "c.title iLIKE CONCAT('%',:search, '%')" +
             "OR c.description iLIKE CONCAT('%', :search, '%') " +
@@ -25,7 +27,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
      String findUserProfileByUserId(Long userId) ;
 
     //to get specific detail ,query wrote by siva ,no parameter passed in this query
-    @Query(value = "SELECT u.profile_image,c.user_id,c.course_id,c.title,c.is_html_course,c.is_free,c.thumb_nail,c.ratings,c.price,c.language,c.created_date,c.category,c.author_name FROM course c RIGHT JOIN user_details u ON  u.id=c.user_id",nativeQuery = true)
+    @Query(value = "SELECT u.profile_image,c.user_id,c.course_id,c.title,c.is_html_course,c.is_free,c.thumb_nail,c.ratings,c.price,c.language,c.created_date,c.category,c.author_name FROM course c  JOIN user_details u ON  u.id=c.user_id",nativeQuery = true)
    List<CourseDetailDto> findAllCourseDetails();
 
 

@@ -26,57 +26,43 @@ public class CartService {
 
 
     public CommonResponse<List<Cart>> saveCart(Cart cart) {
-        List<Cart> carts = null;
-        try {
-            Long userId = cart.getUserId();
+
+            long userId = cart.getUserId();
             String courseId = cart.getCourseId();
             cart.setCreateDate(new Timestamp(System.currentTimeMillis()));
-
-          List<Cart> cartList = cartRepository.findByUserId(userId);
-
-            if (!cartList.isEmpty()) {
-                Cart existingCart = cartRepository.findByCourseIdAndUserId(courseId, userId);
-                if (existingCart != null) {
-                    return CommonResponse.<List<Cart>>builder()
-                            .status(false)
-                            .statusCode(Constant.SUCCESS)
-                            .message(Constant.COURSE_EXISTS_CART)
-                            .data(carts)
-                            .build();
-                }
-            }
-
+        List<Cart>  cartList = cartRepository.findByUserId(userId);
+        Optional<Cart> existingCart = cartRepository.findByCourseIdAndUserId(courseId, userId);
+        if(existingCart.isEmpty()) {
             cartRepository.save(cart);
-            carts = cartRepository.findByUserId(userId);
-
             return CommonResponse.<List<Cart>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.CART_SAVED)
-                    .data(carts)
-                    .build();
-        } catch (Exception e) {
-            // Log the exception or handle it appropriately
-            return CommonResponse.<List<Cart>>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.CART_FAILED)
-                    .data(carts)
+                    .data(cartList)
                     .build();
         }
+
+        return CommonResponse.<List<Cart>>builder()
+                .status(false)
+                .statusCode(Constant.SUCCESS)
+                .message(Constant.COURSE_EXISTS_CART)
+                .data(cartList)
+                .build();
+
     }
 
 
     public CommonResponse<List<CartDetail>> getCartDetailByUserId(Long userId) {
-        List<CartDetail> cartDetails = null;
-        try {
-            cartDetails = new ArrayList<>();
+        List<CartDetail> cartDetails = new ArrayList<>();
             List<Cart> carts = cartRepository.findByUserId(userId);
+
+
+
 
             if (!carts.isEmpty()) {
                 for (Cart cart : carts) {
                     String courseId = cart.getCourseId();
-                    Course course = courseRepository.findCourseByCourseId(courseId);
+                    Course course = courseRepository.findByCourseId(courseId);
 
                     if (course != null) {
                         CartDetail cartDetail = new CartDetail();
@@ -96,23 +82,14 @@ public class CartService {
                         .message(Constant.CART_DETAILS_FOUND)
                         .data(cartDetails)
                         .build();
-            } else {
+            }
                 return CommonResponse.<List<CartDetail>>builder()
                         .status(false)
                         .statusCode(Constant.NO_CONTENT)
                         .message(Constant.EMPTY_CART)
                         .data(cartDetails)
                         .build();
-            }
-        } catch (Exception e) {
-            // Log the exception or handle it appropriately
-            return CommonResponse.<List<CartDetail>>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_CART_DETAILS)
-                    .data(cartDetails)
-                    .build();
-        }
+
     }
 
 
@@ -130,7 +107,7 @@ public class CartService {
                 if (!cartList.isEmpty()) {
                     for (Cart cart1 : cartList) {
                         String courseId = cart1.getCourseId();
-                        Course course = courseRepository.findCourseByCourseId(courseId);
+                        Course course = courseRepository.findByCourseId(courseId);
 
                         if (course != null) {
                             CartDetail cartDetail = new CartDetail();

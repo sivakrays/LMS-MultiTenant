@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuizRankRepository extends JpaRepository<QuizRank, String> {
-    Optional<QuizRank> findByUserIdAndSubSectionId(Long userId, String subSectionId);
+    Optional<QuizRank> findByUserIdAndSectionId(Long userId, String sectionId);
    /* @Query(value = "select badge, count(*) from quiz_rank where user_id=?1 AND badge=?2 group by badge",nativeQuery = true)
     Long countByUserIdAndBadge(@Param("userId") Long userId, @Param("badge") int badge);*/
 
