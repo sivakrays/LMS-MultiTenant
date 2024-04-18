@@ -17,7 +17,7 @@ public class QuizRank {
     @Column(name = "rank_id")
     private String rankId;
     private long userId;
-    private String subSectionId;
+    private String sectionId;
     private Integer energyPoints;
     private int badge;
 

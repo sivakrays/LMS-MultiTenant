@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS quiz_rank
     energy_points integer,
     user_id bigint,
     rank_id character varying(255) NOT NULL,
-    sub_section_id character varying(255),
+    section_id character varying(255),
     CONSTRAINT quiz_rank_pkey PRIMARY KEY (rank_id)
 );
 -- Table: cart
