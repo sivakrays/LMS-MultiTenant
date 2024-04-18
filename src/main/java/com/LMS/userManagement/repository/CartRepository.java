@@ -8,12 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, String> {
    List<Cart>  findByUserId(Long userId);
 
-   Cart findByCourseIdAndUserId(String courseId, Long userId);
+  Optional<Cart>  findByCourseIdAndUserId(String courseId, Long userId);
 
 
    @Query(value = "SELECT COUNT(cart_id) FROM cart WHERE user_id =?1", nativeQuery = true)
