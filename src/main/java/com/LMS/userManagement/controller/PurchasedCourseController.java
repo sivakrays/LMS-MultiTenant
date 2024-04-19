@@ -31,4 +31,8 @@ public class PurchasedCourseController {
         return purchasedCourseService.getPurchasedCoursesByUserId(userId);
     }
 
+    @DeleteMapping("/deletePurchasedCourse")
+    public CommonResponse<String> deletePurchased(@RequestParam long id){
+        return purchasedCourseService.deletePurchased(id);
+    }
 }

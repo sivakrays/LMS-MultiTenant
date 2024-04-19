@@ -114,4 +114,11 @@ public class PurchasedCourseService {
         }
     }
 
+    public CommonResponse<String> deletePurchased(long id) {
+         purchasedCourseRepository.deleteById(id);
+         return CommonResponse.<String>builder()
+                 .status(true)
+                 .data("course removed from purchase")
+                 .build();
+    }
 }
