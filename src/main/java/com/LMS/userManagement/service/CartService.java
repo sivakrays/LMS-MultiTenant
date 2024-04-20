@@ -30,10 +30,10 @@ public class CartService {
             long userId = cart.getUserId();
             String courseId = cart.getCourseId();
             cart.setCreateDate(new Timestamp(System.currentTimeMillis()));
-        List<Cart>  cartList = cartRepository.findByUserId(userId);
         Optional<Cart> existingCart = cartRepository.findByCourseIdAndUserId(courseId, userId);
         if(existingCart.isEmpty()) {
             cartRepository.save(cart);
+            List<Cart>  cartList = cartRepository.findByUserId(userId);
             return CommonResponse.<List<Cart>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
@@ -41,7 +41,7 @@ public class CartService {
                     .data(cartList)
                     .build();
         }
-
+        List<Cart>  cartList = cartRepository.findByUserId(userId);
         return CommonResponse.<List<Cart>>builder()
                 .status(false)
                 .statusCode(Constant.SUCCESS)
