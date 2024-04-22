@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,13 +41,12 @@ public class TenantService {
     }
 
     @Transactional
-    public CommonResponse<TenantDto> registerTenant(TenantDto tenantDetails) {
+    public CommonResponse<List<TenantDetails>> registerTenant(TenantDto tenantDetails) throws Exception {
         String tenantId=tenantDetails.getTenantId()
                 .replaceAll(" ","_")
                 .toLowerCase();
 
         String email=tenantDetails.getEmail();
-        try {
             Optional<TenantDetails> tenantByTenantId = tenantRepository.findByTenantId(tenantId);
             Optional<TenantDetails> tenantByEmail = tenantRepository.findByEmail(email);
             if (tenantByTenantId.isEmpty() && tenantByEmail.isEmpty()) {
@@ -60,33 +60,34 @@ public class TenantService {
                         .createdDate(new Timestamp(System.currentTimeMillis()))
                         .build();
                 var savedTenant = tenantRepository.save(tenantDtls);
-                initDatabase(savedTenant.getTenantId());
-              TenantDto  t = TenantDto.builder()
+                try {
+                    initDatabase(savedTenant.getTenantId());
+                } catch (Exception e){
+                    throw new Exception("failed to initialize database for new tenant ::::::"+e.getMessage());
+                }
+                List<TenantDetails> tenantList=tenantRepository.findAll();
+              /*TenantDto  t = TenantDto.builder()
                         .role(savedTenant.getRole())
                         .issuer(savedTenant.getIssuer())
                         .tenantId(savedTenant.getTenantId())
                         .email(savedTenant.getEmail())
-                        .build();
+                        .build();*/
 
-                return CommonResponse.<TenantDto>builder()
+                return CommonResponse.<List<TenantDetails>>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.TENANT_REGISTERED_SUCCESSFUL)
+                        .data(tenantList)
                         .build();
             }
-            return CommonResponse.<TenantDto>builder()
+        List<TenantDetails> tenantList=tenantRepository.findAll();
+            return CommonResponse.<List<TenantDetails>>builder()
                     .status(false)
                     .statusCode(Constant.FORBIDDEN)
                     .message(Constant.TENANT_EXISTS)
+                    .data(tenantList)
                     .build();
-        } catch (Exception e) {
-            // Log the exception or handle it appropriately
-            return CommonResponse.<TenantDto>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_REGISTER_TENANT)
-                    .build();
-        }
+
     }
 
 
