@@ -178,6 +178,22 @@ CREATE TABLE IF NOT EXISTS purchased_course
     CONSTRAINT purchased_course_pkey PRIMARY KEY (purchased_id)
 );
 
+-- Table: public.feedback
+
+
+CREATE TABLE IF NOT EXISTS feedback
+(
+    id bigint NOT NULL,
+    active boolean NOT NULL,
+    comment text ,
+    created_date timestamp(6) without time zone,
+    rating integer NOT NULL,
+    reviewed boolean NOT NULL,
+    user_id bigint NOT NULL,
+    CONSTRAINT feedback_pkey PRIMARY KEY (id)
+)
+
+
 
 
 

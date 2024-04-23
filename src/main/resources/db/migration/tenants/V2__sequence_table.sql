@@ -31,3 +31,12 @@ CREATE SEQUENCE IF NOT EXISTS purchased_course_seq
 
 
 
+    CREATE SEQUENCE IF NOT EXISTS feedback_seq
+        INCREMENT 50
+        START 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        CACHE 1;
+
+
+
