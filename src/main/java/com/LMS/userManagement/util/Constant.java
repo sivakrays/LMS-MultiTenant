@@ -48,6 +48,7 @@ public class Constant {
 
     public static final String COURSE_ALREADY_PURCHASED = "Course already purchased";
 
+    public static final String USER_ID_NULL = "UserId is Null";
 
 
 
