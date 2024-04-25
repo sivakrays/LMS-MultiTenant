@@ -18,7 +18,9 @@ public class PurchasedCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long purchasedId;
-    private  Long userId;
+  //  @Column(nullable = false)
+    private  long userId;
+    @Column(nullable = false)
     private String courseId;
     private boolean purchased ;
     private Timestamp purchasedOn;
