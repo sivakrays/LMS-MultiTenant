@@ -32,6 +32,14 @@ public class PurchasedCourseService {
         List<PurchasedCourse> purchasedCourseDetail = null;
         try {
             Long userId = purchasedCourseDto.getUserId();
+            if(userId ==null){
+                return CommonResponse.<List<PurchasedCourse>>builder()
+                        .status(false)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.USER_ID_NULL)
+                        .data(purchasedCourseDetail)
+                        .build();
+            }
             for (String courseId : purchasedCourseDto.getCourseId()) {
                 List<PurchasedCourse>   purchasedCourseDetailList = purchasedCourseRepository.findByUserId(userId);
             if(!purchasedCourseDetailList.isEmpty()) {
