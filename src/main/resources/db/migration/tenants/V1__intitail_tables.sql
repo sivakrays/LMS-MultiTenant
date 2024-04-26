@@ -179,8 +179,6 @@ CREATE TABLE IF NOT EXISTS purchased_course
 );
 
 -- Table: public.feedback
-
-
 CREATE TABLE IF NOT EXISTS feedback
 (
     id bigint NOT NULL,
@@ -193,6 +191,17 @@ CREATE TABLE IF NOT EXISTS feedback
     CONSTRAINT feedback_pkey PRIMARY KEY (id)
 )
 
+-- Table: course_tracker
+CREATE TABLE IF NOT EXISTS course_tracker
+(
+    id bigint NOT NULL,
+    course_id character varying(255) NOT NULL,
+    duration bigint NOT NULL,
+    section_id character varying(255)  NOT NULL,
+    sub_section_id character varying(255)  NOT NULL,
+    user_id bigint NOT NULL,
+    CONSTRAINT course_tracker_pkey PRIMARY KEY (id)
+)
 
 
 
