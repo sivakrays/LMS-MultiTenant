@@ -18,8 +18,6 @@ public class Constant {
     public static final String CART_DELETED = "Cart Deleted Successfully";
     public static final String LOGIN_SUCCESS = "Login Successful";
     public static final String SUCCESS_FILE = "File retrieved successfully";
-    public static final String UPDATED_VIDEO_DURATION = "Course Video Duration updated";
-    public static final String SAVED_VIDEO_DURATION = "Course Video Duration saved";
     public static final String TENANT_REGISTERED_SUCCESSFUL = "Tenant registered successfully";
     public static final String ADMIN_REGISTERED = "Admin registered successfully";
     public static final String SCHEMA_UPDATED = "Schema updated successfully";
@@ -38,7 +36,6 @@ public class Constant {
     public static final String QUIZ_CSV_DOWNLOAD = "Quiz CSV template downloaded successfully";
     public static final String CART_EMPTY_DELETION = "Cart is empty after deletion";
     public static final String COURSE_PURCHASED = "Course purchased successfully";
-    public static final String COURSE_IDS_EMPTY = "Course ids are empty";
     public static final String RETRIEVED_PURCHASED_COURSE = "Purchased courses found";
     public static final String SAVE_HTML_COURSE = "Html course save successfully";
     public static final String CHAPTER_NOT_FOUND = "Chapter not found";
@@ -48,7 +45,6 @@ public class Constant {
 
     public static final String COURSE_ALREADY_PURCHASED = "Course already purchased";
 
-    public static final String USER_ID_NULL = "UserId is Null";
 
 
 
@@ -59,7 +55,6 @@ public class Constant {
     //NEGATIVE Message
     public static final String NO_COURSE = "No Courses Found";
     public static final String FAILED_PURCHASE_COURSE = "Failed to purchase course";
-    public static final String FAILED_RETRIEVED_PURCHASED_COURSE = "Failed to retrieve purchased course";
     public static final String FAILED_SAVE_HTML_COURSE = "Failed to save html course";
 
     public static final String FAILED_UPDATE_CHAPTER = "Failed to update chapter details";
@@ -68,29 +63,18 @@ public class Constant {
 
 
     public static final String EMPTY_CART = "Cart is empty";
-    public static final String NO_CARTNO_CART = "Cart not found";
     public static final String NO_DATA = "No data found";
     public static final String PROFILE_NOT_FOUND = "Profile not found";
-    public static final String FAILED_COURSE = "Failed to retrieve courses";
-    public static final String FAILED_VIDEO_DURATION = "Failed to save course video duration";
     public static final String FAILED_RETRIEVED_PROFILE = "Failed to retrieve profile";
     public static final String FAILED_TENANT = "Failed to retrieve tenants";
-    public static final String FAILED_USER_STATS = "Failed to retrieve user statistics";
     public static final String FAILED_DELETE_CART = "Failed to delete cart";
-    public static final String FAILED_CART_DETAILS = "Failed to retrieve cart details";
     public static final String FAILED_FILES = "Failed to retrieve files";
-    public static final String FAILED_RETRIEVE_USERS = "Failed to retrieve users";
     public static final String NO_FILES = "No files found";
     public static final String NO_TENANTS = "No Tenants Found";
-    public static final String FAILED_REGISTER_TENANT = "Failed to register tenant";
     public static final String LOGIN_FAILED = "Login failed";
     public static final String USER_NOT_FOUND = "User not found or incorrect credentials";
-    public static final String USERS_NOT_FOUND = "No data Found";
-    public static final String ADMIN_NOT_FOUND = "Admin not found or incorrect credentials";
-    public static final String FAILED_ADMIN_REGISTER = "Failed to register admin";
     public static final String REMOVED_USER = "User removed successfully";
     public static final String FAILED_DELETE_TENANT = "Failed to delete tenant";
-    public static final String CART_FAILED = "Failed to save cart";
     public static final String TENANT_NOT_FOUND_BY_EMAIL = "Tenant not found for email";
     public static final String TENANT_NOT_FOUND = "Tenant not found";
     public static final String SCHEMA_UPDATE_FAILED = "Failed to update schema";
@@ -101,12 +85,9 @@ public class Constant {
     public static final String SECTION_SAVE_FAILED = "Failed to save section";
     public static final String DELETE_COURSE = "Course Deleted Successfully";
     public static final String USER_DELETED = "User Deleted Successfully";
-    public static final String FAILED_DELETE_USER = "Failed to delete user";
     public static final String DELETE_COURSE_FAILED = "Failed to Delete Course";
-    public static final String SEARCH_FAILED = "Failed to search courses";
     public static final String FAILED_COURSES_FETCH = "Failed to fetch courses";
     public static final String FAILED_QUIZ_UPDATE = "Failed to update quiz";
-    public static final String FAILED_BADGE = "Failed to update/save badge";
     public static final String FAILED_PROFILE_SAVE_EDIT = "Failed to edit/save profile";
     public static final String FAILED_QUIZ_CSV_UPLOAD = "Failed to upload Quiz CSV";
     public static final String FAILED_QUIZ_CSV_DOWNLOAD = "Quiz CSV template downloaded failed";
@@ -124,4 +105,5 @@ public class Constant {
     public static final String DEFAULT_PROFILE_IMAGE="https://t4.ftcdn.net/jpg/05/89/93/27/360_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg";
 
 
+    public static final String IMAGE_NOT_SUPPORTED ="The file type is not an image or is empty" ;
 }

@@ -56,8 +56,4 @@ public class Course {
     private List<Chapter> chapters;
 
 
-
-
-
-
 }
