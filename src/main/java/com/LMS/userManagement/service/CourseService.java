@@ -348,20 +348,18 @@ public class CourseService {
     }
 
 
-    public CommonResponse<List<Course>> getCourseByUserId(Long userId) {
+    public CommonResponse<List<CourseDetailDto>> getCourseByUserId(Long userId) {
 
-        List<Course> courses = null;
-        try {
-            courses = courseRepository.findByUserId(userId);
+        List<CourseDetailDto> courses = courseRepository.findCourseByUserId(userId);
             if (!courses.isEmpty()) {
-                return CommonResponse.<List<Course>>builder()
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(true)
                         .data(courses)
                         .message(Constant.COURSES_FOUND)
                         .statusCode(Constant.SUCCESS)
                         .build();
-            } else {
-                return CommonResponse.<List<Course>>builder()
+            }  {
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(false)
                         .data(courses)
                         .message(Constant.NO_COURSE)
@@ -369,14 +367,6 @@ public class CourseService {
                         .build();
             }
 
-        } catch (Exception e) {
-            return CommonResponse.<List<Course>>builder()
-                    .status(false)
-                    .data(courses)
-                    .message(Constant.FAILED_COURSES_FETCH)
-                    .statusCode(Constant.FORBIDDEN)
-                    .build();
-        }
     }
     public CommonResponse<List<Chapter>> saveHtmlCourse(List<Chapter> chapterList) {
         List<Chapter> chapters;
