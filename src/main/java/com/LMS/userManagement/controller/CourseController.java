@@ -8,7 +8,6 @@ import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +26,10 @@ public class CourseController {
     CourseService courseService;
     @PostMapping(value = "/saveCourse" ,consumes =MediaType.MULTIPART_FORM_DATA_VALUE)
   //  @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse<Course> saveCourse(@RequestPart(value ="course") Course course,
-                                            @RequestPart(value = "file") MultipartFile file){
-     return courseService.saveCourse(course,file);
+    public CommonResponse<Course> saveCourse(@RequestBody Course course){
+                                         //   @RequestPart(value = "file") MultipartFile file){
+    // return courseService.saveCourse(course,file);
+     return courseService.saveCourse(course);
 
     }
     @GetMapping("/getCourseById")
@@ -102,5 +102,11 @@ public class CourseController {
     public ResponseEntity<?> getCourseCompletion(@RequestHeader int courseId){
         return courseService.getCourseCompletion(courseId);
     }*/
+
+    @DeleteMapping("/deleteCourseDetailById")
+    public String deleteById(@RequestParam String id){
+        return courseService.deleteById(id);
+    }
+
 }
 

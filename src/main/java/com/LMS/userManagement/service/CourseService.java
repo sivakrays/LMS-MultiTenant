@@ -10,7 +10,6 @@ import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 
@@ -185,7 +184,7 @@ public class CourseService {
 
 
 
-    public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
+  /*  public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
         String key="LmsCourse/thumbNail/"+ UUID.randomUUID().toString();
 
         if (file == null || !file.getContentType().startsWith("image")){
@@ -216,8 +215,19 @@ public class CourseService {
                     .error(e.getMessage())
                     .build();
         }
-    }
+    }*/
 
+    public CommonResponse<Course> saveCourse(Course course) {
+        course.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+          Course savedCourse=  courseRepository.save(course);
+        return   CommonResponse.<Course>builder()
+                  .status(true)
+                  .data(savedCourse)
+                  .message(Constant.COURSE_SAVED)
+                  .statusCode(Constant.SUCCESS)
+                  .build();
+
+    }
 
     public CommonResponse<CourseDTO> getCourseById(String courseId,Long userId) {
 
@@ -522,6 +532,11 @@ public class CourseService {
                     .data(updatedChapterContent)
                     .build();
         }
+    }
+
+    public String deleteById(String id) {
+        courseRepository.deleteById(id);
+        return "success";
     }
 
 
