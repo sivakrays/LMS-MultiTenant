@@ -24,7 +24,7 @@ import java.util.List;
 public class CourseController {
     @Autowired
     CourseService courseService;
-    @PostMapping(value = "/saveCourse" ,consumes =MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/saveCourse")
   //  @PreAuthorize("hasAuthority('admin')")
     public CommonResponse<Course> saveCourse(@RequestBody Course course){
                                          //   @RequestPart(value = "file") MultipartFile file){

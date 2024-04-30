@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS feedback
     reviewed boolean NOT NULL,
     user_id bigint NOT NULL,
     CONSTRAINT feedback_pkey PRIMARY KEY (id)
-)
+);
 
 -- Table: course_tracker
 CREATE TABLE IF NOT EXISTS course_tracker
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS course_tracker
     sub_section_id character varying(255)  NOT NULL,
     user_id bigint NOT NULL,
     CONSTRAINT course_tracker_pkey PRIMARY KEY (id)
-)
+);
 
 
 
