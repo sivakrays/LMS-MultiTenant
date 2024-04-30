@@ -80,8 +80,10 @@ public class CourseController {
     public  CommonResponse<Quiz> updateQuiz(@RequestBody Quiz quiz){
         return courseService.updateQuiz(quiz);
     }
+
+
     @GetMapping("/getCourseByUserId")
-    public CommonResponse<List<Course>> getCourseByUserId(@RequestParam Long userId){
+    public CommonResponse<List<CourseDetailDto>> getCourseByUserId(@RequestParam Long userId){
         return courseService.getCourseByUserId(userId);
     }
 

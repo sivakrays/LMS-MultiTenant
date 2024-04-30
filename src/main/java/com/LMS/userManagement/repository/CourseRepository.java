@@ -45,6 +45,9 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "WHERE(p.course_id IS NULL OR p.purchased = false OR p.purchased IS NULL) AND c.user_id=?1",nativeQuery = true)
     List<CourseDetailDto> findAllCourseDetailByUserId(Long userId);
 
+    @Query(value = "SELECT c.user_id,c.course_id,c.title,c.is_html_course,c.is_free,c.thumb_nail,c.ratings,c.price,c.language,c.created_date,c.category,c.author_name FROM course c   WHERE c.user_id=?1",nativeQuery = true)
+    List<CourseDetailDto> findCourseByUserId(Long userId);
+
 
 
 
