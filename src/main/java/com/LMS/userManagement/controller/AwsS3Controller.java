@@ -36,12 +36,26 @@ public class AwsS3Controller {
     }
 
     @PostMapping(value = "/uploadFile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public  String saveFile(@RequestPart MultipartFile file,@RequestParam String courseId) throws IOException {
+    public  CommonResponse<String> saveFile(@RequestPart MultipartFile file,@RequestParam String courseId) throws IOException {
         String key="LmsCourse/"+courseId+"/"+UUID.randomUUID().toString();
-        System.out.println(file.getContentType());
-        awss3Service.putObject(key,file);
-       return awsUrl+key;
-       // return file.getContentType();
+        try {
+            awss3Service.putObject(key,file);
+
+        }catch (Exception e){
+            return CommonResponse.<String>builder()
+                    .data(" ")
+                    .status(false)
+                    .statusCode(Constant.FORBIDDEN)
+                    .message("Failed to upload")
+                    .error(e.getMessage())
+                    .build();
+        }
+        return CommonResponse.<String>builder()
+                .data(awsUrl+key)
+                .status(true)
+                .statusCode(Constant.SUCCESS)
+                .message("Video successfully uploaded")
+                .build();
     }
 
     @GetMapping(value = "/fetchFile",produces ="video/mp4")
