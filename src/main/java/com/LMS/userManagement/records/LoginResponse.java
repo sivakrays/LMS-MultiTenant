@@ -8,6 +8,7 @@ public record LoginResponse(
         AuthenticationResponse auth,
 
         List<HomeData> dataList
+      //  HomeData homeData
 
         ) {
 }

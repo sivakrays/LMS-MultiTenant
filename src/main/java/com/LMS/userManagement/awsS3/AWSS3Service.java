@@ -27,7 +27,7 @@ public class AWSS3Service {
     private String awsUrl="https://krays-lms-s3.s3.ap-south-1.amazonaws.com/";
 
 
-    public  String uploadFile( MultipartFile file,String key) throws IOException {
+    public  String uploadImageFile( MultipartFile file,String key) throws IOException {
         putObject(key,file);
         return awsUrl+key;
     }
