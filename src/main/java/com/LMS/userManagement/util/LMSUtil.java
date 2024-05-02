@@ -196,5 +196,107 @@ public class LMSUtil {
     }
 
 
+   /* public LoginResponse findHomeScreenByTenantIdTest(String tenantId, AuthenticationResponse auth,String type){
+        Home home= homeRepository.findByTenantId(tenantId);
+        List<EducationContent> contentList= eduContentRepository.findImageByTenantId(tenantId);
+        Long userId = auth.getUserId();
+
+        LinkedList<CourseDto> courseList= getAllCoursesForHome(userId);
+        List<HomeData> homeList=new ArrayList<>();
+
+        List<CourseData> educationContentList=new ArrayList<>();
+        if (!contentList.isEmpty()) {
+            contentList.forEach(n -> {
+                educationContentList.add(
+                        new CourseData(
+                                n.getImage_title(),
+                                n.getImage(),
+                                n.getImage_content()));
+            });
+        }
+        Banner banner=new Banner("","","","","","","");
+        PromoData promo =new PromoData("","","");
+        if (home==null && contentList.isEmpty() && courseList.isEmpty()){
+           ;
+            return new LoginResponse(
+                    auth,
+                    new HomeData(
+                            banner,
+                            new ArrayList<>(),
+                            promo)
+            );
+        }
+
+
+        String courseTitle="";
+        String courseTitle2="";
+        String educationTitle="";
+
+
+        if (home!=null){
+            courseTitle=home.getCourseTitle();
+            courseTitle2=home.getCourseTitle2();
+            educationTitle= home.getEducationTitle();
+            if(type.equalsIgnoreCase("web")){
+                banner = ExtractWebBannerDetailFromHome(home);
+            }else{
+                banner= new Banner(
+                        home.getBannerImage(),
+                        home.getHomeTitle(),
+                        home.getTheme(),
+                        "",
+                        "",
+                        "",
+                        home.getSupportNumber()
+                );
+            }
+            promo= new PromoData(
+                    home.getPromoTitle(),
+                    home.getPromoVideo(),
+                    home.getPromoDescription()
+            );
+        }
+
+        //  List<CourseData> popularCourseList=new ArrayList<>();
+        var popularCourse=   new PopularCourse(
+                courseTitle,
+                courseList,
+                false
+        );
+
+        //  List<CourseData> recommendedCourseList=new ArrayList<>();
+        var recommendedCourse=   new RecommendedCourse(
+                courseTitle2,
+                courseList,
+                false
+        );
+
+
+        var educationContent=new EducationCourse(
+                educationTitle,
+                educationContentList,
+                true
+        );
+
+
+
+        List<Object> featuredCourseList=new ArrayList<>();
+        featuredCourseList.add(popularCourse);
+        featuredCourseList.add(recommendedCourse);
+        featuredCourseList.add(educationContent);
+
+
+
+        return   new LoginResponse(
+                auth,
+                new HomeData(
+                        banner,
+                        featuredCourseList,
+                        promo)
+        );
+    }
+*/
+
+
 
 }
