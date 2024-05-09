@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface EduContentRepository extends JpaRepository<EduContent,Long> {
-    List<EduContent> findAllByTenantId(String tenantId);
+    //List<EduContent> findAllByTenantId(String tenantId);
 
-    @Query(value = "SELECT IMAGE,IMAGE_CONTENT,IMAGE_TITLE FROM EDU_CONTENT WHERE TENANT_ID=?1",nativeQuery = true)
-    List<EducationContent> findImageByTenantId(String tenantId);
+  //  @Query(value = "SELECT IMAGE,IMAGE_CONTENT,IMAGE_TITLE FROM EDU_CONTENT WHERE TENANT_ID=?1",nativeQuery = true)
+   // List<EducationContent> findImageByTenantId(String tenantId);
 }

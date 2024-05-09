@@ -10,8 +10,9 @@ import java.util.List;
 
 @Repository
 public interface PurchasedCourseRepository extends JpaRepository<PurchasedCourse, Long> {
+    @Query(value = "SELECT * FROM PURCHASED_COURSE  WHERE user_id=?1",nativeQuery = true)
     List<PurchasedCourse> findByUserId(Long userId);
-    @Query(value = "SELECT pc.courseId FROM PurchasedCourse pc WHERE pc.userId = :userId")
+    @Query(value = "SELECT course_id FROM PURCHASED_COURSE  WHERE user_id=?1",nativeQuery = true)
     List<String> findCourseIdsByUserId(Long userId);
 
     @Query(value = "SELECT PURCHASED FROM PURCHASED_COURSE WHERE COURSE_ID=?1 AND USER_ID=?2 AND PURCHASED = true",nativeQuery = true)
@@ -21,5 +22,6 @@ public interface PurchasedCourseRepository extends JpaRepository<PurchasedCourse
             " COALESCE(pc.purchased, false) AS purchased FROM purchased_course pc INNER JOIN course c ON pc.course_id = c.course_id WHERE pc.user_id = ?1",nativeQuery = true)
     List<CourseDetailDto> findPurchasedCourseByUserId(Long userId);
 
+    @Query(value = "SELECT * FROM PURCHASED_COURSE  WHERE user_id=?1 AND course_id=?2",nativeQuery = true)
     PurchasedCourse findByUserIdAndCourseId(Long userId,String courseId);
 }

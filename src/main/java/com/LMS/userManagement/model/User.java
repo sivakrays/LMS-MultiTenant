@@ -41,10 +41,6 @@ public class User implements UserDetails {
     @JsonIgnore
     public String password;
 
-    @Column(nullable = false)
-    @JsonIgnore
-    public String confirmPassword;
-
     public Timestamp createdDate;
 
     public String role;
@@ -61,6 +57,10 @@ public class User implements UserDetails {
 
     @Column(columnDefinition = "TEXT")
     public String profileImage;
+
+    @OneToMany(targetEntity = PurchasedCourse.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    public List<PurchasedCourse> purchasedCourses;
 
   /* @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
     private List<Token> tokens;*/

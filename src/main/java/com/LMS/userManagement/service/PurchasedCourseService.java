@@ -46,7 +46,7 @@ public class PurchasedCourseService {
                 }
             }
                 PurchasedCourse purchasedCourse = new PurchasedCourse();
-                purchasedCourse.setUserId(userId);
+                purchasedCourse.setUser_id(userId);
                 purchasedCourse.setCourseId(courseId);
                 purchasedCourse.setPurchased(true);
                 purchasedCourse.setPurchasedOn(new Timestamp(System.currentTimeMillis()));

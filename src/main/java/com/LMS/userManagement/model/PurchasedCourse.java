@@ -1,5 +1,6 @@
 package com.LMS.userManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +19,8 @@ public class PurchasedCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long purchasedId;
-  //  @Column(nullable = false)
-    private  long userId;
+    @JsonProperty("userId")
+    private  long user_id;
     @Column(nullable = false)
     private String courseId;
     private boolean purchased ;

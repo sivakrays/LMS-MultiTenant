@@ -108,33 +108,37 @@ CREATE TABLE IF NOT EXISTS cart
 CREATE TABLE IF NOT EXISTS edu_content
 (
     id bigint NOT NULL,
-    image text,
-    image_content text,
-    image_title character varying(255),
-    standard character varying(255),
-    tenant_id character varying(255),
-    CONSTRAINT edu_content_pkey PRIMARY KEY (id)
+    home_id bigint,
+    image text ,
+    image_content text ,
+    image_title character varying(255) ,
+    CONSTRAINT edu_content_pkey PRIMARY KEY (id),
+    CONSTRAINT fknsa7av7w3ssyurwgugwn2hmjt FOREIGN KEY (home_id)
+        REFERENCES home (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 );
 
 
 CREATE TABLE IF NOT EXISTS home
 (
     id bigint NOT NULL,
-    banner_image text,
-    course_title character varying(255),
-    course_title2 character varying(255),
-    education_title character varying(255),
-    home_title character varying(255),
-    promo_description text,
-    promo_title text,
-    promo_video text,
-    standard character varying(255),
-    support_number character varying(255),
-    tenant_id character varying(255),
-    theme text,
     banner_heading text ,
+    banner_image text ,
     banner_paragraph text ,
     banner_sub_heading text ,
+    course_title character varying(255) ,
+    course_title2 character varying(255) ,
+    education_title character varying(255) ,
+    home_title character varying(255),
+    promo_description text ,
+    promo_title text ,
+    promo_video text ,
+    standard character varying(255) ,
+    support_number character varying(255) ,
+    tenant_id character varying(255) ,
+    theme text ,
+    support_email character varying(255) ,
     CONSTRAINT home_pkey PRIMARY KEY (id)
 );
 

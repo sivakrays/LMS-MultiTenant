@@ -63,7 +63,7 @@ public class HomeScreenService {
     }
 
     public CommonResponse<List<EduContentDTO>> savePromoContent(List<EduContentDTO> eduContentDTOList) throws IOException {
-        List<EduContent> content= mapper.DTOToEduContentMappper(eduContentDTOList);
+      /*  List<EduContent> content= mapper.DTOToEduContentMappper(eduContentDTOList);
         var contentList= eduContentRepository.saveAll(content);
         List<EduContentDTO> contentDTOList=  mapper.EduContentToDTOMapper(contentList);
         return CommonResponse.<List<EduContentDTO>>builder()
@@ -71,23 +71,23 @@ public class HomeScreenService {
                 .status(true)
                 .data(contentDTOList)
                 .statusCode(200)
-                .build();
+                .build();*/
+        return null;
 
     }
 
-    public CommonResponse<HomeDTO> getHomeScreenByTenantId(String tenantId) {
+    public CommonResponse<Home> getHomeScreenByTenantId(String tenantId) {
        Home home= homeRepository.findByTenantId(tenantId);
         if (home==null){
-           return CommonResponse.<HomeDTO>builder()
+           return CommonResponse.<Home>builder()
                    .status(false)
                    .statusCode(400)
                    .message("Home Page not found")
                    .build();
        }
-        var response=  mapper.homeToDTOMapper(home);
 
-        return CommonResponse.<HomeDTO>builder()
-                .data(response)
+        return CommonResponse.<Home>builder()
+                .data(home)
                 .status(true)
                 .statusCode(Constant.SUCCESS)
                 .message("SUCCESS")
@@ -96,12 +96,13 @@ public class HomeScreenService {
 
 
     public CommonResponse<List<EduContent>> getEducationContent(String tenantId) {
-        List<EduContent> contentList= eduContentRepository.findAllByTenantId(tenantId);
+       /* List<EduContent> contentList= eduContentRepository.findAllByTenantId(tenantId);
         return CommonResponse.<List<EduContent>>builder()
                 .message("SUCCESS")
                 .status(true)
                 .statusCode(Constant.SUCCESS)
                 .data(contentList)
-                .build();
+                .build();*/
+        return null;
     }
 }

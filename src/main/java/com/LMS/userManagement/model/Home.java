@@ -19,41 +19,55 @@ public class Home {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String tenantId;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String homeTitle;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String courseTitle;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String courseTitle2;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
     public String theme;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String standard;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String educationTitle;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
     public String promoTitle;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
     public String promoVideo;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
     public String promoDescription;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
      public String bannerImage;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String supportNumber;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
     public String bannerHeading;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
     public String bannerSubHeading;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
     public String bannerParagraph;
+
+    @Column(columnDefinition = "VARCHAR(255) default ''")
+    public String supportEmail;
+
+    @OneToMany(targetEntity = EduContent.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "home_id",referencedColumnName = "id")
+    public List<EduContent> eduContents;
 }

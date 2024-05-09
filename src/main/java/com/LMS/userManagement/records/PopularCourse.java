@@ -9,7 +9,7 @@ import java.util.List;
 
 public record PopularCourse(
         String title,
-        LinkedList<CourseDto> data,
+      //  LinkedList<CourseDto> data,
 
         boolean isEducation
 

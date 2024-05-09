@@ -126,13 +126,15 @@ public class AuthService {
                 .standard(user.getStandard())
                 .build();
 
-        var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth,type);
+        var home=lmsUtil.findHomeScreenByTenantIdTest(tenantId,type);
+
+     //   var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth,type);
 
         return CommonResponse.<LoginResponse>builder()
                 .status(true)
                 .statusCode(Constant.SUCCESS)
                 .message(Constant.LOGIN_SUCCESS)
-                .data(loginResponse)
+                .data(new LoginResponse(auth,home))
                 .build();
     }
 

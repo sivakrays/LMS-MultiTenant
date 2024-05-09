@@ -31,7 +31,7 @@ public class CustomMapper {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .confirmPassword(passwordEncoder.encode(request.getConfirmPassword()))
+              //  .confirmPassword(passwordEncoder.encode(request.getConfirmPassword()))
                 .role(request.getRole().toLowerCase())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .build();
@@ -89,7 +89,7 @@ public class CustomMapper {
         );
     }
 
-    public List<EduContent> DTOToEduContentMappper(List<EduContentDTO> eduContentDTOList){
+   /* public List<EduContent> DTOToEduContentMappper(List<EduContentDTO> eduContentDTOList){
         List<EduContent> eduContentList = new ArrayList<>();
         eduContentDTOList.forEach(eduContentDTO -> {
                     EduContent content = EduContent.builder()
@@ -102,10 +102,10 @@ public class CustomMapper {
                     eduContentList.add(content);
                 });
         return eduContentList;
-    }
+    }*/
 
 
-    public List<EduContentDTO> EduContentToDTOMapper(List<EduContent> contentList) {
+    /*public List<EduContentDTO> EduContentToDTOMapper(List<EduContent> contentList) {
         List<EduContentDTO> eduContentDTOList = new ArrayList<>();
 
         contentList.forEach(eduContent -> {
@@ -121,5 +121,5 @@ public class CustomMapper {
             );
         });
         return eduContentDTOList;
-    }
+    }*/
 }

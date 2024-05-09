@@ -20,40 +20,43 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "course_id")
-    private String courseId;
+    public String courseId;
     @Column(nullable = false)
-    private long userId;
-    private String title;
-    private String authorName;
+    public long userId;
+    public String title;
+    public String authorName;
     @Column(columnDefinition = "TEXT")
-    private String description;
+    public String description;
     @Column(columnDefinition = "TEXT")
-    private String thumbNail;
-    private long enrolled;
-    private String category;
-    private int ratings;
-    private String language;
-    private String overview;
+    public String thumbNail;
+    public long enrolled;
+    public String category;
+    public int ratings;
+    public String language;
+    public String overview;
     @Column(columnDefinition = "TEXT")
-    private String whatYouWillLearn;
-    private int price;
+    public String whatYouWillLearn;
+    public int price;
     @Column(name = "isFree")
     @JsonProperty("isFree")
-    private boolean isFree;
+    public boolean isFree;
     @JsonFormat(pattern="yyyy-MM-dd")
-    private Timestamp createdDate;
+    public Timestamp createdDate;
 
     @Column(name = "isHtmlCourse")
     @JsonProperty("isHtmlCourse")
-    private boolean isHtmlCourse;
+    public boolean isHtmlCourse;
 
     @OneToMany(targetEntity = Section.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id",referencedColumnName = "course_id")
-    private List<Section> sections;
+    public List<Section> sections;
 
     @OneToMany(targetEntity = Chapter.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "html_course_id",referencedColumnName = "course_id")
-    private List<Chapter> chapters;
+    public List<Chapter> chapters;
 
+    public boolean recommended;
+
+    public boolean popular;
 
 }
