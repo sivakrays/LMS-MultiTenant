@@ -1,6 +1,7 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.TenantDto;
+import com.LMS.userManagement.model.TenantDetails;
 import com.LMS.userManagement.records.LoginDTO;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.TenantService;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -21,7 +24,7 @@ public class TenantController {
     private TenantService tenantService;
 
     @PostMapping("/registerTenant")
-    public CommonResponse<TenantDto> registerTenant(@RequestBody TenantDto tenantDetails) {
+    public CommonResponse<List<TenantDetails>> registerTenant(@RequestBody TenantDto tenantDetails) throws Exception {
         return tenantService.registerTenant(tenantDetails);
     }
 

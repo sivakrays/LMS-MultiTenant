@@ -32,7 +32,7 @@ public class AuthController {
 
     @PostMapping("/register")
     //  @PreAuthorize("hasAuthority('manager')")
-    public CommonResponse<UserDTO> register (@RequestBody RegisterRequest request){
+    public CommonResponse<List<User>> register (@RequestBody RegisterRequest request){
         return authService.register(request);
 
     }

@@ -15,5 +15,4 @@ public class ProfileDto {
     public Integer standard;
     public String city;
     public String country;
-    public String profileImage;
 }

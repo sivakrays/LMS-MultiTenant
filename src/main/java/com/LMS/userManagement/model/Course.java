@@ -40,7 +40,7 @@ public class Course {
     @Column(name = "isFree")
     @JsonProperty("isFree")
     private boolean isFree;
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Timestamp createdDate;
 
     @Column(name = "isHtmlCourse")
@@ -54,10 +54,6 @@ public class Course {
     @OneToMany(targetEntity = Chapter.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "html_course_id",referencedColumnName = "course_id")
     private List<Chapter> chapters;
-
-
-
-
 
 
 }

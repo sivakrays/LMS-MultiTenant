@@ -173,9 +173,34 @@ CREATE TABLE IF NOT EXISTS purchased_course
     purchased boolean NOT NULL,
     purchased_id bigint NOT NULL,
     purchased_on timestamp(6) without time zone,
-    user_id bigint,
-    course_id character varying(255),
+    user_id bigint NOT NULL,
+    course_id character varying(255) NOT NULL,
     CONSTRAINT purchased_course_pkey PRIMARY KEY (purchased_id)
+);
+
+-- Table: public.feedback
+CREATE TABLE IF NOT EXISTS feedback
+(
+    id bigint NOT NULL,
+    active boolean NOT NULL,
+    comment text ,
+    created_date timestamp(6) without time zone,
+    rating integer NOT NULL,
+    reviewed boolean NOT NULL,
+    user_id bigint NOT NULL,
+    CONSTRAINT feedback_pkey PRIMARY KEY (id)
+);
+
+-- Table: course_tracker
+CREATE TABLE IF NOT EXISTS course_tracker
+(
+    id bigint NOT NULL,
+    course_id character varying(255) NOT NULL,
+    duration bigint NOT NULL,
+    section_id character varying(255)  NOT NULL,
+    sub_section_id character varying(255)  NOT NULL,
+    user_id bigint NOT NULL,
+    CONSTRAINT course_tracker_pkey PRIMARY KEY (id)
 );
 
 

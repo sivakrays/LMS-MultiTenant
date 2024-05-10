@@ -60,6 +60,7 @@ public class SecurityConfiguration  {
                                     .requestMatchers("/lms/api/tenant/**").permitAll()
                                     .requestMatchers("/lms/api/admin/**").permitAll()
                                    .requestMatchers("/lms/api/user/getCourseCompletion").permitAll()
+                                   .requestMatchers("/lms/api/user/deleteCourseDetailById").permitAll()
                                     .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                    /*.requestMatchers("/lms/api/auth/saveAndEditProfile").permitAll()
                                     .requestMatchers("/lms/api/user/saveSection").permitAll()
@@ -81,15 +82,4 @@ public class SecurityConfiguration  {
         return http.build();
     }
 
-
-   /* @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                // This wildcard pattern matches any host from domain.com and url patterns like "https:microservice.division.domain.com/version1/some_endpoint"
-                registry.addMapping("/**").allowedMethods("*").allowedOriginPatterns("http://localhost:3000");
-            }
-        };
-    }*/
 }

@@ -1,4 +1,5 @@
 package com.LMS.userManagement.service;
+import com.LMS.userManagement.awsS3.AWSS3Service;
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.CourseDto;
 import com.LMS.userManagement.mapper.CourseMapper;
@@ -13,10 +14,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 @Service
 public class CourseService {
     @Autowired
@@ -33,6 +32,9 @@ public class CourseService {
     ChapterContentRepository chapterContentRepository;
     @Autowired
     PurchasedCourseRepository purchasedCourseRepository;
+
+    @Autowired
+    AWSS3Service awss3Service;
 
     private final CourseMapper mapper;
 
@@ -182,10 +184,22 @@ public class CourseService {
 
 
 
-    public CommonResponse<Course> saveCourse(Course course) {
+  /*  public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
+        String key="LmsCourse/thumbNail/"+ UUID.randomUUID().toString();
+
+        if (file == null || !file.getContentType().startsWith("image")){
+            return CommonResponse.<Course>builder()
+                    .status(false)
+                    .message(Constant.IMAGE_NOT_SUPPORTED)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+
 
         try {
+         String thumbNailUrl=   awss3Service.uploadFile(file,key);
             course.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            course.setThumbNail(thumbNailUrl);
             Course   savedCourse = courseRepository.save(course);
             return CommonResponse.<Course>builder()
                     .status(true)
@@ -198,10 +212,22 @@ public class CourseService {
                     .status(false)
                     .message(Constant.COURSE_SAVE_FAILED)
                     .statusCode(Constant.FORBIDDEN)
+                    .error(e.getMessage())
                     .build();
         }
-    }
+    }*/
 
+    public CommonResponse<Course> saveCourse(Course course) {
+        course.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+          Course savedCourse=  courseRepository.save(course);
+        return   CommonResponse.<Course>builder()
+                  .status(true)
+                  .data(savedCourse)
+                  .message(Constant.COURSE_SAVED)
+                  .statusCode(Constant.SUCCESS)
+                  .build();
+
+    }
 
     public CommonResponse<CourseDTO> getCourseById(String courseId,Long userId) {
 
@@ -322,20 +348,18 @@ public class CourseService {
     }
 
 
-    public CommonResponse<List<Course>> getCourseByUserId(Long userId) {
+    public CommonResponse<List<CourseDetailDto>> getCourseByUserId(Long userId) {
 
-        List<Course> courses = null;
-        try {
-            courses = courseRepository.findByUserId(userId);
+        List<CourseDetailDto> courses = courseRepository.findCourseByUserId(userId);
             if (!courses.isEmpty()) {
-                return CommonResponse.<List<Course>>builder()
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(true)
                         .data(courses)
                         .message(Constant.COURSES_FOUND)
                         .statusCode(Constant.SUCCESS)
                         .build();
-            } else {
-                return CommonResponse.<List<Course>>builder()
+            }  {
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(false)
                         .data(courses)
                         .message(Constant.NO_COURSE)
@@ -343,14 +367,6 @@ public class CourseService {
                         .build();
             }
 
-        } catch (Exception e) {
-            return CommonResponse.<List<Course>>builder()
-                    .status(false)
-                    .data(courses)
-                    .message(Constant.FAILED_COURSES_FETCH)
-                    .statusCode(Constant.FORBIDDEN)
-                    .build();
-        }
     }
     public CommonResponse<List<Chapter>> saveHtmlCourse(List<Chapter> chapterList) {
         List<Chapter> chapters;
@@ -506,6 +522,11 @@ public class CourseService {
                     .data(updatedChapterContent)
                     .build();
         }
+    }
+
+    public String deleteById(String id) {
+        courseRepository.deleteById(id);
+        return "success";
     }
 
 

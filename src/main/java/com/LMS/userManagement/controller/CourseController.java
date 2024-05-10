@@ -8,8 +8,9 @@ import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,9 +24,11 @@ import java.util.List;
 public class CourseController {
     @Autowired
     CourseService courseService;
-    @PostMapping("/saveCourse")
+    @PostMapping(value = "/saveCourse")
   //  @PreAuthorize("hasAuthority('admin')")
     public CommonResponse<Course> saveCourse(@RequestBody Course course){
+                                         //   @RequestPart(value = "file") MultipartFile file){
+    // return courseService.saveCourse(course,file);
      return courseService.saveCourse(course);
 
     }
@@ -77,8 +80,10 @@ public class CourseController {
     public  CommonResponse<Quiz> updateQuiz(@RequestBody Quiz quiz){
         return courseService.updateQuiz(quiz);
     }
+
+
     @GetMapping("/getCourseByUserId")
-    public CommonResponse<List<Course>> getCourseByUserId(@RequestParam Long userId){
+    public CommonResponse<List<CourseDetailDto>> getCourseByUserId(@RequestParam Long userId){
         return courseService.getCourseByUserId(userId);
     }
 
@@ -99,5 +104,11 @@ public class CourseController {
     public ResponseEntity<?> getCourseCompletion(@RequestHeader int courseId){
         return courseService.getCourseCompletion(courseId);
     }*/
+
+    @DeleteMapping("/deleteCourseDetailById")
+    public String deleteById(@RequestParam String id){
+        return courseService.deleteById(id);
+    }
+
 }
 
