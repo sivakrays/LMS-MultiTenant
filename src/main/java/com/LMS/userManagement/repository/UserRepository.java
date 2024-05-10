@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     User findByEmail(String username);
 
-    @Query(value = "SELECT name,email,id,standard,city,country,school,gender FROM USER_DETAILS WHERE ID=?1",nativeQuery = true)
+    @Query(value = "SELECT name,email,id,standard,city,country,school,gender,profile_image FROM USER_DETAILS WHERE ID=?1",nativeQuery = true)
     UserProfileDto findUserByUserId(Long userId);
 }

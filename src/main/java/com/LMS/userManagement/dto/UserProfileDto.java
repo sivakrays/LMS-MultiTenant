@@ -21,6 +21,9 @@ public interface UserProfileDto {
 
     public String getCountry();
 
+    @JsonProperty("profileImage")
+    public String getProfile_image();
+
 
 
 }
