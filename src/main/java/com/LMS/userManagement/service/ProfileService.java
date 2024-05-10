@@ -2,6 +2,7 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.awsS3.AWSS3Service;
 import com.LMS.userManagement.dto.ProfileDto;
+import com.LMS.userManagement.dto.UserProfileDto;
 import com.LMS.userManagement.model.User;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.response.CommonResponse;
@@ -25,29 +26,30 @@ public class ProfileService {
     }
 
 
-    public CommonResponse<User> saveAndEditProfile(ProfileDto profileRequest,
+    public CommonResponse<UserProfileDto> saveAndEditProfile(ProfileDto profileRequest,
                                                    MultipartFile file) {
         Optional<User> user = userRepository.findById(profileRequest.getId());
         try {
             if (user.isPresent()) {
-              String profileImage=  awss3Service.uploadImageFile(file,profileRequest.getId().toString());
                 User userDetails = user.get();
+                if (file!=null) {
+                    String profileImage = awss3Service.uploadImageFile(file, profileRequest.getId().toString());
+                    userDetails.setProfileImage(profileImage);
+                }
                 userDetails.setName(profileRequest.getName());
                 userDetails.setGender(profileRequest.getGender());
-                userDetails.setSchool(profileRequest.getSchool());
-                userDetails.setStandard(profileRequest.getStandard());
                 userDetails.setCity(profileRequest.getCity());
                 userDetails.setCountry(profileRequest.getCountry());
-                userDetails.setProfileImage(profileImage);
                 User    savedUser = userRepository.save(userDetails);
-                return CommonResponse.<User>builder()
+                UserProfileDto profile= userRepository.findUserByUserId(savedUser.getId());
+                return CommonResponse.<UserProfileDto>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.PROFILE_UPDATED)
-                        .data(savedUser)
+                        .data(profile)
                         .build();
             }
-                return CommonResponse.<User>builder()
+                return CommonResponse.<UserProfileDto>builder()
                         .status(false)
                         .statusCode(Constant.NO_CONTENT)
                         .message(Constant.USER_NOT_FOUND)
@@ -55,7 +57,7 @@ public class ProfileService {
 
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.<User>builder()
+            return CommonResponse.<UserProfileDto>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_PROFILE_SAVE_EDIT)
