@@ -10,6 +10,7 @@ import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 
@@ -184,7 +185,7 @@ public class CourseService {
 
 
 
-  /*  public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
+    public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
         String key="LmsCourse/thumbNail/"+ UUID.randomUUID().toString();
 
         if (file == null || !file.getContentType().startsWith("image")){
@@ -197,7 +198,7 @@ public class CourseService {
 
 
         try {
-         String thumbNailUrl=   awss3Service.uploadFile(file,key);
+         String thumbNailUrl=   awss3Service.uploadImageFile(file,key);
             course.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             course.setThumbNail(thumbNailUrl);
             Course   savedCourse = courseRepository.save(course);
@@ -215,9 +216,9 @@ public class CourseService {
                     .error(e.getMessage())
                     .build();
         }
-    }*/
+    }
 
-    public CommonResponse<Course> saveCourse(Course course) {
+  /*  public CommonResponse<Course> saveCourse(Course course) {
         course.setCreatedDate(new Timestamp(System.currentTimeMillis()));
           Course savedCourse=  courseRepository.save(course);
         return   CommonResponse.<Course>builder()
@@ -227,7 +228,7 @@ public class CourseService {
                   .statusCode(Constant.SUCCESS)
                   .build();
 
-    }
+    }*/
 
     public CommonResponse<CourseDTO> getCourseById(String courseId,Long userId) {
 

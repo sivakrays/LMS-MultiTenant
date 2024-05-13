@@ -33,7 +33,8 @@ public class ProfileService {
             if (user.isPresent()) {
                 User userDetails = user.get();
                 if (file!=null) {
-                    String profileImage = awss3Service.uploadImageFile(file, profileRequest.getId().toString());
+                    String key="profileImage/"+profileRequest.getId().toString();
+                    String profileImage = awss3Service.uploadImageFile(file, key);
                     userDetails.setProfileImage(profileImage);
                 }
                 userDetails.setName(profileRequest.getName());

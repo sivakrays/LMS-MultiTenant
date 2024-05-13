@@ -24,13 +24,12 @@ import java.util.List;
 public class CourseController {
     @Autowired
     CourseService courseService;
-    @PostMapping(value = "/saveCourse")
+    @PostMapping(value = "/saveCourse",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   //  @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse<Course> saveCourse(@RequestBody Course course){
-                                         //   @RequestPart(value = "file") MultipartFile file){
-    // return courseService.saveCourse(course,file);
-     return courseService.saveCourse(course);
-
+    public CommonResponse<Course> saveCourse(@RequestPart(value = "course") Course course,
+                                            @RequestPart(value = "file") MultipartFile file){
+     return courseService.saveCourse(course,file);
+    // return courseService.saveCourse(course);
     }
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")

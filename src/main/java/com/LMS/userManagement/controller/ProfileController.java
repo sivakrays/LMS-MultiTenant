@@ -26,7 +26,6 @@ public class ProfileController {
     @Autowired
     ProfileService profileService;
 
-    @Async
     @PutMapping(value = "/saveAndEditProfile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResponse<UserProfileDto> saveAndEditProfile(@RequestPart(value = "profile") ProfileDto profileRequest
                                                     , @RequestPart(value = "file",required = false) MultipartFile file){
