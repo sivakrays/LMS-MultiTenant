@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,19 +48,26 @@ public class User implements UserDetails {
 
     public Timestamp createdDate;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String role;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String gender;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
+  //  @ColumnDefault(value = "' '")
     public String school;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public Integer standard;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String city;
 
+    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String country;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT default ''")
     public String profileImage;
 
   /* @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
