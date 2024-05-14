@@ -1,6 +1,7 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.ProfileDto;
+import com.LMS.userManagement.dto.UserProfileDto;
 import com.LMS.userManagement.model.User;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.ProfileService;
@@ -25,10 +26,9 @@ public class ProfileController {
     @Autowired
     ProfileService profileService;
 
-    @Async
-    @PostMapping(value = "/saveAndEditProfile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CommonResponse<User> saveAndEditProfile(@RequestPart(value = "profile") ProfileDto profileRequest
-                                                    ,@RequestPart(value = "file") MultipartFile file){
+    @PutMapping(value = "/saveAndEditProfile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CommonResponse<UserProfileDto> saveAndEditProfile(@RequestPart(value = "profile") ProfileDto profileRequest
+                                                    , @RequestPart(value = "file",required = false) MultipartFile file){
         return profileService.saveAndEditProfile(profileRequest,file);
     }
     @GetMapping("/getProfileById")
