@@ -1,20 +1,15 @@
 package com.LMS.userManagement.model;
 
-import com.LMS.userManagement.util.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -44,26 +39,19 @@ public class User implements UserDetails {
 
     public Timestamp createdDate;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String role;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String gender;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
-  //  @ColumnDefault(value = "' '")
     public String school;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
     public Integer standard;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
     public String city;
-
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+    @Column(columnDefinition = "varchar(255) default 'india'")
     public String country;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
     public String profileImage;
 
     @OneToMany(targetEntity = PurchasedCourse.class,cascade = CascadeType.ALL)
@@ -109,3 +97,4 @@ public class User implements UserDetails {
         return true;
     }
 }
+

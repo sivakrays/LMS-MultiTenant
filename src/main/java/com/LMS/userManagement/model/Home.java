@@ -19,52 +19,52 @@ public class Home {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+  //  @Column(columnDefinition = "VARCHAR(255) default ''")
     public String tenantId;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+  //  @Column(columnDefinition = "VARCHAR(255) default ''")
     public String homeTitle;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+   // @Column(columnDefinition = "VARCHAR(255) default ''")
     public String courseTitle;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+  //  @Column(columnDefinition = "VARCHAR(255) default ''")
     public String courseTitle2;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
     public String theme;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+   // @Column(columnDefinition = "VARCHAR(255) default ''")
     public String standard;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+  //  @Column(columnDefinition = "VARCHAR(255) default ''")
     public String educationTitle;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
     public String promoTitle;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
     public String promoVideo;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
     public String promoDescription;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
      public String bannerImage;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+   // @Column(columnDefinition = "VARCHAR(255) default ''")
     public String supportNumber;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
     public String bannerHeading;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
     public String bannerSubHeading;
 
-    @Column(columnDefinition = "TEXT default ''")
+    @Column(columnDefinition = "TEXT")
     public String bannerParagraph;
 
-    @Column(columnDefinition = "VARCHAR(255) default ''")
+  //  @Column(columnDefinition = "VARCHAR(255) default ''")
     public String supportEmail;
 
     @OneToMany(targetEntity = EduContent.class,cascade = CascadeType.ALL)
