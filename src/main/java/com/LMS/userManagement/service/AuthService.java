@@ -61,17 +61,29 @@ public class AuthService {
 
     public CommonResponse<List<User>> register(RegisterRequest request) {
 
-            User user=mapper.DtoToUserMapper(request);
-            user.setProfileImage(Constant.DEFAULT_PROFILE_IMAGE);
-            User savedUser= userRepository.save(user);
-           List<User> users = userRepository.findAll();
-          UserDTO    userDto=mapper.UserDtoToUserMapper(savedUser);
-        return CommonResponse.<List<User>>builder()
-                .message(Constant.USER_REGISTERED)
-                .status(true)
-                .data(users)
-                .statusCode(Constant.SUCCESS)
-                .build();
+        try {
+
+        User user = mapper.DtoToUserMapper(request);
+        user.setProfileImage(Constant.DEFAULT_PROFILE_IMAGE);
+        User savedUser = userRepository.save(user);
+        List<User> users = userRepository.findAll();
+        UserDTO userDto = mapper.UserDtoToUserMapper(savedUser);
+            return CommonResponse.<List<User>>builder()
+                    .message(Constant.USER_REGISTERED)
+                    .status(true)
+                    .data(users)
+                    .statusCode(Constant.SUCCESS)
+                    .build();
+
+        }catch (Exception e){
+            List<User> users = userRepository.findAll();
+            return CommonResponse.<List<User>>builder()
+                    .message(Constant.REGISTER_FAILED)
+                    .status(false)
+                    .data(users)
+                    .statusCode(Constant.FORBIDDEN)
+                    .build();
+        }
 
     }
 
