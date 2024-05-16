@@ -63,26 +63,7 @@ public class AdminController {
     }
 
 
-    //Testing APIs
-    @GetMapping("/adminRead")
-    @PreAuthorize("hasAuthority('admin')")
-    public String adminRead(){
-
-        return "admin:: can  read";
-    }
-
-    @PostMapping("/adminCreate")
-    @PreAuthorize("hasAuthority('admin')")
-    public String adminCreate(){
-        return "admin:: can create";
-    }
-
-    @DeleteMapping("/adminDelete")
-    @PreAuthorize("hasAuthority('admin')")
-    public String adminDelete(){
-
-        return "admin:: can  delete";
-    }
+  //  @GetMapping("/")
 
 
 }
