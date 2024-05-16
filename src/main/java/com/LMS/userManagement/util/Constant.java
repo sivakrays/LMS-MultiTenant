@@ -28,13 +28,12 @@ public class Constant {
     public static final String SECTION_SAVED = "Section saved successfully";
     public static final String SUBSECTION_SAVED = "Subsection saved successfully";
     public static final String SECTION_UPDATED = "Section updated successfully";
-    public static final String EMPTY_SEARCH = "Search string is empty";
     public static final String QUIZ_UPDATED = "Quiz updated successfully";
     public static final String BADGE_SAVED = "Badge saved successfully";
     public static final String BADGE_UPDATED = "Badge updated successfully";
     public static final String QUIZ_CSV_UPLOAD = "Quiz CSV uploaded successfully";
     public static final String QUIZ_CSV_DOWNLOAD = "Quiz CSV template downloaded successfully";
-    public static final String CART_EMPTY_DELETION = "Cart is empty after deletion";
+    public static final String CART_EMPTY_DELETION = "Cart is empty";
     public static final String COURSE_PURCHASED = "Course purchased successfully";
     public static final String RETRIEVED_PURCHASED_COURSE = "Purchased courses found";
     public static final String SAVE_HTML_COURSE = "Html course save successfully";
@@ -101,7 +100,6 @@ public class Constant {
 
 
     //Common Data
-    public static final String CREATED_DATE="createdDate";
     public static final String DEFAULT_PROFILE_IMAGE="https://t4.ftcdn.net/jpg/05/89/93/27/360_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg";
 
 
