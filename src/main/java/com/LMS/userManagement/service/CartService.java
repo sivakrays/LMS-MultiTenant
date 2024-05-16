@@ -127,14 +127,14 @@ public class CartService {
                             .message(Constant.CART_DELETED)
                             .data(cartDetails)
                             .build();
-                } else {
+                }
                     return CommonResponse.<List<CartDetail>>builder()
                             .status(false)
                             .statusCode(Constant.SUCCESS)
                             .message(Constant.CART_EMPTY_DELETION)
                             .data(cartDetails)
                             .build();
-                }
+
             }
             return CommonResponse.<List<CartDetail>>builder()
                     .status(false)
