@@ -1,5 +1,7 @@
 package com.LMS.userManagement.Razorpay;
 
+import com.LMS.userManagement.response.CommonResponse;
+import com.LMS.userManagement.util.Constant;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -20,8 +22,7 @@ public class RazorpayController {
     private static final String SECRET_KEY = "k7QAPSwoA3zwl5deNmNaN2IR";
 
     @PostMapping("/createOrder")
-
-    public OrderResponse createOrder(@RequestBody OrderRequest orderRequest) {
+    public CommonResponse<OrderResponse>  createOrder(@RequestBody OrderRequest orderRequest) {
         OrderResponse response = new OrderResponse();
         try {
 
@@ -34,26 +35,36 @@ public class RazorpayController {
             System.out.println("---------------------------");
 
             response.setRazorpayOrderId(orderId);
-            response.setApplicationFee("" + orderRequest.getAmount());
+            response.setPayment("" + orderRequest.getAmount());
 
             response.setSecretKey(SECRET_KEY);
             response.setSecretId(SECRET_ID);
 
-            return response;
+            return CommonResponse.<OrderResponse>builder()
+                    .status(true)
+                    .data(response)
+                    .statusCode(Constant.SUCCESS)
+                    .message("order success")
+                    .build();
 
         } catch (RazorpayException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return CommonResponse.<OrderResponse>builder()
+                    .status(false)
+                    .data(response)
+                    .statusCode(Constant.FORBIDDEN)
+                    .message("order failed")
+                    .error(e.getMessage())
+                    .build();
         }
 
-        return response;
 
     }
 
-    private Order createRazorPayOrder(BigInteger amount) throws RazorpayException {
+    private Order createRazorPayOrder(Float amount) throws RazorpayException {
 
         JSONObject options = new JSONObject();
-        options.put("amount", amount.multiply(new BigInteger("100")));
+       // options.put("amount", amount.multiply(new BigInteger("100")));
+        options.put("amount", amount);
         options.put("currency", "INR");
         options.put("receipt", "txn_123456");
         options.put("payment_capture", 1); // You can enable this if you want to do Auto Capture.

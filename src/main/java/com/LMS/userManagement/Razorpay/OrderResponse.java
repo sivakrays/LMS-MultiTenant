@@ -7,7 +7,7 @@ public class OrderResponse {
 
         String secretKey;
         String razorpayOrderId;
-        String applicationFee;
+        String payment;
         String secretId;
 
 }
