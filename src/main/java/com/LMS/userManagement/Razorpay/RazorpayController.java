@@ -60,11 +60,11 @@ public class RazorpayController {
 
     }
 
-    private Order createRazorPayOrder(Float amount) throws RazorpayException {
+    private Order createRazorPayOrder(BigInteger amount) throws RazorpayException {
 
         JSONObject options = new JSONObject();
-       // options.put("amount", amount.multiply(new BigInteger("100")));
-        options.put("amount", amount);
+        options.put("amount", amount.multiply(new BigInteger("100")));
+      //  options.put("amount", amount);
         options.put("currency", "INR");
         options.put("receipt", "txn_123456");
         options.put("payment_capture", 1); // You can enable this if you want to do Auto Capture.

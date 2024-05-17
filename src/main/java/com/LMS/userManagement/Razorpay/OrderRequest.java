@@ -10,6 +10,6 @@ public class OrderRequest {
         String customerName;
         String email;
         String phoneNumber;
-        Float amount;
+        BigInteger amount;
 
 }
