@@ -104,4 +104,5 @@ public class Constant {
 
 
     public static final String IMAGE_NOT_SUPPORTED ="The file type is not an image or is empty" ;
+    public static final String REGISTER_FAILED = "Register failed";
 }

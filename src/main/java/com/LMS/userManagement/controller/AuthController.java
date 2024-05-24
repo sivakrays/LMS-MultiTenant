@@ -65,8 +65,9 @@ public class AuthController {
 
     @GetMapping("/getAllUser")
     private CommonResponse<List<User>> getAllUser(){
-        return   authService.getAllUser();
+        return authService.getAllUser();
     }
+
     @DeleteMapping("/deleteUserById")
     public CommonResponse<List<User>> deleteUserById(@RequestParam Long userId){
         return authService.deleteUserById(userId);
