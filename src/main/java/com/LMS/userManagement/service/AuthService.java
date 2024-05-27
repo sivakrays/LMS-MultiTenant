@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @Service
@@ -58,33 +59,37 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public CommonResponse<UserDTO> register(RegisterRequest request) {
-        UserDTO userDto;
+    public CommonResponse<List<User>> register(RegisterRequest request) {
+
         try {
-            User user=mapper.DtoToUserMapper(request);
-            user.setProfileImage(Constant.DEFAULT_PROFILE_IMAGE);
-            var savedUser= userRepository.save(user);
-            userDto=mapper.UserDtoToUserMapper(savedUser);
+
+        User user = mapper.DtoToUserMapper(request);
+        user.setProfileImage(Constant.DEFAULT_PROFILE_IMAGE);
+        User savedUser = userRepository.save(user);
+        List<User> users = userRepository.findAll();
+        UserDTO userDto = mapper.UserDtoToUserMapper(savedUser);
+            return CommonResponse.<List<User>>builder()
+                    .message(Constant.USER_REGISTERED)
+                    .status(true)
+                    .data(users)
+                    .statusCode(Constant.SUCCESS)
+                    .build();
+
         }catch (Exception e){
-            return CommonResponse.<UserDTO>builder()
+            List<User> users = userRepository.findAll();
+            return CommonResponse.<List<User>>builder()
+                    .message(Constant.REGISTER_FAILED)
                     .status(false)
-                    .message(Constant.USER_EXISTS)
+                    .data(users)
                     .statusCode(Constant.FORBIDDEN)
                     .build();
         }
-
-        return CommonResponse.<UserDTO>builder()
-                .message(Constant.USER_REGISTERED)
-                .status(true)
-                .data(userDto)
-                .statusCode(Constant.SUCCESS)
-                .build();
 
     }
 
 
 
-    public CommonResponse<LoginResponse> authentication(LoginDTO loginDto, String tenantId) {
+    public CommonResponse<LoginResponse> authentication(LoginDTO loginDto, String tenantId,String type) {
         String email = loginDto.email();
         String password = loginDto.password();
         try {
@@ -133,7 +138,7 @@ public class AuthService {
                 .standard(user.getStandard())
                 .build();
 
-        var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth);
+        var loginResponse=lmsUtil.findHomeScreenByTenantId(tenantId,auth,type);
 
         return CommonResponse.<LoginResponse>builder()
                 .status(true)
@@ -175,28 +180,19 @@ public class AuthService {
 
     }
 
-    public CommonResponse<Page<User>> getAllUser(int pageNo, int pageSize) {
-        Page<User> users = null;
-        try {
-            Pageable sortedByTime =
-                    PageRequest.of(pageNo, pageSize, Sort.by(Constant.CREATED_DATE).descending());
-            users = userRepository.findAll(sortedByTime);
-        } catch (Exception e) {
-            return CommonResponse.<Page<User>>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_RETRIEVE_USERS)
-                    .build();
-        }
+    public CommonResponse<List<User>> getAllUser() {
+        List<User> users = userRepository.findAll();
+
         if (users.isEmpty()) {
-            return CommonResponse.<Page<User>>builder()
+            return CommonResponse.<List<User>>builder()
                     .status(false)
                     .statusCode(Constant.SUCCESS)
                     .message(Constant.NO_DATA)
+                    .data(users)
                     .build();
         }
 
-        return CommonResponse.<Page<User>>builder()
+        return CommonResponse.<List<User>>builder()
                 .status(true)
                 .statusCode(Constant.SUCCESS)
                 .message(Constant.DATA_FOUND)
@@ -205,34 +201,27 @@ public class AuthService {
     }
 
 
-    public CommonResponse<Page<User>> deleteUserById(Long userId,int pageNo,int pageSize) {
-        try {
-            Page<User> userList = null;
+    public CommonResponse<List<User>> deleteUserById(Long userId) {
+
             if (userRepository.existsById(userId)) {
                 userRepository.deleteById(userId);
-               userList = userRepository.findAll(PageRequest.of(pageNo,pageSize));
-                return CommonResponse.<Page<User>>builder()
+                List<User>  userList = userRepository.findAll();
+                return CommonResponse.<List<User>>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.USER_DELETED)
                         .data(userList)
                         .build();
-            } else {
-                return CommonResponse.<Page<User>>builder()
+            }
+        List<User>  userList = userRepository.findAll();
+        return CommonResponse.<List<User>>builder()
                         .status(false)
                         .statusCode(Constant.NO_CONTENT)
                         .message(Constant.NO_DATA)
                         .data(userList)
                         .build();
-            }
-        } catch (Exception e) {
-            return CommonResponse.<Page<User>>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_DELETE_USER)
-                    .data(null)
-                    .build();
-        }
+
+
     }
 
     /*private void saveUserToken(User user, String jwtToken) {

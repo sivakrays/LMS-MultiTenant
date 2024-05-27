@@ -1,24 +1,21 @@
 package com.LMS.userManagement.service;
+import com.LMS.userManagement.awsS3.AWSS3Service;
 import com.LMS.userManagement.dto.CourseDetailDto;
+import com.LMS.userManagement.dto.CourseDto;
 import com.LMS.userManagement.mapper.CourseMapper;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.CourseDTO;
-import com.LMS.userManagement.repository.CourseRepository;
-import com.LMS.userManagement.repository.QuizRepository;
-import com.LMS.userManagement.repository.SectionRepository;
-import com.LMS.userManagement.repository.SubSectionRepository;
+import com.LMS.userManagement.repository.*;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.sql.Timestamp;
+
+
+import java.util.*;
 
 @Service
 public class CourseService {
@@ -30,6 +27,15 @@ public class CourseService {
     SubSectionRepository subSectionRepository;
     @Autowired
     QuizRepository quizRepository;
+    @Autowired
+    ChapterRepository chapterRepository;
+    @Autowired
+    ChapterContentRepository chapterContentRepository;
+    @Autowired
+    PurchasedCourseRepository purchasedCourseRepository;
+
+    @Autowired
+    AWSS3Service awss3Service;
 
     private final CourseMapper mapper;
 
@@ -60,23 +66,23 @@ public class CourseService {
 
     }
 
-    public CommonResponse<Page<Course>> deleteCourseById(UUID courseId,int pageNo,int pageSize) {
+    public CommonResponse<List<Course>> deleteCourseById(String courseId) {
 
         try {
-            Page<Course> courses = null;
+            List<Course> courses = null;
             if (courseRepository.existsById(courseId)) {
                 Optional<Course> course = courseRepository.findById(courseId);
                 Long userId = course.get().getUserId();
                 courseRepository.deleteById(courseId);
-                 courses = courseRepository.findCourseByUserId(userId,PageRequest.of(pageNo,pageSize));
-                return CommonResponse.<Page<Course>>builder()
+                 courses = courseRepository.findByUserId(userId);
+                return CommonResponse.<List<Course>>builder()
                         .status(true)
                         .message(Constant.DELETE_COURSE)
                         .data(courses)
                         .statusCode(Constant.SUCCESS)
                         .build();
             } else {
-                return CommonResponse.<Page<Course>>builder()
+                return CommonResponse.<List<Course>>builder()
                         .status(false)
                         .message(Constant.NO_COURSE)
                         .data(courses)
@@ -85,7 +91,7 @@ public class CourseService {
             }
 
         } catch (Exception e) {
-            return CommonResponse.<Page<Course>>builder()
+            return CommonResponse.<List<Course>>builder()
                     .status(false)
                     .message(Constant.DELETE_COURSE_FAILED)
                     .data(null)
@@ -179,10 +185,22 @@ public class CourseService {
 
 
 
-    public CommonResponse<Course> saveCourse(Course course) {
+    public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
+        String key="LmsCourse/thumbNail/"+ UUID.randomUUID().toString();
+
+        if (file == null || !file.getContentType().startsWith("image")){
+            return CommonResponse.<Course>builder()
+                    .status(false)
+                    .message(Constant.IMAGE_NOT_SUPPORTED)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+
 
         try {
-            course.setIsHtmlCourse(false);
+         String thumbNailUrl=   awss3Service.uploadImageFile(file,key);
+            course.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            course.setThumbNail(thumbNailUrl);
             Course   savedCourse = courseRepository.save(course);
             return CommonResponse.<Course>builder()
                     .status(true)
@@ -195,18 +213,36 @@ public class CourseService {
                     .status(false)
                     .message(Constant.COURSE_SAVE_FAILED)
                     .statusCode(Constant.FORBIDDEN)
+                    .error(e.getMessage())
                     .build();
         }
     }
 
+  /*  public CommonResponse<Course> saveCourse(Course course) {
+        course.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+          Course savedCourse=  courseRepository.save(course);
+        return   CommonResponse.<Course>builder()
+                  .status(true)
+                  .data(savedCourse)
+                  .message(Constant.COURSE_SAVED)
+                  .statusCode(Constant.SUCCESS)
+                  .build();
 
-    public CommonResponse<CourseDTO> getCourseById(UUID courseId) {
+    }*/
 
-        try {
-            Course  courseDetails = courseRepository.findCourseByCourseId(courseId);
+    public CommonResponse<CourseDTO> getCourseById(String courseId,Long userId) {
+
+
+            Course  courseDetails = courseRepository.findByCourseId(courseId);
+
             if(courseDetails != null){
+                //userId of the person who published the course
                 String profileImage=courseRepository.findUserProfileByUserId(courseDetails.getUserId());
-                CourseDTO courseDTO=mapper.CourseToCourseDtoMapper(courseDetails,profileImage);
+                Boolean purchased=  purchasedCourseRepository.findByCourseIdAndUserId(courseId,userId);
+                if (purchased==null){
+                    purchased=false;
+                }
+                CourseDTO courseDTO=mapper.CourseToCourseDtoMapper(courseDetails,profileImage,purchased);
 
                 return CommonResponse.<CourseDTO>builder()
                         .status(true)
@@ -222,30 +258,54 @@ public class CourseService {
                         .build();
             }
 
-        } catch (Exception e) {
-            return CommonResponse.<CourseDTO>builder()
-                    .status(false)
-                    .message(Constant.FAILED_COURSE)
-                    .statusCode(Constant.FORBIDDEN)
-                    .build();
-        }
     }
 
 
-    public CommonResponse<List<CourseDetailDto>> getAllCourses() {
-        List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetails();
-        if (courseList.isEmpty()) {
-            return CommonResponse.<List<CourseDetailDto>>builder()
+    public CommonResponse<LinkedList<CourseDto>> getAllCourses(Long userId) {
+
+        //not by siva
+      //  List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetailsByUserId(userId);
+        // added by siva
+        LinkedList<CourseDto> courseDtoList=new LinkedList<>();
+
+        List<CourseDetailDto> courseList = courseRepository.findAllCourseDetails();
+        if (courseList.isEmpty()){
+               return CommonResponse.<LinkedList<CourseDto>>builder()
                     .status(false)
-                    .data(courseList)
+                    .data(courseDtoList)
                     .message(Constant.NO_COURSE)
                     .statusCode(Constant.NO_CONTENT)
                     .build();
         }
+       courseList.forEach(course -> {
+            Boolean purchased = purchasedCourseRepository
+                    .findByCourseIdAndUserId(course.getCourse_id(),userId);
+            if (purchased == null) {
+                purchased = false;
+            }
 
-        return CommonResponse.<List<CourseDetailDto>>builder()
+           CourseDto c=       CourseDto.builder()
+                   .isHtmlCourse(course.getIs_html_course())
+                   .courseId(course.getCourse_id())
+                   .price(course.getPrice())
+                   .category(course.getCategory())
+                   .title(course.getTitle())
+                   .createdDate(course.getCreated_date())
+                   .isFree(course.getIs_free())
+                   .isPurchased(purchased)
+                   .ratings(course.getRatings())
+                   .language(course.getLanguage())
+                   .authorName(course.getAuthor_name())
+                   .thumbNail(course.getThumb_nail())
+                   .profileImage(course.getProfile_image())
+                   .userId(course.getUser_id())
+                   .build();
+           courseDtoList.add(c);
+        });
+
+        return CommonResponse.<LinkedList<CourseDto>>builder()
                 .status(true)
-                .data(courseList)
+                .data(courseDtoList)
                 .message(Constant.COURSES_FOUND)
                 .statusCode(Constant.SUCCESS)
                 .build();
@@ -289,20 +349,18 @@ public class CourseService {
     }
 
 
-    public CommonResponse<Page<Course>> getCourseByUserId(Long userId, int pageNo, int pageSize) {
+    public CommonResponse<List<CourseDetailDto>> getCourseByUserId(Long userId) {
 
-        Page<Course> courses = null;
-        try {
-            courses = courseRepository.findCourseByUserId(userId, PageRequest.of(pageNo, pageSize));
-            if (courses != null && courses.hasContent()) {
-                return CommonResponse.<Page<Course>>builder()
+        List<CourseDetailDto> courses = courseRepository.findCourseByUserId(userId);
+            if (!courses.isEmpty()) {
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(true)
                         .data(courses)
                         .message(Constant.COURSES_FOUND)
                         .statusCode(Constant.SUCCESS)
                         .build();
-            } else {
-                return CommonResponse.<Page<Course>>builder()
+            }  {
+                return CommonResponse.<List<CourseDetailDto>>builder()
                         .status(false)
                         .data(courses)
                         .message(Constant.NO_COURSE)
@@ -310,15 +368,169 @@ public class CourseService {
                         .build();
             }
 
-        } catch (Exception e) {
-            return CommonResponse.<Page<Course>>builder()
+    }
+    public CommonResponse<List<Chapter>> saveHtmlCourse(List<Chapter> chapterList) {
+        List<Chapter> chapters;
+       try {
+         /*  chapterList.sort(Comparator.comparingInt(Chapter::getChapterOrder));
+           chapterList.forEach(chapter -> {
+               chapter.getChapterContent()
+                       .sort(Comparator.comparingInt(ChapterContent::getChapterContentOrder));
+           });*/
+            chapters = chapterRepository.saveAll(chapterList);
+           return CommonResponse.<List<Chapter>>builder()
+                   .status(true)
+                   .statusCode(Constant.SUCCESS)
+                   .message(Constant.SAVE_HTML_COURSE)
+                   .data(chapters)
+                   .build();
+       }catch (Exception e){
+           return CommonResponse.<List<Chapter>>builder()
+                   .status(false)
+                   .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                   .message(Constant.FAILED_SAVE_HTML_COURSE)
+                   .data(new ArrayList<>())
+                   .build();
+       }
+    }
+    public CommonResponse<Chapter> updateChapter(Chapter chapter) {
+        Chapter updatedChapter = null;
+        try{
+            updatedChapter=new Chapter();
+        Optional<Chapter> existingChapterOptional = chapterRepository.findById(chapter.getChapterId());
+        if (existingChapterOptional.isEmpty()) {
+            return CommonResponse.<Chapter>builder()
                     .status(false)
-                    .data(courses)
-                    .message(Constant.FAILED_COURSES_FETCH)
-                    .statusCode(Constant.FORBIDDEN)
+                    .statusCode(Constant.NO_CONTENT)
+                    .message(Constant.CHAPTER_NOT_FOUND)
+                    .data(updatedChapter)
+                    .build();
+           // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Chapter Not Found");
+        }
+
+        // Get the existing chapter
+        Chapter existingChapter = existingChapterOptional.get();
+
+        // Update fields of the existing chapter with values provided in the request
+            //commented bby siva
+      ///  if (chapter.getUserId() != null) {
+            existingChapter.setUserId(chapter.getUserId());
+   //     }
+        if (chapter.getHtml_course_id() != null) {
+            existingChapter.setHtml_course_id(chapter.getHtml_course_id());
+        }
+        if (chapter.getChapter() != null) {
+            existingChapter.setChapter(chapter.getChapter());
+        }
+        if (chapter.getChapterOrder() != null) {
+            existingChapter.setChapterOrder(chapter.getChapterOrder());
+        }
+        if (chapter.getChapterContent() != null) {
+            List<ChapterContent> existingChapterContent = existingChapter.getChapterContent();
+            List<ChapterContent> updatedChapterContent = chapter.getChapterContent();
+            if (existingChapterContent != null && updatedChapterContent != null) {
+                for (int i = 0; i < Math.min(existingChapterContent.size(), updatedChapterContent.size()); i++) {
+                    ChapterContent existingContent = existingChapterContent.get(i);
+                    ChapterContent updatedContent = updatedChapterContent.get(i);
+                    if (updatedContent != null) {
+                        if (updatedContent.getChapterContentOrder() != null) {
+                            existingContent.setChapterContentOrder(updatedContent.getChapterContentOrder());
+                        }
+                        if (updatedContent.getContent() != null) {
+                            existingContent.setContent(updatedContent.getContent());
+                        }
+                        if (updatedContent.getImage() != null) {
+                            existingContent.setImage(updatedContent.getImage());
+                        }
+                        if (updatedContent.getOrderChanged() != null) {
+                            existingContent.setOrderChanged(updatedContent.getOrderChanged());
+                        }
+                        if (updatedContent.getType() != null) {
+                            existingContent.setType(updatedContent.getType());
+                        }
+                    }
+                }
+            }
+        }
+
+        // Save the updated chapter in the database
+       updatedChapter= chapterRepository.save(existingChapter);
+            return CommonResponse.<Chapter>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.UPDATED_CHAPTER)
+                    .data(updatedChapter)
+                    .build();
+        }catch (Exception e){
+            return CommonResponse.<Chapter>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_UPDATE_CHAPTER)
+                    .data(updatedChapter)
+                    .build();
+        }
+
+
+    }
+
+    public CommonResponse<ChapterContent> updateChapterContent(ChapterContent chapterContent) {
+        ChapterContent updatedChapterContent = null;
+        try {
+            updatedChapterContent = new ChapterContent();
+            Optional<ChapterContent> existingChapterContentOptional = chapterContentRepository.findById(chapterContent.getChapterContentId());
+            if (existingChapterContentOptional.isEmpty()) {
+                return CommonResponse.<ChapterContent>builder()
+                        .status(false)
+                        .statusCode(Constant.NO_CONTENT)
+                        .message(Constant.CHAPTER_CONTENT_NOT_FOUND)
+                        .data(updatedChapterContent)
+                        .build();
+            }
+            ChapterContent existingChapterContent = existingChapterContentOptional.get();
+
+            // Update fields only if they are not null in the incoming chapterContent
+            if (chapterContent.getChapterContentId() != null) {
+                existingChapterContent.setChapterContentId(chapterContent.getChapterContentId());
+            }
+            if (chapterContent.getChapterContentOrder() != null) {
+                existingChapterContent.setChapterContentOrder(chapterContent.getChapterContentOrder());
+            }
+            if (chapterContent.getContent() != null) {
+                existingChapterContent.setContent(chapterContent.getContent());
+            }
+            if (chapterContent.getOrderChanged() != null) {
+                existingChapterContent.setOrderChanged(chapterContent.getOrderChanged());
+            }
+            if (chapterContent.getType() != null) {
+                existingChapterContent.setType(chapterContent.getType());
+            }
+            if (chapterContent.getImage() != null) {
+                existingChapterContent.setImage(chapterContent.getImage());
+            }
+
+            updatedChapterContent = chapterContentRepository.save(existingChapterContent);
+            return CommonResponse.<ChapterContent>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.UPDATED_CHAPTER_CONTENT)
+                    .data(updatedChapterContent)
+                    .build();
+        }catch (Exception e){
+            return CommonResponse.<ChapterContent>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_UPDATE_CHAPTER_CONTENT)
+                    .data(updatedChapterContent)
                     .build();
         }
     }
+
+    public String deleteById(String id) {
+        courseRepository.deleteById(id);
+        return "success";
+    }
+
+
 
 /*
     public ResponseEntity<?> getCourseCompletion(int courseId) {

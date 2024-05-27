@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,8 +53,8 @@ public class AdminController {
 
 
     @GetMapping("/viewAllTenants")
-    public CommonResponse<Page<TenantDetails>> findAllTenants(@RequestParam int pageNo, @RequestParam int pageSize) {
-        return adminService.findAllTenants(pageNo,pageSize);
+    public CommonResponse<List<TenantDetails>> findAllTenants() {
+        return adminService.findAllTenants();
     }
 
     @PutMapping("/updateSchemaByTenant")
@@ -62,26 +63,7 @@ public class AdminController {
     }
 
 
-    //Testing APIs
-    @GetMapping("/adminRead")
-    @PreAuthorize("hasAuthority('admin')")
-    public String adminRead(){
-
-        return "admin:: can  read";
-    }
-
-    @PostMapping("/adminCreate")
-    @PreAuthorize("hasAuthority('admin')")
-    public String adminCreate(){
-        return "admin:: can create";
-    }
-
-    @DeleteMapping("/adminDelete")
-    @PreAuthorize("hasAuthority('admin')")
-    public String adminDelete(){
-
-        return "admin:: can  delete";
-    }
+  //  @GetMapping("/")
 
 
 }

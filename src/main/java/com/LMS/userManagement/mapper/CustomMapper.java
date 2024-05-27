@@ -84,7 +84,10 @@ public class CustomMapper {
                 savedHome.getPromoVideo(),
                 savedHome.getPromoDescription(),
                 savedHome.getBannerImage(),
-                savedHome.getSupportNumber()
+                savedHome.getSupportNumber(),
+                savedHome.getBannerHeading(),
+                savedHome.getBannerSubHeading(),
+                savedHome.getBannerParagraph()
         );
     }
 

@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -16,7 +16,7 @@ public class SubSection {
     @Id
     @Column(name = "sub_section_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID subSectionId;
+    private String subSectionId;
     private Integer key;
     private String title;
     @Column(columnDefinition = "text")
@@ -24,9 +24,7 @@ public class SubSection {
     @Column(columnDefinition = "text")
     private String link;
 
-    @OneToMany(targetEntity = Quiz.class,cascade = CascadeType.ALL)
-    @JoinColumn(name = "sub_section_id",referencedColumnName = "sub_section_id")
-    private List<Quiz> quizList;
+
 
 
 

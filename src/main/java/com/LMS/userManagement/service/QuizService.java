@@ -32,10 +32,10 @@ public class QuizService {
     //@Transactional
     public CommonResponse<BadgeCounts> saveBadge(QuizRank quizRank) {
         Long userId = quizRank.getUserId();
-        UUID subSectionId = quizRank.getSubSectionId();
+        String sectionId = quizRank.getSectionId();
         Integer energyPoints = quizRank.getEnergyPoints();
         int badge = quizRank.getBadge();
-        Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSubSectionId(userId, subSectionId);
+        Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSectionId(userId, sectionId);
         BadgeCounts data = null;
         try {
             if (obj.isPresent()) {
@@ -62,12 +62,7 @@ public class QuizService {
             }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.<BadgeCounts>builder()
-                    .status(false)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .message(Constant.FAILED_BADGE)
-                    .data(data)
-                    .build();
+          throw  new RuntimeException(e.getMessage());
         }
     }
 

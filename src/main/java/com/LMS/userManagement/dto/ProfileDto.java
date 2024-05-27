@@ -11,9 +11,8 @@ public class ProfileDto {
     public Long id;
     public String name;
     public String gender;
-    public String school;
-    public Integer standard;
+   // public String school;
+   // public Integer standard;
     public String city;
     public String country;
-    public String profileImage;
 }

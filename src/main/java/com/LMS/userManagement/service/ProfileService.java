@@ -1,6 +1,8 @@
 package com.LMS.userManagement.service;
 
+import com.LMS.userManagement.awsS3.AWSS3Service;
 import com.LMS.userManagement.dto.ProfileDto;
+import com.LMS.userManagement.dto.UserProfileDto;
 import com.LMS.userManagement.model.User;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.response.CommonResponse;
@@ -9,48 +11,58 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 @Service
 public class ProfileService {
-    @Autowired
-    private UserRepository userRepository;
-    @Transactional
-    public CommonResponse<User> saveAndEditProfile(ProfileDto profileRequest) {
+    private final UserRepository userRepository;
+
+  private final   AWSS3Service awss3Service;
+
+    public ProfileService(UserRepository userRepository, AWSS3Service service) {
+        this.userRepository = userRepository;
+        this.awss3Service = service;
+    }
+
+
+    public CommonResponse<UserProfileDto> saveAndEditProfile(ProfileDto profileRequest,
+                                                   MultipartFile file) {
         Optional<User> user = userRepository.findById(profileRequest.getId());
-        User savedUser = null;
         try {
             if (user.isPresent()) {
                 User userDetails = user.get();
+                if (file!=null) {
+                    String key="profileImage/"+profileRequest.getId().toString();
+                    String profileImage = awss3Service.uploadImageFile(file, key);
+                    userDetails.setProfileImage(profileImage);
+                }
                 userDetails.setName(profileRequest.getName());
                 userDetails.setGender(profileRequest.getGender());
-                userDetails.setSchool(profileRequest.getSchool());
-                userDetails.setStandard(profileRequest.getStandard());
                 userDetails.setCity(profileRequest.getCity());
                 userDetails.setCountry(profileRequest.getCountry());
-                userDetails.setProfileImage(profileRequest.getProfileImage());
-                savedUser = userRepository.save(userDetails);
-                return CommonResponse.<User>builder()
+                User    savedUser = userRepository.save(userDetails);
+                UserProfileDto profile= userRepository.findUserByUserId(savedUser.getId());
+                return CommonResponse.<UserProfileDto>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.PROFILE_UPDATED)
-                        .data(savedUser)
+                        .data(profile)
                         .build();
-            } else {
-                return CommonResponse.<User>builder()
+            }
+                return CommonResponse.<UserProfileDto>builder()
                         .status(false)
                         .statusCode(Constant.NO_CONTENT)
                         .message(Constant.USER_NOT_FOUND)
-                        .data(savedUser)
                         .build();
-            }
+
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-            return CommonResponse.<User>builder()
+            return CommonResponse.<UserProfileDto>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .message(Constant.FAILED_PROFILE_SAVE_EDIT)
-                    .data(savedUser)
+                    .error(e.getMessage())
                     .build();
         }
     }
