@@ -12,6 +12,8 @@ public class ClassRoomDashBoardDto {
 
     private String classRoomName;
 
+    private Long classRoomId;
+
     private Long noOfUsers;
 
 }

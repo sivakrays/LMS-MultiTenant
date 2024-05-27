@@ -68,6 +68,7 @@ public class ClassRoomService {
 
             for (ClassRoom classRoom : classRooms) {
                 ClassRoomDashBoardDto dashBoardDto = new ClassRoomDashBoardDto();
+                dashBoardDto.setClassRoomId(classRoom.getClassroomId());
                 dashBoardDto.setClassRoomName(classRoom.getClassRoomName());
                 dashBoardDto.setNoOfUsers((long) classRoom.getUsers().size());
                 dashboardDtos.add(dashBoardDto);
