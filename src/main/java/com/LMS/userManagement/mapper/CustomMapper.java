@@ -35,6 +35,7 @@ public class CustomMapper {
                 .role(request.getRole().toLowerCase())
                 .standard(request.getStandard())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
+                .school(request.getSchool())
                 .build();
     }
 
@@ -47,7 +48,8 @@ public class CustomMapper {
                 savedUser.getEmail(),
                 savedUser.getRole(),
                 savedUser.getCreatedDate(),
-                savedUser.getStandard()
+                savedUser.getStandard(),
+                savedUser.getSchool()
         );
     }
 

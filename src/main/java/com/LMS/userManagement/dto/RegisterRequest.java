@@ -26,4 +26,6 @@ public class RegisterRequest {
     private String role;
 
     private int standard;
+
+    private String school;
 }
