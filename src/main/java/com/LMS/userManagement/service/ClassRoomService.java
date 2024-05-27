@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ClassRoomService {
@@ -122,5 +121,43 @@ public class ClassRoomService {
                     .build();
 
         }
+    }
+
+    public CommonResponse<String> deleteClassRoom(Long classRoomId) {
+
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+
+        try {
+
+            if (classRoom.isEmpty()){
+
+                return CommonResponse.<String>builder()
+                        .status(true)
+                        .message("There is no classroom")
+                        .statusCode(Constant.NO_CONTENT)
+                        .build();
+
+            }else {
+
+                classRoomRepository.deleteById(classRoomId);
+                return CommonResponse.<String>builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message("Deleted Successfully")
+                        .build();
+
+            }
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+            return CommonResponse.<String>builder()
+                    .status(false)
+                    .statusCode(Constant.FORBIDDEN)
+                    .message("Something Went Wrong..")
+                    .build();
+
+        }
+
     }
 }
