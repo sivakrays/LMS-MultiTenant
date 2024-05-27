@@ -27,13 +27,18 @@ public class ClassRoomController {
     }
 
     @GetMapping("/getAllClassRooms")
-    public CommonResponse<List<ClassRoomDashBoardDto>> getAllClassRooms(@RequestParam long userId){
+    public CommonResponse<List<ClassRoomDashBoardDto>> getAllClassRooms(@RequestParam Long userId){
         return classRoomService.getAllClassRooms(userId);
     }
 
     @GetMapping("/getAllUsers")
     public CommonResponse<List<UserClassRoomDto>> getAllUsers(){
         return classRoomService.getAllUsers();
+    }
+
+    @DeleteMapping("/deleteClassRoom")
+    public CommonResponse<String> deleteClassRoom(@RequestParam Long classRoomId){
+        return classRoomService.deleteClassRoom(classRoomId);
     }
 
 }
