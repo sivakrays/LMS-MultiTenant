@@ -33,6 +33,7 @@ public class CustomMapper {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .confirmPassword(passwordEncoder.encode(request.getConfirmPassword()))
                 .role(request.getRole().toLowerCase())
+                .standard(request.getStandard())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .build();
     }
@@ -45,7 +46,8 @@ public class CustomMapper {
                 savedUser.getName(),
                 savedUser.getEmail(),
                 savedUser.getRole(),
-                savedUser.getCreatedDate()
+                savedUser.getCreatedDate(),
+                savedUser.getStandard()
         );
     }
 
