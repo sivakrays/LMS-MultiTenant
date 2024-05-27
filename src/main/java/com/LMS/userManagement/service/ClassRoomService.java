@@ -123,38 +123,43 @@ public class ClassRoomService {
         }
     }
 
-    public CommonResponse<String> deleteClassRoom(Long classRoomId) {
+    public CommonResponse<List<ClassRoom>> deleteClassRoom(Long classRoomId,long userId) {
 
         Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
 
         try {
 
             if (classRoom.isEmpty()){
-
-                return CommonResponse.<String>builder()
+                List<ClassRoom> classRoomList=classRoomRepository.findByCreatedBy(userId);
+                return CommonResponse.<List<ClassRoom>>builder()
                         .status(true)
                         .message("There is no classroom")
                         .statusCode(Constant.NO_CONTENT)
-                        .build();
-
-            }else {
-
-                classRoomRepository.deleteById(classRoomId);
-                return CommonResponse.<String>builder()
-                        .status(true)
-                        .statusCode(Constant.SUCCESS)
-                        .message("Deleted Successfully")
+                        .data(classRoomList)
                         .build();
 
             }
 
+                classRoomRepository.deleteById(classRoomId);
+            List<ClassRoom> classRoomList=classRoomRepository.findByCreatedBy(userId);
+                return CommonResponse.<List<ClassRoom>>builder()
+                        .status(true)
+                        .statusCode(Constant.SUCCESS)
+                        .message("Deleted Successfully")
+                        .data(classRoomList)
+                        .build();
+
+
+
         }catch (Exception e){
 
-            e.printStackTrace();
-            return CommonResponse.<String>builder()
+            List<ClassRoom> classRoomList=classRoomRepository.findByCreatedBy(userId);
+            return CommonResponse.< List<ClassRoom>>builder()
                     .status(false)
                     .statusCode(Constant.FORBIDDEN)
                     .message("Something Went Wrong..")
+                    .data(classRoomList)
+                    .error(e.getMessage())
                     .build();
 
         }
