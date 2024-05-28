@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.ClassRoomDashBoardDto;
 import com.LMS.userManagement.dto.ClassRoomDto;
+import com.LMS.userManagement.dto.ClassRoomNameDto;
 import com.LMS.userManagement.dto.UserClassRoomDto;
 import com.LMS.userManagement.model.ClassRoom;
 import com.LMS.userManagement.response.CommonResponse;
@@ -40,6 +41,11 @@ public class ClassRoomController {
     public CommonResponse<List<ClassRoom>> deleteClassRoom(@RequestParam Long classRoomId,
                                                            @RequestParam long userId){
         return classRoomService.deleteClassRoom(classRoomId,userId);
+    }
+
+    @GetMapping("/getAllClassRoomNames")
+    public CommonResponse<List<ClassRoomNameDto>> getAllClassRoomNames(@RequestParam Long userId){
+        return classRoomService.getAllClassRoomNames(userId);
     }
 
 }

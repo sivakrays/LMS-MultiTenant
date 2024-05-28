@@ -2,6 +2,7 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.ClassRoomDashBoardDto;
 import com.LMS.userManagement.dto.ClassRoomDto;
+import com.LMS.userManagement.dto.ClassRoomNameDto;
 import com.LMS.userManagement.dto.UserClassRoomDto;
 import com.LMS.userManagement.model.ClassRoom;
 import com.LMS.userManagement.model.User;
@@ -168,4 +169,35 @@ public class ClassRoomService {
         }
 
     }
+
+    public CommonResponse<List<ClassRoomNameDto>> getAllClassRoomNames(Long userId) {
+
+        List<ClassRoomNameDto> names = new ArrayList<>();
+
+        try {
+            List<ClassRoom> classRooms = classRoomRepository.findByCreatedBy(userId);
+
+            for (ClassRoom classRoom : classRooms) {
+                ClassRoomNameDto nameDto = new ClassRoomNameDto();
+                nameDto.setClassRoomName(classRoom.getClassRoomName());
+                names.add(nameDto);
+            }
+
+            return CommonResponse.<List<ClassRoomNameDto>>builder()
+                    .status(true)
+                    .data(names)
+                    .statusCode(Constant.SUCCESS)
+                    .message("ClassRoom names fetched successfully")
+                    .build();
+
+        } catch (Exception e) {
+            return CommonResponse.<List<ClassRoomNameDto>>builder()
+                    .status(false)
+                    .data(new ArrayList<>())
+                    .statusCode(Constant.FORBIDDEN)
+                    .message("An error occurred while fetching ClassRoom names")
+                    .build();
+        }
+    }
+
 }

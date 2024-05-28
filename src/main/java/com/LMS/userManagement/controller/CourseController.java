@@ -31,6 +31,7 @@ public class CourseController {
      return courseService.saveCourse(course,file);
     // return courseService.saveCourse(course);
     }
+
     @GetMapping("/getCourseById")
    // @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public CommonResponse<CourseDTO> getCourseById(@RequestParam String courseId,@RequestParam Long userId){
