@@ -22,7 +22,7 @@ public class ClassRoomController {
     ClassRoomService classRoomService;
 
     @PostMapping("/createClassRoom")
-    public CommonResponse<ClassRoom> createClassRoom(@RequestBody ClassRoomDto classRoomDto){
+    public CommonResponse<List<ClassRoom>> createClassRoom(@RequestBody ClassRoomDto classRoomDto){
         return classRoomService.createClassRoom(classRoomDto);
     }
 
