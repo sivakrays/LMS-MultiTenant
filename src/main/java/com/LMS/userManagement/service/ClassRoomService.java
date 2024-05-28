@@ -25,7 +25,7 @@ public class ClassRoomService {
     UserRepository userRepository;
 
 
-    public CommonResponse<ClassRoom> createClassRoom(ClassRoomDto classRoomDto) {
+    public CommonResponse<List<ClassRoom>> createClassRoom(ClassRoomDto classRoomDto) {
 
         List<Long> userIds = classRoomDto.getUsers();
         Long count = (long) userIds.size();
@@ -40,19 +40,21 @@ public class ClassRoomService {
         try {
 
             ClassRoom newClassRoom = classRoomRepository.save(classRoom);
-            return CommonResponse.<ClassRoom>builder()
+            List<ClassRoom> classRoomList=classRoomRepository.findByCreatedBy(classRoom.getCreatedBy());
+            return CommonResponse.<List<ClassRoom>>builder()
                     .statusCode(Constant.SUCCESS)
                     .status(true)
-                    .data(newClassRoom)
+                    .data(classRoomList)
                     .message("ClassRoom Created Successfully !!")
                     .build();
 
         }catch (Exception e){
 
-            return CommonResponse.<ClassRoom>builder()
+            List<ClassRoom> classRoomList=classRoomRepository.findByCreatedBy(classRoom.getCreatedBy());
+            return CommonResponse.<List<ClassRoom>>builder()
                     .statusCode(Constant.FORBIDDEN)
                     .status(false)
-                    .data(classRoom)
+                    .data(classRoomList)
                     .message("Unable to create the ClassRoom")
                     .build();
 
@@ -142,7 +144,7 @@ public class ClassRoomService {
             }
 
                 classRoomRepository.deleteById(classRoomId);
-            List<ClassRoom> classRoomList=classRoomRepository.findByCreatedBy(userId);
+                List<ClassRoom> classRoomList=classRoomRepository.findByCreatedBy(userId);
                 return CommonResponse.<List<ClassRoom>>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
