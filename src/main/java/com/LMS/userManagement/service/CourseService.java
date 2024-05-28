@@ -284,7 +284,7 @@ public class CourseService {
                 purchased = false;
             }
 
-           CourseDto c=       CourseDto.builder()
+           CourseDto c = CourseDto.builder()
                    .isHtmlCourse(course.getIs_html_course())
                    .courseId(course.getCourse_id())
                    .price(course.getPrice())
