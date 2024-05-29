@@ -28,12 +28,12 @@ public class ClassRoomService {
 
     public CommonResponse<List<ClassRoom>> createClassRoom(ClassRoomDto classRoomDto) {
 
-        List<Long> userIds = classRoomDto.getUsers();
+        List<Long> userIds = classRoomDto.getUserIds();
         Long count = (long) userIds.size();
 
         ClassRoom classRoom = ClassRoom.builder()
                 .classRoomName(classRoomDto.getClassRoomName())
-                .users(classRoomDto.getUsers())
+                .userIds(classRoomDto.getUserIds())
                 .createdBy(classRoomDto.getCreatedBy())
                 .noOfUsers(count)
                 .build();
@@ -73,7 +73,7 @@ public class ClassRoomService {
                 ClassRoomDashBoardDto dashBoardDto = new ClassRoomDashBoardDto();
                 dashBoardDto.setClassRoomId(classRoom.getClassroomId());
                 dashBoardDto.setClassRoomName(classRoom.getClassRoomName());
-                dashBoardDto.setNoOfUsers((long) classRoom.getUsers().size());
+                dashBoardDto.setNoOfUsers((long) classRoom.getUserIds().size());
                 dashboardDtos.add(dashBoardDto);
             }
 
@@ -127,7 +127,7 @@ public class ClassRoomService {
         }
     }
 
-    public CommonResponse<List<ClassRoom>> deleteClassRoom(Long classRoomId,long userId) {
+    public CommonResponse<List<ClassRoom>> deleteClassRoom(String classRoomId,long userId) {
 
         Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
 

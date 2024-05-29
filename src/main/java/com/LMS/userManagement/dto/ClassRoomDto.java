@@ -13,7 +13,7 @@ public class ClassRoomDto {
 
     private String classRoomName;
 
-    private List<Long> users;
+    private List<Long> userIds;
 
     private Long createdBy;
 

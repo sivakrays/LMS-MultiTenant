@@ -50,6 +50,17 @@ public interface CourseRepository extends JpaRepository<Course, String> {
 
 
 
+    @Query("SELECT c FROM Course c WHERE c.userId = :userId AND c.visibleTo = :visibleTo")
+    List<CourseDetailDto> findCoursesVisibleToUserAndClassrooms(@Param("userId") Long userId, @Param("visibleTo") String classroomId);
+
+
+    @Query("SELECT c FROM Course c WHERE c.visibleTo = :visibleTo")
+    List<CourseDetailDto> findByVisibleTo(@Param("visibleTo") String visibleTo);
+
+    boolean existsByVisibleTo(String classRoomId);
+
+
+
 
 
 

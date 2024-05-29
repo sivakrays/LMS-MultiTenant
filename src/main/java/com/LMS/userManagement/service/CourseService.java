@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseService {
@@ -33,6 +34,8 @@ public class CourseService {
     ChapterContentRepository chapterContentRepository;
     @Autowired
     PurchasedCourseRepository purchasedCourseRepository;
+    @Autowired
+    ClassRoomRepository classRoomRepository;
 
     @Autowired
     AWSS3Service awss3Service;
@@ -262,54 +265,93 @@ public class CourseService {
 
 
     public CommonResponse<LinkedList<CourseDto>> getAllCourses(Long userId) {
+        try {
+            // Check if the user is associated with any classrooms
+            boolean isInClassroom = classRoomRepository.existsByUserIdsContaining(userId);
+            List<CourseDetailDto> courseList;
 
-        //not by siva
-      //  List<CourseDetailDto> courseList=  courseRepository.findAllCourseDetailsByUserId(userId);
-        // added by siva
-        LinkedList<CourseDto> courseDtoList=new LinkedList<>();
+            if (isInClassroom) {
+                // Find the classroom ID(s) associated with the user
+                Optional<UUID> optionalClassroomId = classRoomRepository.findClassroomIdByUserId(userId);
+                if (optionalClassroomId.isPresent()) {
+                    UUID classroomId = optionalClassroomId.get();
+                    // Retrieve courses visible to the user in the classroom
+                    boolean coursesExist = courseRepository.existsByVisibleTo(classroomId.toString());
 
-        List<CourseDetailDto> courseList = courseRepository.findAllCourseDetails();
-        if (courseList.isEmpty()){
-               return CommonResponse.<LinkedList<CourseDto>>builder()
+                    if (coursesExist) {
+                        List<CourseDetailDto> courses = courseRepository.findCoursesVisibleToUserAndClassrooms(userId, classroomId.toString());
+                        courseList = new ArrayList<>(courses);
+                    } else {
+                        courseList = new ArrayList<>();
+                    }
+                } else {
+                    courseList = new ArrayList<>();
+                }
+            } else {
+                // If the user is not associated with any classrooms, retrieve only public courses
+                courseList = courseRepository.findByVisibleTo("public");
+            }
+
+            // Check if there are purchased courses for the user
+            Boolean isTherePurchasedCourses = purchasedCourseRepository.existsByUserId(userId);
+            if (isTherePurchasedCourses) {
+                // Get the IDs of purchased courses for the user
+                List<String> purchasedCourseIds = purchasedCourseRepository.findCourseIdsByUserId(userId);
+                // Remove purchased courses from the course list
+                courseList = courseList.stream()
+                        .filter(course -> !purchasedCourseIds.contains(course.getCourse_id()))
+                        .collect(Collectors.toList());
+            }
+
+            // Convert CourseDetailDto objects to CourseDto objects
+            LinkedList<CourseDto> courseDtoList = new LinkedList<>();
+            courseList.forEach(course -> {
+                CourseDto c = CourseDto.builder()
+                        .isHtmlCourse(course.getIs_html_course())
+                        .courseId(course.getCourse_id())
+                        .price(course.getPrice())
+                        .category(course.getCategory())
+                        .title(course.getTitle())
+                        .createdDate(course.getCreated_date())
+                        .isFree(course.getIs_free())
+                        .isPurchased(false) // Assuming purchased status is not relevant here
+                        .ratings(course.getRatings())
+                        .language(course.getLanguage())
+                        .authorName(course.getAuthor_name())
+                        .thumbNail(course.getThumb_nail())
+                        .profileImage(course.getProfile_image())
+                        .userId(course.getUser_id())
+                        .build();
+                courseDtoList.add(c);
+            });
+
+            // Prepare the response based on the course list
+            if (courseDtoList.isEmpty()) {
+                return CommonResponse.<LinkedList<CourseDto>>builder()
+                        .status(true)
+                        .data(courseDtoList)
+                        .message(Constant.NO_COURSE)
+                        .statusCode(Constant.NO_CONTENT)
+                        .build();
+            } else {
+                return CommonResponse.<LinkedList<CourseDto>>builder()
+                        .status(true)
+                        .data(courseDtoList)
+                        .message(Constant.COURSES_FOUND)
+                        .statusCode(Constant.SUCCESS)
+                        .build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CommonResponse.<LinkedList<CourseDto>>builder()
                     .status(false)
-                    .data(courseDtoList)
-                    .message(Constant.NO_COURSE)
-                    .statusCode(Constant.NO_CONTENT)
+                    .data(new LinkedList<>())
+                    .message("Error occurred while fetching courses ")
+                    .statusCode(Constant.FORBIDDEN)
                     .build();
         }
-       courseList.forEach(course -> {
-            Boolean purchased = purchasedCourseRepository
-                    .findByCourseIdAndUserId(course.getCourse_id(),userId);
-            if (purchased == null) {
-                purchased = false;
-            }
+    }
 
-           CourseDto c = CourseDto.builder()
-                   .isHtmlCourse(course.getIs_html_course())
-                   .courseId(course.getCourse_id())
-                   .price(course.getPrice())
-                   .category(course.getCategory())
-                   .title(course.getTitle())
-                   .createdDate(course.getCreated_date())
-                   .isFree(course.getIs_free())
-                   .isPurchased(purchased)
-                   .ratings(course.getRatings())
-                   .language(course.getLanguage())
-                   .authorName(course.getAuthor_name())
-                   .thumbNail(course.getThumb_nail())
-                   .profileImage(course.getProfile_image())
-                   .userId(course.getUser_id())
-                   .build();
-           courseDtoList.add(c);
-        });
-
-        return CommonResponse.<LinkedList<CourseDto>>builder()
-                .status(true)
-                .data(courseDtoList)
-                .message(Constant.COURSES_FOUND)
-                .statusCode(Constant.SUCCESS)
-                .build();
-            }
 
 
 

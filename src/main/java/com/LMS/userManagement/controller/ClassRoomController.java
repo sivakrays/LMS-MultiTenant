@@ -38,7 +38,7 @@ public class ClassRoomController {
     }
 
     @DeleteMapping("/deleteClassRoom")
-    public CommonResponse<List<ClassRoom>> deleteClassRoom(@RequestParam Long classRoomId,
+    public CommonResponse<List<ClassRoom>> deleteClassRoom(@RequestParam String classRoomId,
                                                            @RequestParam long userId){
         return classRoomService.deleteClassRoom(classRoomId,userId);
     }

@@ -12,7 +12,7 @@ public class ClassRoomDashBoardDto {
 
     private String classRoomName;
 
-    private Long classRoomId;
+    private String classRoomId;
 
     private Long noOfUsers;
 

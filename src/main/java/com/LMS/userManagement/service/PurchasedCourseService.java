@@ -71,6 +71,7 @@ public class PurchasedCourseService {
                     .build();
         }
     }
+
     public void  removePurchasedCoursesFromCart(Long userId,List<String> courseIds){
         List<Cart> purchasedCartList =cartRepository.findByUserIdAndCourseId(userId,courseIds);
         cartRepository.deleteAll(purchasedCartList);
