@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS course
         created_date timestamp(6) without time zone,
         enrolled bigint NOT NULL,
         user_id bigint NOT NULL,
+        visible_to character varying(255),
         author_name character varying(255),
         category character varying(255),
         course_id character varying(255) NOT NULL,
@@ -204,7 +205,7 @@ CREATE TABLE IF NOT EXISTS class_room
         created_by bigint,
         no_of_users bigint,
         class_room_name character varying(255),
-        users bigint[],
+        user_ids bigint[],
         CONSTRAINT class_room_pkey PRIMARY KEY (classroom_id)
 );
 

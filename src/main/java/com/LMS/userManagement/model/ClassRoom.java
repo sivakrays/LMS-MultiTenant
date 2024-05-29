@@ -18,12 +18,12 @@ public class ClassRoom {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long classroomId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String classroomId;
 
     private String classRoomName;
 
-    private List<Long> users;
+    private List<Long> userIds;
 
     private Long createdBy;
 

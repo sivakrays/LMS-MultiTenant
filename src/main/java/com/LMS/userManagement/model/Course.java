@@ -23,6 +23,8 @@ public class Course {
     private String courseId;
     @Column(nullable = false)
     private long userId;
+    @Column(name = "visible_to")
+    private String visibleTo;
     private String title;
     private String authorName;
     @Column(columnDefinition = "TEXT")
