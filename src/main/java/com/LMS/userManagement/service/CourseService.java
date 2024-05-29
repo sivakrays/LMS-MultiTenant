@@ -319,7 +319,6 @@ public class CourseService {
                         .language(course.getLanguage())
                         .authorName(course.getAuthor_name())
                         .thumbNail(course.getThumb_nail())
-                        .profileImage(course.getProfile_image())
                         .userId(course.getUser_id())
                         .build();
                 courseDtoList.add(c);
