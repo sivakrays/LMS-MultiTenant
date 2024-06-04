@@ -201,14 +201,20 @@ CREATE TABLE IF NOT EXISTS course_tracker
 
 CREATE TABLE IF NOT EXISTS class_room
 (
-    classroom_id bigint NOT NULL,
-        created_by bigint,
-        no_of_users bigint,
-        class_room_name character varying(255),
-        user_ids bigint[],
-        CONSTRAINT class_room_pkey PRIMARY KEY (classroom_id)
+    classroom_id character varying(255) NOT NULL,
+    class_room_name character varying(255),
+    created_by bigint,
+    no_of_users bigint,
+    CONSTRAINT class_room_pkey PRIMARY KEY (classroom_id)
 );
 
+CREATE TABLE IF NOT EXISTS classroom_data
+(
+    id character varying(255) NOT NULL,
+    classroom_id character varying(255) NOT NULL,
+    user_id bigint NOT NULL,
+    CONSTRAINT classroom_data_pkey PRIMARY KEY (id)
+);
 
 
 
