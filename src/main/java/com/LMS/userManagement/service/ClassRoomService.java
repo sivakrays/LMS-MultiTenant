@@ -5,8 +5,10 @@ import com.LMS.userManagement.dto.ClassRoomDto;
 import com.LMS.userManagement.dto.ClassRoomNameDto;
 import com.LMS.userManagement.dto.UserClassRoomDto;
 import com.LMS.userManagement.model.ClassRoom;
+import com.LMS.userManagement.model.ClassroomData;
 import com.LMS.userManagement.model.User;
 import com.LMS.userManagement.repository.ClassRoomRepository;
+import com.LMS.userManagement.repository.ClassroomDataRepository;
 import com.LMS.userManagement.repository.UserRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ClassRoomService {
@@ -25,15 +28,17 @@ public class ClassRoomService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ClassroomDataRepository classroomDataRepository;
+
 
     public CommonResponse<List<ClassRoom>> createClassRoom(ClassRoomDto classRoomDto) {
 
         List<Long> userIds = classRoomDto.getUserIds();
         Long count = (long) userIds.size();
-
         ClassRoom classRoom = ClassRoom.builder()
                 .classRoomName(classRoomDto.getClassRoomName())
-                .userIds(classRoomDto.getUserIds())
+              //  .userIds(classRoomDto.getUserIds())
                 .createdBy(classRoomDto.getCreatedBy())
                 .noOfUsers(count)
                 .build();
@@ -41,6 +46,15 @@ public class ClassRoomService {
         try {
 
             ClassRoom newClassRoom = classRoomRepository.save(classRoom);
+            List<ClassroomData> classroomDataList=new ArrayList<>();
+          String classId=  newClassRoom.getClassroomId();
+            userIds.forEach(n-> {
+                ClassroomData data=new ClassroomData();
+                data.setClassroomId(classId);
+                data.setUserId(n);
+                classroomDataList.add(data);
+            });
+            classroomDataRepository.saveAll(classroomDataList);
             List<ClassRoom> classRoomList=classRoomRepository.findByCreatedBy(classRoom.getCreatedBy());
             return CommonResponse.<List<ClassRoom>>builder()
                     .statusCode(Constant.SUCCESS)
@@ -73,7 +87,7 @@ public class ClassRoomService {
                 ClassRoomDashBoardDto dashBoardDto = new ClassRoomDashBoardDto();
                 dashBoardDto.setClassRoomId(classRoom.getClassroomId());
                 dashBoardDto.setClassRoomName(classRoom.getClassRoomName());
-                dashBoardDto.setNoOfUsers((long) classRoom.getUserIds().size());
+             //   dashBoardDto.setNoOfUsers((long) classRoom.getUserIds().size());
                 dashboardDtos.add(dashBoardDto);
             }
 

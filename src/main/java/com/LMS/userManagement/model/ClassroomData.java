@@ -6,27 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
 @Builder
-@Table(name = "classRoom")
-public class ClassRoom {
-
+public class ClassroomData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @Column(nullable = false)
     private String classroomId;
 
-    private String classRoomName;
-
-  //  private List<Long> userIds;
-
-    private Long createdBy;
-
-    private Long noOfUsers;
-
+    private long userId;
 }

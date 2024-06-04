@@ -38,6 +38,9 @@ public class CourseService {
     ClassRoomRepository classRoomRepository;
 
     @Autowired
+    ClassroomDataRepository classroomDataRepository;
+
+    @Autowired
     AWSS3Service awss3Service;
 
     private final CourseMapper mapper;
@@ -267,29 +270,24 @@ public class CourseService {
     public CommonResponse<LinkedList<CourseDto>> getAllCourses(Long userId) {
         try {
             // Check if the user is associated with any classrooms
-            boolean isInClassroom = classRoomRepository.existsByUserIdsContaining(userId);
-            List<CourseDetailDto> courseList;
+            boolean isInClassroom = classroomDataRepository.existsByUserId(userId);
+            List<CourseDetailDto> courseList = new ArrayList<>();
 
             if (isInClassroom) {
-                // Find the classroom ID(s) associated with the user
-                Optional<UUID> optionalClassroomId = classRoomRepository.findClassroomIdByUserId(userId);
-                if (optionalClassroomId.isPresent()) {
-                    UUID classroomId = optionalClassroomId.get();
-                    // Retrieve courses visible to the user in the classroom
-                    boolean coursesExist = courseRepository.existsByVisibleTo(classroomId.toString());
-
+                // Find the classroom IDs associated with the user
+                List<String> classroomIds = classroomDataRepository.findByUserId(userId);
+                for (String classroomId : classroomIds) {
+                    boolean coursesExist = courseRepository.existsByVisibleTo(classroomId);
                     if (coursesExist) {
-                        List<CourseDetailDto> courses = courseRepository.findCoursesVisibleToUserAndClassrooms(userId, classroomId.toString());
-                        courseList = new ArrayList<>(courses);
-                    } else {
-                        courseList = new ArrayList<>();
+                        List<CourseDetailDto> courses = courseRepository.findCoursesVisibleTo(classroomId);
+                        courseList.addAll(courses);
+                        List<CourseDetailDto> publicCourseList = courseRepository.findCoursesVisibleToPublic();
+                        courseList.addAll(publicCourseList);
                     }
-                } else {
-                    courseList = new ArrayList<>();
                 }
             } else {
                 // If the user is not associated with any classrooms, retrieve only public courses
-                courseList = courseRepository.findByVisibleTo("public");
+                courseList = courseRepository.findCoursesVisibleToPublic();
             }
 
             // Check if there are purchased courses for the user
