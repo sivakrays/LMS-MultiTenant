@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class UserClassRoomDto {
 
     public Long userId;
+
     private String userName;
 
 }

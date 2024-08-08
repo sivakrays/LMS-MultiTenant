@@ -18,7 +18,7 @@ public class FlywayConfig {
         Flyway flyway = Flyway.configure()
                 .baselineOnMigrate(true)
                 .baselineVersion("0")
-               // .baselineDescription("init")
+                // .baselineDescription("init")
                 .locations("db/migration/default")
                 .dataSource(dataSource)
                 .schemas("public")

@@ -1,5 +1,5 @@
 package com.LMS.userManagement.service;
-import com.LMS.userManagement.awsS3.AWSS3Service;
+//import com.LMS.userManagement.awsS3.AWSS3Service;
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.CourseDto;
 import com.LMS.userManagement.mapper.CourseMapper;
@@ -40,8 +40,8 @@ public class CourseService {
     @Autowired
     ClassroomDataRepository classroomDataRepository;
 
-    @Autowired
-    AWSS3Service awss3Service;
+//    @Autowired
+//    AWSS3Service awss3Service;
 
     private final CourseMapper mapper;
 
@@ -191,22 +191,23 @@ public class CourseService {
 
 
 
-    public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
-        String key="LmsCourse/thumbNail/"+ UUID.randomUUID().toString();
+//    public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
+    public CommonResponse<Course> saveCourse(Course course) {
+//        String key="LmsCourse/thumbNail/"+ UUID.randomUUID().toString();
 
-        if (file == null || !file.getContentType().startsWith("image")){
-            return CommonResponse.<Course>builder()
-                    .status(false)
-                    .message(Constant.IMAGE_NOT_SUPPORTED)
-                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
-                    .build();
-        }
+//        if (file == null || !file.getContentType().startsWith("image")){
+//            return CommonResponse.<Course>builder()
+//                    .status(false)
+//                    .message(Constant.IMAGE_NOT_SUPPORTED)
+//                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+//                    .build();
+//        }
 
 
         try {
-         String thumbNailUrl=   awss3Service.uploadImageFile(file,key);
+//         String thumbNailUrl=   awss3Service.uploadImageFile(file,key);
             course.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-            course.setThumbNail(thumbNailUrl);
+//            course.setThumbNail(thumbNailUrl);
             Course   savedCourse = courseRepository.save(course);
             return CommonResponse.<Course>builder()
                     .status(true)

@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -16,14 +14,13 @@ import java.util.List;
 @Table(name = "classRoom")
 public class ClassRoom {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String classroomId;
 
     private String classRoomName;
 
-  //  private List<Long> userIds;
+    //  private List<Long> userIds;
 
     private Long createdBy;
 

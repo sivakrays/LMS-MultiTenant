@@ -1,29 +1,27 @@
 package com.LMS.userManagement.records;
 
-import java.util.List;
-
 public record HomeDTO(
-                     Long id,
-                    String tenantId,
-                      String homeTitle,
+        Long id,
+        String tenantId,
+        String homeTitle,
 
-                      String courseTitle,
-                      String courseTitle2,
-                      String theme,
-                      String standard,
-                      String educationTitle,
-                      String promoTitle,
+        String courseTitle,
+        String courseTitle2,
+        String theme,
+        String standard,
+        String educationTitle,
+        String promoTitle,
 
-                      String promoVideo,
-                      String promoDescription,
-                      String bannerImage,
+        String promoVideo,
+        String promoDescription,
+        String bannerImage,
 
-                      String supportNumber,
+        String supportNumber,
 
-                     String bannerHeading,
+        String bannerHeading,
 
-                     String bannerSubHeading,
-                      String bannerParagraph
+        String bannerSubHeading,
+        String bannerParagraph
 
 ) {
 }

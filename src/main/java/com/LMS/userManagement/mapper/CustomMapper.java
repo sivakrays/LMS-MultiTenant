@@ -25,7 +25,7 @@ public class CustomMapper {
 
 
     // user register details mapper
-    public User DtoToUserMapper(RegisterRequest request){
+    public User DtoToUserMapper(RegisterRequest request) {
 
         return User.builder()
                 .name(request.getName())
@@ -40,7 +40,7 @@ public class CustomMapper {
     }
 
     //saved user in user registration using records
-    public UserDTO UserDtoToUserMapper(User savedUser){
+    public UserDTO UserDtoToUserMapper(User savedUser) {
 
         return new UserDTO(
                 savedUser.getId(),
@@ -53,8 +53,7 @@ public class CustomMapper {
         );
     }
 
-    public Home DTOToHomeMapper(HomeDTO homeDTO,
-                                String promoVideo){
+    public Home DTOToHomeMapper(HomeDTO homeDTO) {
         return Home.builder()
                 .homeTitle(homeDTO.homeTitle())
                 .courseTitle(homeDTO.courseTitle())
@@ -64,14 +63,13 @@ public class CustomMapper {
                 .theme(homeDTO.theme())
                 .tenantId(homeDTO.tenantId())
                 .promoDescription(homeDTO.promoDescription())
-                .promoVideo(promoVideo)
                 .standard(homeDTO.standard())
                 .promoTitle(homeDTO.promoTitle())
                 .supportNumber(homeDTO.supportNumber())
                 .build();
     }
 
-    public HomeDTO homeToDTOMapper(Home savedHome){
+    public HomeDTO homeToDTOMapper(Home savedHome) {
 
         return new HomeDTO(
                 savedHome.getId(),
@@ -93,18 +91,18 @@ public class CustomMapper {
         );
     }
 
-    public List<EduContent> DTOToEduContentMappper(List<EduContentDTO> eduContentDTOList){
+    public List<EduContent> DTOToEduContentMappper(List<EduContentDTO> eduContentDTOList) {
         List<EduContent> eduContentList = new ArrayList<>();
         eduContentDTOList.forEach(eduContentDTO -> {
-                    EduContent content = EduContent.builder()
-                            .imageTitle(eduContentDTO.imageTitle())
-                            .image(eduContentDTO.image())
-                            .imageContent(eduContentDTO.imageContent())
-                            .tenantId(eduContentDTO.tenantId())
-                            .standard(eduContentDTO.standard())
-                            .build();
-                    eduContentList.add(content);
-                });
+            EduContent content = EduContent.builder()
+                    .imageTitle(eduContentDTO.imageTitle())
+                    .image(eduContentDTO.image())
+                    .imageContent(eduContentDTO.imageContent())
+                    .tenantId(eduContentDTO.tenantId())
+                    .standard(eduContentDTO.standard())
+                    .build();
+            eduContentList.add(content);
+        });
         return eduContentList;
     }
 
@@ -126,4 +124,5 @@ public class CustomMapper {
         });
         return eduContentDTOList;
     }
+
 }

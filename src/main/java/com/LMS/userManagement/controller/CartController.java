@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/lms/api/user")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 @Tag(name = "Cart", description = "Cart management APIs")
-
 public class CartController {
 
     @Autowired
@@ -29,6 +28,7 @@ public class CartController {
     public CommonResponse<List<CartDetail>> getCartDetailByUserId(@RequestParam Long userId){
         return cartService.getCartDetailByUserId(userId);
     }
+
     @DeleteMapping("/deleteCartById")
     public CommonResponse<List<CartDetail>> deleteCartById(@RequestParam String cartId){
         return cartService.deleteCartById(cartId);
@@ -38,4 +38,5 @@ public class CartController {
     public CommonResponse<List<Cart>> deleteCartByUserId(@RequestParam Long userId){
         return  cartService.deleteCartByUserId(userId);
     }
+
 }

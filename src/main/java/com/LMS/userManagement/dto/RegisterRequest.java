@@ -1,13 +1,9 @@
 package com.LMS.userManagement.dto;
 
-import com.LMS.userManagement.enumFile.Roles;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -19,7 +15,7 @@ public class RegisterRequest {
 
     private String email;
 
-    private  String password;
+    private String password;
 
     private String confirmPassword;
 
@@ -28,4 +24,5 @@ public class RegisterRequest {
     private int standard;
 
     private String school;
+
 }

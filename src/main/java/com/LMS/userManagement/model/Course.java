@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "course_id")
@@ -42,20 +42,19 @@ public class Course {
     @Column(name = "isFree")
     @JsonProperty("isFree")
     private boolean isFree;
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Timestamp createdDate;
 
     @Column(name = "isHtmlCourse")
     @JsonProperty("isHtmlCourse")
     private boolean isHtmlCourse;
 
-    @OneToMany(targetEntity = Section.class,cascade = CascadeType.ALL)
-    @JoinColumn(name = "course_id",referencedColumnName = "course_id")
+    @OneToMany(targetEntity = Section.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id", referencedColumnName = "course_id")
     private List<Section> sections;
 
-    @OneToMany(targetEntity = Chapter.class,cascade = CascadeType.ALL)
-    @JoinColumn(name = "html_course_id",referencedColumnName = "course_id")
+    @OneToMany(targetEntity = Chapter.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "html_course_id", referencedColumnName = "course_id")
     private List<Chapter> chapters;
-
 
 }

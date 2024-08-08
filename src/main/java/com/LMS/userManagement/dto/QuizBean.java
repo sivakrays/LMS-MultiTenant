@@ -13,7 +13,7 @@ public class QuizBean {
 
     public String question;
 
-   public List<String> options;
+    public List<String> options;
 
     public String answer;
 

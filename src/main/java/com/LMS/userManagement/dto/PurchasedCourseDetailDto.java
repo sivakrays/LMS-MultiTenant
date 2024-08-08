@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 public class PurchasedCourseDetailDto {
 
     private Long userId;
+
     private String courseId;
+
     private boolean purchased;
+
 }

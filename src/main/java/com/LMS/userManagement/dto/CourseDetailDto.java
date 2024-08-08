@@ -7,34 +7,47 @@ import java.sql.Timestamp;
 
 public interface CourseDetailDto {
 
-
     @JsonProperty("courseId")
-    public String  getCourse_id();
+    String getCourse_id();
+
     @JsonProperty("userId")
-    public Long getUser_id();
+    Long getUser_id();
+
     @JsonProperty("title")
-    public String getTitle();
+    String getTitle();
+
     @JsonProperty("authorName")
-    public String getAuthor_name();
+    String getAuthor_name();
+
     @JsonProperty("profileImage")
-    public String getProfile_image();
+    String getProfile_image();
+
     @JsonProperty("thumbNail")
-    public String getThumb_nail();
+    String getThumb_nail();
+
     @JsonProperty("category")
-    public String getCategory();
+    String getCategory();
+
     @JsonProperty("ratings")
-    public Integer getRatings();
+    Integer getRatings();
+
     @JsonProperty("language")
-    public String getLanguage();
+    String getLanguage();
+
     @JsonProperty("price")
-    public Integer getPrice();
+    Integer getPrice();
+
     @JsonProperty("createdDate")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    public Timestamp getCreated_date();
+    Timestamp getCreated_date();
+
     @JsonProperty("isHtmlCourse")
-    public Boolean getIs_html_course();
+    Boolean getIs_html_course();
+
     @JsonProperty("isFree")
-    public Boolean getIs_free();
+    Boolean getIs_free();
+
     @JsonProperty("isPurchased")
-    public Boolean getPurchased();
+    Boolean getPurchased();
+
 }

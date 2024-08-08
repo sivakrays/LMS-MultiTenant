@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CourseMapper {
 
-    public CourseDTO CourseToCourseDtoMapper(Course course,String profileImage,boolean isPurchased){
-        return  new CourseDTO(
+    public CourseDTO CourseToCourseDtoMapper(Course course, String profileImage, boolean isPurchased) {
+        return new CourseDTO(
                 course.getCourseId(),
                 course.getUserId(),
                 profileImage,
@@ -29,7 +29,6 @@ public class CourseMapper {
                 isPurchased,
                 course.getSections(),
                 course.getChapters()
-
 
         );
     }

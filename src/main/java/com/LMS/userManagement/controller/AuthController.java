@@ -23,43 +23,33 @@ import java.util.List;
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 @RequiredArgsConstructor
 @Tag(name = "User", description = "User management APIs")
-
 public class AuthController {
 
     @Autowired
     private  AuthService authService;
 
-
     @PostMapping("/register")
     //  @PreAuthorize("hasAuthority('manager')")
     public CommonResponse<List<User>> register (@RequestBody RegisterRequest request){
         return authService.register(request);
-
     }
 
     @PostMapping("/mobile/login")
     // @PreAuthorize("hasAuthority('user')")
-    public CommonResponse<LoginResponse> mobileAuthentication (
-            @RequestBody LoginDTO loginDto,
-            @RequestHeader String tenantId) {
+    public CommonResponse<LoginResponse> mobileAuthentication (@RequestBody LoginDTO loginDto, @RequestHeader String tenantId) {
         String type="mob";
         return authService.authentication(loginDto,tenantId,type);
-
     }
+
     @PostMapping("/login")
     // @PreAuthorize("hasAuthority('user')")
-    public CommonResponse<LoginResponse> WebAuthentication (
-            @RequestBody LoginDTO loginDto,
-            @RequestHeader String tenantId) {
+    public CommonResponse<LoginResponse> WebAuthentication (@RequestBody LoginDTO loginDto, @RequestHeader String tenantId) {
         String type="web";
         return authService.authentication(loginDto,tenantId,type);
-
     }
 
-
     @PostMapping("/refreshToken")
-    public void refreshToken(HttpServletRequest request,
-                             HttpServletResponse response) throws IOException {
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authService.refreshToken(request,response);
     }
 
@@ -72,6 +62,5 @@ public class AuthController {
     public CommonResponse<List<User>> deleteUserById(@RequestParam Long userId){
         return authService.deleteUserById(userId);
     }
-
 
 }

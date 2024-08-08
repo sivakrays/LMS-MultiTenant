@@ -13,9 +13,9 @@ public class AdminDto {
 
     public String role;
 
-    public AdminDto(String email, String password, String role){
-        this.email=email;
-        this.password=password;
-        this.role=role;
+    public AdminDto(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 }

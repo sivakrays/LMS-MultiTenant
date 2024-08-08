@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/lms/api/user")
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class FeedController {
 
     private final FeedService feedService;
@@ -16,11 +16,9 @@ public class FeedController {
         this.feedService = feedService;
     }
 
-
     @PostMapping("/saveFeedback")
-    public CommonResponse<Feedback> saveFeedback(@RequestBody Feedback feedback){
+    public CommonResponse<Feedback> saveFeedback(@RequestBody Feedback feedback) {
         return feedService.saveFeedback(feedback);
-
     }
 
 }
