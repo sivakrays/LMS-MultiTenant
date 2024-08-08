@@ -193,7 +193,7 @@ public class CourseService {
 
 //    public CommonResponse<Course> saveCourse(Course course, MultipartFile file) {
     public CommonResponse<Course> saveCourse(Course course) {
-        String key="LmsCourse/thumbNail/"+ UUID.randomUUID().toString();
+//        String key="LmsCourse/thumbNail/"+ UUID.randomUUID().toString();
 
 //        if (file == null || !file.getContentType().startsWith("image")){
 //            return CommonResponse.<Course>builder()
