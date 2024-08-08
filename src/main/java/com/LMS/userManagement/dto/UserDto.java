@@ -1,6 +1,5 @@
 package com.LMS.userManagement.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -16,4 +15,5 @@ public class UserDto {
     public String name;
 
     public Timestamp createdDate;
+
 }

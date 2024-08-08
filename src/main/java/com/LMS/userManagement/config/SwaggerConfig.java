@@ -11,15 +11,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class SwaggerConfig {
+
     @Value("${lms.openapi.dev-url}")
     private String developmentUrl;
+
     @Value("${lms.openapi.local-url}")
     private String localUrl;
+
     @Bean
     public OpenAPI customOpenAPI() {
+
         OpenAPI openApi = new OpenAPI();
         openApi.info(
                 new Info()
@@ -37,10 +42,11 @@ public class SwaggerConfig {
         openApi.addSecurityItem(
                 new SecurityRequirement().addList("bearer-jwt", Arrays.asList("read", "write"))
         );
-        openApi.servers(Arrays.asList(
+        openApi.servers(Collections.singletonList(
                 new Server().url(developmentUrl).description("Server URL in Development environment")
         ));
 
         return openApi;
     }
+
 }

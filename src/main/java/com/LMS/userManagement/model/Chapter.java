@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,19 +13,24 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class
-Chapter {
+public class Chapter {
 
     @Id
     @Column(name = "chapter_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     public String chapterId;
+
     public long userId;
+
     @JsonProperty("courseId")
     public String html_course_id;
+
     public String chapter;
+
     public Integer chapterOrder;
-    @OneToMany(targetEntity = ChapterContent.class,cascade = CascadeType.ALL)
-    @JoinColumn(name = "chapter_id",referencedColumnName = "chapter_id")
+
+    @OneToMany(targetEntity = ChapterContent.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "chapter_id", referencedColumnName = "chapter_id")
     public List<ChapterContent> chapterContent;
+
 }

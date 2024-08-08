@@ -5,25 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public interface UserProfileDto {
 
     @JsonProperty("userId")
-    public Long getId();
+    Long getId();
 
-    public String getName();
+    String getName();
 
-    public String getEmail();
+    String getEmail();
 
-    public String getGender();
+    String getGender();
 
-    public String getSchool();
+    String getSchool();
 
-    public Integer getStandard();
+    Integer getStandard();
 
-    public String getCity();
+    String getCity();
 
-    public String getCountry();
+    String getCountry();
 
     @JsonProperty("profileImage")
-    public String getProfile_image();
-
-
+    String getProfile_image();
 
 }

@@ -24,14 +24,15 @@ public enum Roles {
     @Getter
     private final Set<Permission> permissions;
 
-    public List<SimpleGrantedAuthority> getAuthorities(){
-      List<SimpleGrantedAuthority> authorities=  getPermissions()
+    public List<SimpleGrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = getPermissions()
                 .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.name()))
                 .collect(Collectors.toList());
 
-      authorities.add(new SimpleGrantedAuthority("ROLE_"+ this.name()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
 
-      return authorities;
+        return authorities;
     }
+
 }
