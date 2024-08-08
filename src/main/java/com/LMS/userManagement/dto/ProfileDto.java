@@ -13,6 +13,7 @@ public class ProfileDto {
     public String gender;
    // public String school;
    // public Integer standard;
+    public String profileImage;
     public String city;
     public String country;
 }

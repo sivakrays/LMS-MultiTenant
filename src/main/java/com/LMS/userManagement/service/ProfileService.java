@@ -1,6 +1,6 @@
 package com.LMS.userManagement.service;
 
-import com.LMS.userManagement.awsS3.AWSS3Service;
+//import com.LMS.userManagement.awsS3.AWSS3Service;
 import com.LMS.userManagement.dto.ProfileDto;
 import com.LMS.userManagement.dto.UserProfileDto;
 import com.LMS.userManagement.model.User;
@@ -16,32 +16,37 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 @Service
 public class ProfileService {
+
     private final UserRepository userRepository;
 
-  private final   AWSS3Service awss3Service;
+//  private final   AWSS3Service awss3Service;
 
-    public ProfileService(UserRepository userRepository, AWSS3Service service) {
+//    public ProfileService(UserRepository userRepository, AWSS3Service service) {
+//        this.userRepository = userRepository;
+//        this.awss3Service = service;
+//    }
+
+    public ProfileService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.awss3Service = service;
     }
 
 
-    public CommonResponse<UserProfileDto> saveAndEditProfile(ProfileDto profileRequest,
-                                                   MultipartFile file) {
+    public CommonResponse<UserProfileDto> saveAndEditProfile(ProfileDto profileRequest) {
         Optional<User> user = userRepository.findById(profileRequest.getId());
         try {
             if (user.isPresent()) {
                 User userDetails = user.get();
-                if (file!=null) {
-                    String key="profileImage/"+profileRequest.getId().toString();
-                    String profileImage = awss3Service.uploadImageFile(file, key);
-                    userDetails.setProfileImage(profileImage);
-                }
+//                if (file!=null) {
+//                    String key="profileImage/"+profileRequest.getId().toString();
+//                    String profileImage = awss3Service.uploadImageFile(file, key);
+//                    userDetails.setProfileImage(profileImage);
+//                }
                 userDetails.setName(profileRequest.getName());
                 userDetails.setGender(profileRequest.getGender());
                 userDetails.setCity(profileRequest.getCity());
                 userDetails.setCountry(profileRequest.getCountry());
-                User    savedUser = userRepository.save(userDetails);
+                userDetails.setProfileImage(profileRequest.getProfileImage());;
+                User savedUser = userRepository.save(userDetails);
                 UserProfileDto profile= userRepository.findUserByUserId(savedUser.getId());
                 return CommonResponse.<UserProfileDto>builder()
                         .status(true)

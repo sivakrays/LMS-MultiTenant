@@ -27,9 +27,9 @@ public class ProfileController {
     ProfileService profileService;
 
     @PutMapping(value = "/saveAndEditProfile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CommonResponse<UserProfileDto> saveAndEditProfile(@RequestPart(value = "profile") ProfileDto profileRequest
-                                                    , @RequestPart(value = "file",required = false) MultipartFile file){
-        return profileService.saveAndEditProfile(profileRequest,file);
+//    public CommonResponse<UserProfileDto> saveAndEditProfile(@RequestPart(value = "profile") ProfileDto profileRequest, @RequestPart(value = "file",required = false) MultipartFile file){
+    public CommonResponse<UserProfileDto> saveAndEditProfile(@RequestBody ProfileDto profileRequest){
+        return profileService.saveAndEditProfile(profileRequest);
     }
     @GetMapping("/getProfileById")
     public CommonResponse<User> getProfileById(@RequestParam Long id){

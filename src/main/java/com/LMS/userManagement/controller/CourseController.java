@@ -26,9 +26,9 @@ public class CourseController {
     CourseService courseService;
     @PostMapping(value = "/saveCourse",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   //  @PreAuthorize("hasAuthority('admin')")
-    public CommonResponse<Course> saveCourse(@RequestPart(value = "course") Course course,
-                                            @RequestPart(value = "file") MultipartFile file){
-     return courseService.saveCourse(course,file);
+//    public CommonResponse<Course> saveCourse(@RequestPart(value = "course") Course course, @RequestPart(value = "file") MultipartFile file){
+    public CommonResponse<Course> saveCourse(@RequestBody Course course){
+        return courseService.saveCourse(course);
     // return courseService.saveCourse(course);
     }
 
