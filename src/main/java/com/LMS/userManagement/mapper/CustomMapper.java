@@ -49,8 +49,7 @@ public class CustomMapper {
         );
     }
 
-    public Home DTOToHomeMapper(HomeDTO homeDTO,
-                                String promoVideo){
+    public Home DTOToHomeMapper(HomeDTO homeDTO){
         return Home.builder()
                 .homeTitle(homeDTO.homeTitle())
                 .courseTitle(homeDTO.courseTitle())
@@ -60,7 +59,6 @@ public class CustomMapper {
                 .theme(homeDTO.theme())
                 .tenantId(homeDTO.tenantId())
                 .promoDescription(homeDTO.promoDescription())
-                .promoVideo(promoVideo)
                 .standard(homeDTO.standard())
                 .promoTitle(homeDTO.promoTitle())
                 .supportNumber(homeDTO.supportNumber())

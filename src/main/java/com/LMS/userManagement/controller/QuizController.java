@@ -8,8 +8,6 @@ import com.LMS.userManagement.service.QuizService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,25 +17,27 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/lms/api/user")
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Quiz", description = "Quiz management APIs")
 
 public class QuizController {
+
     @Autowired
     QuizService quizService;
+
     @PostMapping("/saveBadge")
     public CommonResponse<BadgeCounts> saveBadge(@RequestBody QuizRank quizRank) {
         return quizService.saveBadge(quizRank);
     }
-
 
     @PostMapping("/uploadQuizCsv")
     public CommonResponse<List<QuizBean>> uploadQuizCsv(@RequestPart("file") MultipartFile file) throws IOException {
         return quizService.uploadQuizCsv(file);
     }
 
-    @GetMapping(value = "/downloadQuizCsv",produces ="application/octet-stream")
+    @GetMapping(value = "/downloadQuizCsv", produces = "application/octet-stream")
     public CommonResponse<Resource> downloadQuizCsv() throws MalformedURLException {
         return quizService.downloadQuizCsv();
     }
+
 }

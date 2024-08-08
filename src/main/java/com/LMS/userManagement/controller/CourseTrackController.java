@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/lms/api/user")
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CourseTrackController {
 
     private final CourseTrackService trackService;
@@ -17,13 +17,13 @@ public class CourseTrackController {
     }
 
     @PostMapping("/saveTracker")
-    public CommonResponse<CourseTracker> saveCourseTrack(@RequestBody CourseTracker tracker){
-            return trackService.saveCourseTrack(tracker);
-        }
+    public CommonResponse<CourseTracker> saveCourseTrack(@RequestBody CourseTracker tracker) {
+        return trackService.saveCourseTrack(tracker);
+    }
 
     @GetMapping("/getProgress")
-    public int getCourseProgress(@RequestParam Long userId,
-                                                     @RequestParam String courseId){
-        return trackService.getCourseProgress(userId,courseId);
+    public int getCourseProgress(@RequestParam Long userId, @RequestParam String courseId) {
+        return trackService.getCourseProgress(userId, courseId);
     }
+
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/lms/api/user")
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Cart", description = "Cart management APIs")
 
 public class CartController {
@@ -21,21 +21,23 @@ public class CartController {
     private CartService cartService;
 
     @PostMapping("/saveCart")
-    public CommonResponse<List<Cart>> saveCart(@RequestBody Cart cart){
+    public CommonResponse<List<Cart>> saveCart(@RequestBody Cart cart) {
         return cartService.saveCart(cart);
     }
 
     @GetMapping("/getCartByUserId")
-    public CommonResponse<List<CartDetail>> getCartDetailByUserId(@RequestParam Long userId){
+    public CommonResponse<List<CartDetail>> getCartDetailByUserId(@RequestParam Long userId) {
         return cartService.getCartDetailByUserId(userId);
     }
+
     @DeleteMapping("/deleteCartById")
-    public CommonResponse<List<CartDetail>> deleteCartById(@RequestParam String cartId){
+    public CommonResponse<List<CartDetail>> deleteCartById(@RequestParam String cartId) {
         return cartService.deleteCartById(cartId);
     }
 
     @DeleteMapping("/deleteCartByUserId")
-    public CommonResponse<List<Cart>> deleteCartByUserId(@RequestParam Long userId){
-        return  cartService.deleteCartByUserId(userId);
+    public CommonResponse<List<Cart>> deleteCartByUserId(@RequestParam Long userId) {
+        return cartService.deleteCartByUserId(userId);
     }
+
 }

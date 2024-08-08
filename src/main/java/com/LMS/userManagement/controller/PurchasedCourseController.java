@@ -35,4 +35,5 @@ public class PurchasedCourseController {
     public CommonResponse<String> deletePurchased(@RequestParam long id){
         return purchasedCourseService.deletePurchased(id);
     }
+
 }

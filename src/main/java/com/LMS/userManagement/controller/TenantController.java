@@ -7,8 +7,6 @@ import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.TenantService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +31,5 @@ public class TenantController {
     public CommonResponse<TenantDto> tenantLogin(@RequestBody LoginDTO loginDto) {
         return tenantService.tenantLogin(loginDto);
     }
-
-
-
 
 }

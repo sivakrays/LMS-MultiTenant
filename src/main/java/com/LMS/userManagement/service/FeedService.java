@@ -18,13 +18,13 @@ public class FeedService {
 
     public CommonResponse<Feedback> saveFeedback(Feedback feedback) {
         feedback.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-      Feedback feed=  feedbackRepository.save(feedback);
-      return CommonResponse.<Feedback>builder()
-              .status(true)
-              .data(feed)
-              .message("Thanks for your feedback")
-              .statusCode(200)
-              .build();
+        Feedback feed = feedbackRepository.save(feedback);
+        return CommonResponse.<Feedback>builder()
+                .status(true)
+                .data(feed)
+                .message("Thanks for your feedback")
+                .statusCode(200)
+                .build();
     }
 
 }

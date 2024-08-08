@@ -1,31 +1,29 @@
 package com.LMS.userManagement.service;
+
 import com.LMS.userManagement.dto.QuizBean;
 import com.LMS.userManagement.model.BadgeCounts;
-import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class QuizService {
+
     @Autowired
     QuizRankRepository quizRankRepository;
 
@@ -62,16 +60,16 @@ public class QuizService {
             }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
-          throw  new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
 
     public BadgeCounts getBadgeCountsForUser(Long userId, Integer energyPoints) {
-        int goldCount = quizRankRepository.countByUserIdAndBadge(userId,1);
+        int goldCount = quizRankRepository.countByUserIdAndBadge(userId, 1);
         int silverCount = quizRankRepository.countByUserIdAndBadge(userId, 2);
         int bronzeCount = quizRankRepository.countByUserIdAndBadge(userId, 3);
-        BadgeCounts badgeCounts=new BadgeCounts();
+        BadgeCounts badgeCounts = new BadgeCounts();
         badgeCounts.setUserId(userId);
         badgeCounts.setEnergyPoints(energyPoints);
         badgeCounts.setGold(goldCount);
@@ -112,23 +110,28 @@ public class QuizService {
                     switch (cellIdx) {
                         case 0 -> quiz.setKey((int) currentCell.getNumericCellValue());
                         case 1 -> {
-                            String title=formatter.formatCellValue(currentCell);
-                            quiz.setTitle(title);}
+                            String title = formatter.formatCellValue(currentCell);
+                            quiz.setTitle(title);
+                        }
                         case 2 -> {
-                            String question=formatter.formatCellValue(currentCell);
-                            quiz.setQuestion(question);}
+                            String question = formatter.formatCellValue(currentCell);
+                            quiz.setQuestion(question);
+                        }
                         case 3, 4, 5, 6, 7 -> {
-                            String opt= formatter.formatCellValue(currentCell);
+                            String opt = formatter.formatCellValue(currentCell);
                             // String opt=currentCell.getStringCellValue();
-                            if(opt!=null && !opt.equals("")){
+                            if (opt != null && !opt.equals("")) {
                                 optionList.add(opt);
                             }
                         }
                         case 8 -> {
-                            String answer= formatter.formatCellValue(currentCell);
+                            String answer = formatter.formatCellValue(currentCell);
                             // currentCell.getStringCellValue();
-                            quiz.setAnswer(answer);}
-                        default -> {break; }
+                            quiz.setAnswer(answer);
+                        }
+                        default -> {
+                            break;
+                        }
                     }
 
                     cellIdx++;
@@ -156,7 +159,6 @@ public class QuizService {
                     .build();
         }
     }
-
 
 
     public CommonResponse<Resource> downloadQuizCsv() {

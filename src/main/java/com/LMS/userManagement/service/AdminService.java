@@ -12,12 +12,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +51,7 @@ public class AdminService {
                     .createdDate(new Timestamp(System.currentTimeMillis()))
                     .email(adminDto.getEmail())
                     .build();
-            Admin   savedAdmin = adminRepository.save(admin);
+            Admin savedAdmin = adminRepository.save(admin);
 
             return CommonResponse.<Admin>builder()
                     .status(true)
@@ -77,7 +78,7 @@ public class AdminService {
 
             if (admin.isPresent() && admin.get().getPassword().equals(password)) {
                 var ad = admin.get();
-                AdminDto  adminDto = AdminDto.builder()
+                AdminDto adminDto = AdminDto.builder()
                         .email(ad.getEmail())
                         .role(ad.getRole())
                         .build();
@@ -90,7 +91,7 @@ public class AdminService {
             } else {
                 return CommonResponse.<AdminDto>builder()
                         .status(false)
-                        .message(Constant.USER_EXISTS)
+                        .message(Constant.USER_NOT_FOUND)
                         .statusCode(Constant.FORBIDDEN)
                         .build();
             }
@@ -107,10 +108,10 @@ public class AdminService {
 
     @Transactional
     public CommonResponse<List<TenantDetails>> deleteTenant(long id) {
-        List<TenantDetails> tenantList =tenantRepository.findAll();
-                try {
+        List<TenantDetails> tenantList = tenantRepository.findAll();
+        try {
 
-            Optional<TenantDetails>    tenant = tenantRepository.findById(id);
+            Optional<TenantDetails> tenant = tenantRepository.findById(id);
             if (tenant.isEmpty()) {
                 return CommonResponse.<List<TenantDetails>>builder()
                         .status(false)
@@ -122,7 +123,7 @@ public class AdminService {
             String schemaName = tenantDtls.getTenantId();
             entityManager.createNativeQuery("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE").executeUpdate();
             tenantRepository.deleteById(id);
-            tenantList=tenantRepository.findAll();
+            tenantList = tenantRepository.findAll();
             return CommonResponse.<List<TenantDetails>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
@@ -142,7 +143,7 @@ public class AdminService {
 
 
     public CommonResponse<Map<String, String>> getAllTenants() {
-        Map<String, String> tenantIdMap  = new HashMap<>();
+        Map<String, String> tenantIdMap = new HashMap<>();
         List<TenantDetails> tenantList = tenantRepository.findAll();
         if (tenantList.isEmpty()) {
             return CommonResponse.<Map<String, String>>builder()
@@ -165,7 +166,6 @@ public class AdminService {
                 .build();
 
     }
-
 
 
     public CommonResponse<List<TenantDetails>> findAllTenants() {

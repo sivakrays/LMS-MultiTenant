@@ -18,22 +18,22 @@ import java.util.Optional;
 
 @Service
 public class CartService {
+
     @Autowired
     CourseRepository courseRepository;
 
     @Autowired
     CartRepository cartRepository;
 
-
     public CommonResponse<List<Cart>> saveCart(Cart cart) {
 
-            long userId = cart.getUserId();
-            String courseId = cart.getCourseId();
-            cart.setCreateDate(new Timestamp(System.currentTimeMillis()));
+        long userId = cart.getUserId();
+        String courseId = cart.getCourseId();
+        cart.setCreateDate(new Timestamp(System.currentTimeMillis()));
         Optional<Cart> existingCart = cartRepository.findByCourseIdAndUserId(courseId, userId);
-        if(existingCart.isEmpty()) {
+        if (existingCart.isEmpty()) {
             cartRepository.save(cart);
-            List<Cart>  cartList = cartRepository.findByUserId(userId);
+            List<Cart> cartList = cartRepository.findByUserId(userId);
             return CommonResponse.<List<Cart>>builder()
                     .status(true)
                     .statusCode(Constant.SUCCESS)
@@ -41,7 +41,7 @@ public class CartService {
                     .data(cartList)
                     .build();
         }
-        List<Cart>  cartList = cartRepository.findByUserId(userId);
+        List<Cart> cartList = cartRepository.findByUserId(userId);
         return CommonResponse.<List<Cart>>builder()
                 .status(false)
                 .statusCode(Constant.SUCCESS)
@@ -51,48 +51,42 @@ public class CartService {
 
     }
 
-
     public CommonResponse<List<CartDetail>> getCartDetailByUserId(Long userId) {
         List<CartDetail> cartDetails = new ArrayList<>();
-            List<Cart> carts = cartRepository.findByUserId(userId);
+        List<Cart> carts = cartRepository.findByUserId(userId);
 
+        if (!carts.isEmpty()) {
+            for (Cart cart : carts) {
+                String courseId = cart.getCourseId();
+                Course course = courseRepository.findByCourseId(courseId);
 
-
-
-            if (!carts.isEmpty()) {
-                for (Cart cart : carts) {
-                    String courseId = cart.getCourseId();
-                    Course course = courseRepository.findByCourseId(courseId);
-
-                    if (course != null) {
-                        CartDetail cartDetail = new CartDetail();
-                        cartDetail.setCartId(cart.getCartId());
-                        cartDetail.setCourseId(course.getCourseId());
-                        cartDetail.setTitle(course.getTitle());
-                        cartDetail.setCategory(course.getCategory());
-                        cartDetail.setAuthorName(course.getAuthorName());
-                        cartDetail.setThumbNail(course.getThumbNail());
-                        cartDetail.setPrice(course.getPrice());
-                        cartDetails.add(cartDetail);
-                    }
+                if (course != null) {
+                    CartDetail cartDetail = new CartDetail();
+                    cartDetail.setCartId(cart.getCartId());
+                    cartDetail.setCourseId(course.getCourseId());
+                    cartDetail.setTitle(course.getTitle());
+                    cartDetail.setCategory(course.getCategory());
+                    cartDetail.setAuthorName(course.getAuthorName());
+                    cartDetail.setThumbNail(course.getThumbNail());
+                    cartDetail.setPrice(course.getPrice());
+                    cartDetails.add(cartDetail);
                 }
-                return CommonResponse.<List<CartDetail>>builder()
-                        .status(true)
-                        .statusCode(Constant.SUCCESS)
-                        .message(Constant.CART_DETAILS_FOUND)
-                        .data(cartDetails)
-                        .build();
             }
-                return CommonResponse.<List<CartDetail>>builder()
-                        .status(false)
-                        .statusCode(Constant.NO_CONTENT)
-                        .message(Constant.EMPTY_CART)
-                        .data(cartDetails)
-                        .build();
+            return CommonResponse.<List<CartDetail>>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message(Constant.CART_DETAILS_FOUND)
+                    .data(cartDetails)
+                    .build();
+        }
+        return CommonResponse.<List<CartDetail>>builder()
+                .status(false)
+                .statusCode(Constant.NO_CONTENT)
+                .message(Constant.EMPTY_CART)
+                .data(cartDetails)
+                .build();
 
     }
-
-
 
     public CommonResponse<List<CartDetail>> deleteCartById(String cartId) {
         List<CartDetail> cartDetails = null;
@@ -128,12 +122,12 @@ public class CartService {
                             .data(cartDetails)
                             .build();
                 }
-                    return CommonResponse.<List<CartDetail>>builder()
-                            .status(false)
-                            .statusCode(Constant.SUCCESS)
-                            .message(Constant.CART_EMPTY_DELETION)
-                            .data(cartDetails)
-                            .build();
+                return CommonResponse.<List<CartDetail>>builder()
+                        .status(false)
+                        .statusCode(Constant.SUCCESS)
+                        .message(Constant.CART_EMPTY_DELETION)
+                        .data(cartDetails)
+                        .build();
 
             }
             return CommonResponse.<List<CartDetail>>builder()
@@ -152,10 +146,11 @@ public class CartService {
                     .build();
         }
     }
+
     @Transactional
     public CommonResponse<List<Cart>> deleteCartByUserId(Long userId) {
         List<Cart> cartList = null;
-        try{
+        try {
             cartList = new ArrayList<>();
             cartRepository.deleteAllByUserId(userId);
             cartList = cartRepository.findByUserId(userId);
@@ -167,15 +162,16 @@ public class CartService {
                     .build();
 
         } catch (Exception e) {
-        // Log the exception or handle it appropriately
-       return CommonResponse.<List<Cart>>builder()
-               .status(false)
-               .statusCode(Constant.INTERNAL_SERVER_ERROR)
-               .message(Constant.FAILED_DELETE_CART)
-               .data(cartList)
-               .build();
+            // Log the exception or handle it appropriately
+            return CommonResponse.<List<Cart>>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message(Constant.FAILED_DELETE_CART)
+                    .data(cartList)
+                    .build();
+
+        }
 
     }
 
-    }
-    }
+}
