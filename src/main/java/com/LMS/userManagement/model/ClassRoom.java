@@ -22,7 +22,7 @@ public class ClassRoom {
 
     private String classRoomName;
 
-    private List<Long> userIds;
+//    private List<Long> userIds;
 
     private Long createdBy;
 
