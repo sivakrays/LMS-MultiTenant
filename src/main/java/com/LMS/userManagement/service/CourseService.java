@@ -286,10 +286,9 @@ public class CourseService {
                         courseList.addAll(publicCourseList);
                     }
                 }
-            } else {
-                // If the user is not associated with any classrooms, retrieve only public courses
-                courseList = courseRepository.findCoursesVisibleToPublic();
             }
+            // If the user is not associated with any classrooms, retrieve only public courses
+            courseList = courseRepository.findCoursesVisibleToPublic();
 
             // Check if there are purchased courses for the user
             Boolean isTherePurchasedCourses = purchasedCourseRepository.existsByUserId(userId);
