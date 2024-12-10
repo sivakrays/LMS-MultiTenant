@@ -13,19 +13,20 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubSection {
+
     @Id
     @Column(name = "sub_section_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String subSectionId;
+
     private Integer key;
+
     private String title;
+
     @Column(columnDefinition = "text")
     private String description;
+
     @Column(columnDefinition = "text")
     private String link;
-
-
-
-
 
 }

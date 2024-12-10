@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -21,27 +22,37 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "course_id")
     private String courseId;
+
     @Column(nullable = false)
     private long userId;
+
     @Column(name = "visible_to")
     private String visibleTo;
+
     private String title;
     private String authorName;
+
     @Column(columnDefinition = "TEXT")
     private String description;
+
     @Column(columnDefinition = "TEXT")
     private String thumbNail;
+
     private long enrolled;
     private String category;
     private int ratings;
     private String language;
     private String overview;
+
     @Column(columnDefinition = "TEXT")
     private String whatYouWillLearn;
+
     private int price;
+
     @Column(name = "isFree")
     @JsonProperty("isFree")
     private boolean isFree;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Timestamp createdDate;
 
@@ -56,5 +67,6 @@ public class Course {
     @OneToMany(targetEntity = Chapter.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "html_course_id", referencedColumnName = "course_id")
     private List<Chapter> chapters;
+
 
 }

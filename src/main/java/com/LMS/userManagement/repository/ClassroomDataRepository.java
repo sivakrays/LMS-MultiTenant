@@ -13,4 +13,7 @@ public interface ClassroomDataRepository extends JpaRepository<ClassroomData,Str
 
     @Query(value = "SELECT classroom_id from classroom_data WHERE user_id=?1",nativeQuery = true)
     List<String> findByUserId(Long userId);
+
+    @Query(value = "SELECT user_id FROM classroom_data WHERE classroom_id=?1", nativeQuery = true)
+    List<Long> findUserIdsByClassroomId(String classroomId);
 }

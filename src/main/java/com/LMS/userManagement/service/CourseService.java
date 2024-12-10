@@ -3,16 +3,20 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.CourseDto;
+import com.LMS.userManagement.dto.PurchasedCompletedCourseDto;
 import com.LMS.userManagement.mapper.CourseMapper;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.CourseDTO;
 import com.LMS.userManagement.repository.*;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -565,6 +569,56 @@ public class CourseService {
     public String deleteById(String id) {
         courseRepository.deleteById(id);
         return "success";
+    }
+
+    public CommonResponse<PurchasedCompletedCourseDto> courseComplete(String courseId, long userId) {
+        Logger logger = LoggerFactory.getLogger(CourseService.class);
+
+        try {
+            // Fetch the purchased course
+            PurchasedCourse purchasedCourse = purchasedCourseRepository.findByUserIdAndCourseId(userId, courseId);
+
+            if (purchasedCourse == null) {
+                logger.warn("Course not found for userId: {} and courseId: {}", userId, courseId);
+                return CommonResponse.<PurchasedCompletedCourseDto>builder()
+                        .status(false)
+                        .statusCode(Constant.NO_CONTENT)
+                        .message("Course not found for the given user")
+                        .build();
+            }
+
+            // Mark the course as completed
+            purchasedCourse.setCompleted(true);
+            purchasedCourse.setCompletedDate(LocalDateTime.now());
+
+            // Save the updated course
+            PurchasedCourse completedCourse = purchasedCourseRepository.save(purchasedCourse);
+
+            // Setting the data to Dto
+            PurchasedCompletedCourseDto purchasedCompletedCourseDto = PurchasedCompletedCourseDto.builder()
+                            .isCompleted(completedCourse.isCompleted())
+                                    .userId(completedCourse.getUserId())
+                                            .courseId(completedCourse.getCourseId())
+                                                    .completedDate(completedCourse.getCompletedDate())
+                                                            .build();
+
+
+            logger.info("Course completed successfully for userId: {} and courseId: {}", userId, courseId);
+            return CommonResponse.<PurchasedCompletedCourseDto>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message("Course Completed")
+                    .data(purchasedCompletedCourseDto)
+                    .build();
+
+        } catch (Exception ex) {
+            logger.error("Error completing course for userId: {} and courseId: {}. Error: {}", userId, courseId, ex.getMessage(), ex);
+            return CommonResponse.<PurchasedCompletedCourseDto>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message("An error occurred while completing the course")
+                    .build();
+        }
     }
 
 

@@ -1,21 +1,17 @@
 package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.QuizBean;
 import com.LMS.userManagement.model.BadgeCounts;
-import com.LMS.userManagement.model.Quiz;
 import com.LMS.userManagement.model.QuizRank;
 import com.LMS.userManagement.repository.QuizRankRepository;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,45 +22,64 @@ import java.util.*;
 
 @Service
 public class QuizService {
+
     @Autowired
     QuizRankRepository quizRankRepository;
 
     //@Transactional
     public CommonResponse<BadgeCounts> saveBadge(QuizRank quizRank) {
+        Logger logger = LoggerFactory.getLogger(QuizService.class);
+
         Long userId = quizRank.getUserId();
         String sectionId = quizRank.getSectionId();
         Integer energyPoints = quizRank.getEnergyPoints();
         int badge = quizRank.getBadge();
-        Optional<QuizRank> obj = quizRankRepository.findByUserIdAndSectionId(userId, sectionId);
-        BadgeCounts data = null;
+
         try {
-            if (obj.isPresent()) {
-                QuizRank quizRank1 = obj.get();
-                quizRank1.setEnergyPoints(energyPoints);
-                quizRank1.setBadge(badge);
-                quizRankRepository.save(quizRank1);
+            Optional<QuizRank> existingQuizRank = quizRankRepository.findByUserIdAndSectionId(userId, sectionId);
+
+            BadgeCounts data;
+            if (existingQuizRank.isPresent()) {
+                QuizRank quizRankToUpdate = existingQuizRank.get();
+                quizRankToUpdate.setEnergyPoints(energyPoints);
+                quizRankToUpdate.setBadge(badge);
+                quizRankRepository.save(quizRankToUpdate);
+
                 data = getBadgeCountsForUser(userId, energyPoints);
+                logger.info("Badge updated successfully for userId: {} and sectionId: {}", userId, sectionId);
+
                 return CommonResponse.<BadgeCounts>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.BADGE_UPDATED)
                         .data(data)
                         .build();
+
             } else {
                 quizRankRepository.save(quizRank);
-                BadgeCounts data1 = getBadgeCountsForUser(userId, energyPoints);
+
+                data = getBadgeCountsForUser(userId, energyPoints);
+                logger.info("Badge saved successfully for userId: {} and sectionId: {}", userId, sectionId);
+
                 return CommonResponse.<BadgeCounts>builder()
                         .status(true)
                         .statusCode(Constant.SUCCESS)
                         .message(Constant.BADGE_SAVED)
-                        .data(data1)
+                        .data(data)
                         .build();
             }
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
-          throw  new RuntimeException(e.getMessage());
+            logger.error("Error saving badge for userId: {} and sectionId: {}. Error: {}", userId, sectionId, e.getMessage(), e);
+
+            return CommonResponse.<BadgeCounts>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message("An error occurred while saving the badge")
+                    .build();
         }
     }
+
+
 
 
     public BadgeCounts getBadgeCountsForUser(Long userId, Integer energyPoints) {

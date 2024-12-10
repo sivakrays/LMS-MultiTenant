@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -15,14 +16,23 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 public class PurchasedCourse {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long purchasedId;
+
   //  @Column(nullable = false)
-    private  long userId;
+    private long userId;
+
     @Column(nullable = false)
     private String courseId;
+
     private boolean purchased ;
+
     private Timestamp purchasedOn;
+
+    private boolean isCompleted;
+
+    private LocalDateTime completedDate;
 
 }
