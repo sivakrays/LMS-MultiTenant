@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("lms/api/user")
+@RequestMapping("/lms/api/user")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class LeaderBoardController {
 
