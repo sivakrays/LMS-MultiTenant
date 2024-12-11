@@ -68,5 +68,8 @@ public class Course {
     @JoinColumn(name = "html_course_id", referencedColumnName = "course_id")
     private List<Chapter> chapters;
 
+    private LocalDateTime updatedTime;
+
+    private Integer discountPercentage;
 
 }

@@ -2,6 +2,7 @@ package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.CourseDto;
+import com.LMS.userManagement.dto.EditCourseDto;
 import com.LMS.userManagement.dto.PurchasedCompletedCourseDto;
 import com.LMS.userManagement.model.*;
 import com.LMS.userManagement.records.CourseDTO;
@@ -121,5 +122,11 @@ public class CourseController {
     public CommonResponse<PurchasedCompletedCourseDto> courseComplete(@RequestParam String courseId, @RequestParam long userId) {
         return courseService.courseComplete(courseId, userId);
     }
+
+    @PutMapping("/normalUpdateCourse")
+    public CommonResponse<EditCourseDto> normalUpdateCourse(@RequestBody EditCourseDto editCourseDto){
+        return courseService.normalUpdateCourse(editCourseDto);
+    }
+
 
 }

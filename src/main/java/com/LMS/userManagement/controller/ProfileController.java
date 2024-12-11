@@ -32,4 +32,9 @@ public class ProfileController {
         return profileService.getProfileById(id);
     }
 
+    @PutMapping("/deleteProfileImage")
+    public CommonResponse<String> deleteProfileImage(@RequestParam Long userId){
+        return profileService.deleteProfileImage(userId);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.CourseDto;
+import com.LMS.userManagement.dto.EditCourseDto;
 import com.LMS.userManagement.dto.PurchasedCompletedCourseDto;
 import com.LMS.userManagement.mapper.CourseMapper;
 import com.LMS.userManagement.model.*;
@@ -621,6 +622,68 @@ public class CourseService {
         }
     }
 
+    public CommonResponse<EditCourseDto> normalUpdateCourse(EditCourseDto editCourseDto) {
+
+        try {
+            String courseId = editCourseDto.getCourseId();
+            Course course = courseRepository.findByCourseId(courseId);
+
+            if (course == null) {
+                return CommonResponse.<EditCourseDto>builder()
+                        .statusCode(404)
+                        .status(false)
+                        .message("Course not found")
+                        .error("Invalid course ID")
+                        .build();
+            }
+
+            // Updating course details
+            course.setTitle(editCourseDto.getTitle());
+            course.setDescription(editCourseDto.getDescription());
+            course.setCategory(editCourseDto.getCategory());
+            course.setPrice(editCourseDto.getPrice());
+            course.setDiscountPercentage(editCourseDto.getDiscountPercentage());
+            course.setLanguage(editCourseDto.getLanguage());
+            course.setThumbNail(editCourseDto.getThumbNail());
+            course.setWhatYouWillLearn(editCourseDto.getWhatYouWillLearn());
+            course.setHtmlCourse(editCourseDto.getIsHtmlCourse());
+            course.setFree(editCourseDto.getIsFree());
+            course.setVisibleTo(editCourseDto.getVisibleTo());
+            course.setUpdatedTime(LocalDateTime.now());
+
+            Course updatedCourse = courseRepository.save(course);
+
+            EditCourseDto updatedEditCourseDto = EditCourseDto.builder()
+                    .title(updatedCourse.getTitle())
+                    .courseId(updatedCourse.getCourseId())
+                    .description(updatedCourse.getDescription())
+                    .category(updatedCourse.getCategory())
+                    .price(updatedCourse.getPrice())
+                    .discountPercentage(updatedCourse.getDiscountPercentage())
+                    .language(updatedCourse.getLanguage())
+                    .thumbNail(updatedCourse.getThumbNail())
+                    .whatYouWillLearn(updatedCourse.getWhatYouWillLearn())
+                    .isHtmlCourse(updatedCourse.isHtmlCourse())
+                    .isFree(updatedCourse.isFree())
+                    .visibleTo(updatedCourse.getVisibleTo())
+                    .build();
+
+            return CommonResponse.<EditCourseDto>builder()
+                    .statusCode(Constant.SUCCESS)
+                    .status(true)
+                    .data(updatedEditCourseDto)
+                    .message(Constant.COURSE_UPDATED)
+                    .build();
+
+        } catch (Exception e) {
+            return CommonResponse.<EditCourseDto>builder()
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .status(false)
+                    .message("Course update failed")
+                    .error(e.getMessage())
+                    .build();
+        }
+    }
 
 
 /*

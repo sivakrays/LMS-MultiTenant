@@ -3,10 +3,7 @@ package com.LMS.userManagement.controller;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,7 +22,7 @@ public class PasswordController {
         return passwordService.verifyOtp(email, otp);
     }
 
-    @PostMapping("/reset-password")
+    @PutMapping("/reset-password")
     public CommonResponse<String> resetPassword(@RequestParam String email, @RequestParam String newPassword) {
         return passwordService.resetPassword(email, newPassword);
     }

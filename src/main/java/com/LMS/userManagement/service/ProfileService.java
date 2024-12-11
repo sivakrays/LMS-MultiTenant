@@ -102,4 +102,41 @@ public class ProfileService {
         }
     }
 
+    public CommonResponse<String> deleteProfileImage(Long userId) {
+        try {
+            // Find the user by ID
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isEmpty()) {
+                return CommonResponse.<String>builder()
+                        .status(false)
+                        .statusCode(404)
+                        .message("User not found with ID: " + userId)
+                        .error("Invalid user ID")
+                        .build();
+            }
+
+            // Update profile image to default
+            User userDetails = user.get();
+            userDetails.setProfileImage(Constant.DEFAULT_PROFILE_IMAGE);
+            userRepository.save(userDetails);
+
+            // Return success response
+            return CommonResponse.<String>builder()
+                    .status(true)
+                    .statusCode(200)
+                    .data("Profile image reset to default successfully")
+                    .message("Profile image deleted")
+                    .build();
+
+        } catch (Exception ex) {
+            // Handle exceptions
+            return CommonResponse.<String>builder()
+                    .status(false)
+                    .statusCode(500)
+                    .message("An error occurred while deleting the profile image")
+                    .error(ex.getMessage())
+                    .build();
+        }
+    }
+
 }

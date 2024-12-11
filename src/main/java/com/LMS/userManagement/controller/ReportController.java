@@ -22,5 +22,4 @@ public class ReportController {
         return reportService.getReport(userId);
     }
 
-
 }
