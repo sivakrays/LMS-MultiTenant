@@ -20,11 +20,13 @@ CREATE TABLE IF NOT EXISTS user_details
 CREATE TABLE IF NOT EXISTS course
 (
     is_free boolean,
+    discount_percentage integer,
         is_html_course boolean,
         price integer NOT NULL,
         ratings integer NOT NULL,
         created_date timestamp(6) without time zone,
         enrolled bigint NOT NULL,
+        updated_time timestamp(6) without time zone,
         user_id bigint NOT NULL,
         visible_to character varying(255),
         author_name character varying(255),
