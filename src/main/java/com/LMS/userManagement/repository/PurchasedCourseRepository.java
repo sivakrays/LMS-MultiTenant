@@ -11,7 +11,9 @@ import java.util.List;
 
 @Repository
 public interface PurchasedCourseRepository extends JpaRepository<PurchasedCourse, Long> {
+
     List<PurchasedCourse> findByUserId(Long userId);
+
     @Query(value = "SELECT pc.courseId FROM PurchasedCourse pc WHERE pc.userId = :userId")
     List<String> findCourseIdsByUserId(Long userId);
 
@@ -28,5 +30,9 @@ public interface PurchasedCourseRepository extends JpaRepository<PurchasedCourse
 
     @Query(value = "SELECT course_id FROM purchased_course WHERE user_id IN :userIds AND is_completed = true", nativeQuery = true)
     List<String> findCompletedCoursesByUserIds(@Param("userIds") List<Long> userIds);
+
+    @Query(value = "SELECT course_id FROM purchased_course WHERE user_id = :userId AND is_completed = true", nativeQuery = true)
+    List<String> findCompletedCoursesByUserId(@Param("userId") Long userId);
+
 
 }
