@@ -1,6 +1,7 @@
 package com.LMS.userManagement.controller;
 
 import com.LMS.userManagement.dto.CourseDetailDto;
+import com.LMS.userManagement.dto.PurchasedCompletedCourseDto;
 import com.LMS.userManagement.dto.PurchasedCourseDto;
 import com.LMS.userManagement.model.PurchasedCourse;
 import com.LMS.userManagement.response.CommonResponse;
@@ -33,6 +34,11 @@ public class PurchasedCourseController {
     @DeleteMapping("/deletePurchasedCourse")
     public CommonResponse<String> deletePurchased(@RequestParam long id) {
         return purchasedCourseService.deletePurchased(id);
+    }
+
+    @PostMapping("/courseComplete")
+    public CommonResponse<PurchasedCompletedCourseDto> courseComplete(@RequestParam String courseId, @RequestParam long userId) {
+        return purchasedCourseService.courseComplete(courseId, userId);
     }
 
 }

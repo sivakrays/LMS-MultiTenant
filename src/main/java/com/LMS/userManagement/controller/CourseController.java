@@ -117,12 +117,6 @@ public class CourseController {
         return courseService.deleteById(id);
     }
 
-
-    @PostMapping("/courseComplete")
-    public CommonResponse<PurchasedCompletedCourseDto> courseComplete(@RequestParam String courseId, @RequestParam long userId) {
-        return courseService.courseComplete(courseId, userId);
-    }
-
     @PutMapping("/normalUpdateCourse")
     public CommonResponse<EditCourseDto> normalUpdateCourse(@RequestBody EditCourseDto editCourseDto){
         return courseService.normalUpdateCourse(editCourseDto);

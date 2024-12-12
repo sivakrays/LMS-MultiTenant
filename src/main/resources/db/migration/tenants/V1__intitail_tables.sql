@@ -17,6 +17,15 @@ CREATE TABLE IF NOT EXISTS user_details
     CONSTRAINT user_details_email_key UNIQUE (email)
 );
 
+CREATE TABLE IF NOT EXISTS otp
+(
+    id bigint NOT NULL,
+    email character varying(255),
+    expiry_time timestamp(6) without time zone,
+    otp character varying(255),
+    CONSTRAINT otp_pkey PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS course
 (
     is_free boolean,
@@ -172,8 +181,10 @@ CREATE TABLE IF NOT EXISTS purchased_course
 (
     purchased boolean NOT NULL,
         purchased_id bigint NOT NULL,
+        completed_date timestamp(6) without time zone,
         purchased_on timestamp(6) without time zone,
         user_id bigint NOT NULL,
+        is_completed boolean NOT NULL,
         course_id character varying(255) NOT NULL,
         CONSTRAINT purchased_course_pkey PRIMARY KEY (purchased_id)
 );
