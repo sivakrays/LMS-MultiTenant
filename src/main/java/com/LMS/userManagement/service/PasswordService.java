@@ -37,11 +37,18 @@ public class PasswordService {
                     .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
 
             // Generate OTP
-            String otp = String.valueOf(new Random().nextInt(999999));
+            String otp = String.format("%06d", new Random().nextInt(999999));
             LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
 
-            // Save OTP
-            Otp otpEntity = new Otp(user.getEmail(), otp, expiryTime);
+            // Save or Update OTP
+            Otp otpEntity = otpRepository.findByEmail(email)
+                    .map(existingOtp -> {
+                        existingOtp.setOtp(otp);
+                        existingOtp.setExpiryTime(expiryTime);
+                        return existingOtp;
+                    })
+                    .orElse(new Otp(email, otp, expiryTime));
+
             otpRepository.save(otpEntity);
 
             // Send OTP Email
@@ -51,21 +58,19 @@ public class PasswordService {
             return CommonResponse.<String>builder()
                     .status(true)
                     .message("OTP sent successfully")
-                    .data(null)
                     .statusCode(Constant.SUCCESS)
-                    .error(null)
                     .build();
         } catch (Exception e) {
             logger.error("Error sending OTP to {}: {}", email, e.getMessage());
             return CommonResponse.<String>builder()
                     .status(false)
                     .message("Failed to send OTP")
-                    .data(null)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
                     .error(e.getMessage())
                     .build();
         }
     }
+
 
     public CommonResponse<String> verifyOtp(String email, String otp) {
         try {

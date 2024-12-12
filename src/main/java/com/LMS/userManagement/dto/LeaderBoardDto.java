@@ -14,6 +14,7 @@ public class LeaderBoardDto {
     private String username;
     private Long userId;
     private Integer rank;
+    private String profileImage;
     private Integer goldCount;
     private Integer silverCount;
     private Integer bronzeCount;

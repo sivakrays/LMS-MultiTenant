@@ -19,11 +19,11 @@ CREATE TABLE IF NOT EXISTS user_details
 
 CREATE TABLE IF NOT EXISTS otp
 (
-    id bigint NOT NULL,
+    otp_id bigint NOT NULL DEFAULT nextval('otp_otp_id_seq'),
     email character varying(255),
     expiry_time timestamp(6) without time zone,
     otp character varying(255),
-    CONSTRAINT otp_pkey PRIMARY KEY (id)
+    CONSTRAINT otp_pkey PRIMARY KEY (otp_id)
 );
 
 CREATE TABLE IF NOT EXISTS course

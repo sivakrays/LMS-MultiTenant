@@ -62,6 +62,7 @@ public class LeaderBoardService {
                 // Fetch user details
                 User user = (User) userRepository.findUserByUserId(id);
                 String username = user.getName();
+                String profileImage = user.getProfileImage();
 
                 // Fetch energy points and badge counts
                 Integer energyPoints = quizRankRepository.sumOfEnergyPoints(id);
@@ -73,6 +74,7 @@ public class LeaderBoardService {
                 LeaderBoardDto leaderBoardDto = LeaderBoardDto.builder()
                         .userId(id)
                         .username(username)
+                        .profileImage(profileImage)
                         .completedCourseCount(completedCourseCount)
                         .goldCount(goldCount)
                         .silverCount(silverCount)

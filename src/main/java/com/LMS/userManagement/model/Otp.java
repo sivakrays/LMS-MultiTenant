@@ -18,7 +18,7 @@ public class Otp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long OtpId;
 
     private String email;
 
@@ -27,5 +27,8 @@ public class Otp {
     private LocalDateTime expiryTime;
 
     public Otp(String email, String otp, LocalDateTime expiryTime) {
+        this.email = email;
+        this.otp = otp;
+        this.expiryTime = expiryTime;
     }
 }
