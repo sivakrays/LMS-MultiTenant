@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LeaderBoardService {
@@ -60,7 +61,7 @@ public class LeaderBoardService {
                 int completedCourseCount = completedCourses.size();
 
                 // Fetch user details
-                User user = (User) userRepository.findUserByUserId(id);
+                User user = userRepository.findTheUserByUserId(id);
                 String username = user.getName();
                 String profileImage = user.getProfileImage();
 

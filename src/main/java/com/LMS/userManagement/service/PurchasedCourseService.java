@@ -3,6 +3,7 @@ package com.LMS.userManagement.service;
 import com.LMS.userManagement.dto.CourseDetailDto;
 import com.LMS.userManagement.dto.PurchasedCompletedCourseDto;
 import com.LMS.userManagement.dto.PurchasedCourseDto;
+import com.LMS.userManagement.dto.SaveSubSectionDto;
 import com.LMS.userManagement.model.Cart;
 import com.LMS.userManagement.model.Course;
 import com.LMS.userManagement.model.PurchasedCourse;
@@ -177,4 +178,14 @@ public class PurchasedCourseService {
         }
     }
 
+//    public CommonResponse<String> saveCompletedSubSection(SaveSubSectionDto saveSubSectionDto) {
+//
+//        try {
+//            Long userId = saveSubSectionDto.getUserId();
+//            Boolean isThere = userRe
+//        }catch (Exception ex){
+//
+//        }
+//
+//    }
 }
