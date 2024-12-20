@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PurchasedCourseRepository extends JpaRepository<PurchasedCourse, Long> {
@@ -33,6 +34,12 @@ public interface PurchasedCourseRepository extends JpaRepository<PurchasedCourse
 
     @Query(value = "SELECT course_id FROM purchased_course WHERE user_id = :userId AND is_completed = true", nativeQuery = true)
     List<String> findCompletedCoursesByUserId(@Param("userId") Long userId);
+
+    @Query(value = "SELECT course_id FROM purchased_course WHERE user_id IN :userIds AND is_completed = true AND completed_date BETWEEN CURRENT_DATE - INTERVAL :daysCount DAY AND CURRENT_DATE", nativeQuery = true)
+    List<String> findCompletedCoursesByUserIdsAndDays(@Param("userIds") List<Long> userIds, @Param("daysCount") Integer daysCount);
+
+    @Query("SELECT p.purchasedId FROM PurchasedCourse p WHERE p.userId = :userId AND p.courseId = :courseId")
+    Optional<Long> findPurchasedIdByUserIdAndCourseId(@Param("userId") long userId, @Param("courseId") String courseId);
 
 
 }

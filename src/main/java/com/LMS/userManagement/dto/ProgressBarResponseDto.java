@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaveSubSectionDto {
+public class ProgressBarResponseDto {
 
-    private long userId;
+    private Long userId;
+
+    private Integer percentage;
 
     private String courseId;
-
-    private String subSectionId;
 
 }

@@ -1,15 +1,8 @@
 package com.LMS.userManagement.service;
 
-import com.LMS.userManagement.dto.CourseDetailDto;
-import com.LMS.userManagement.dto.PurchasedCompletedCourseDto;
-import com.LMS.userManagement.dto.PurchasedCourseDto;
-import com.LMS.userManagement.dto.SaveSubSectionDto;
-import com.LMS.userManagement.model.Cart;
-import com.LMS.userManagement.model.Course;
-import com.LMS.userManagement.model.PurchasedCourse;
-import com.LMS.userManagement.repository.CartRepository;
-import com.LMS.userManagement.repository.CourseRepository;
-import com.LMS.userManagement.repository.PurchasedCourseRepository;
+import com.LMS.userManagement.dto.*;
+import com.LMS.userManagement.model.*;
+import com.LMS.userManagement.repository.*;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +22,15 @@ public class PurchasedCourseService {
     @Autowired
     private PurchasedCourseRepository purchasedCourseRepository;
     @Autowired
+    private PurchasedCourseSubSectionRepository purchasedCourseSubSectionRepository;
+    @Autowired
     private CourseRepository courseRepository;
     @Autowired
     CartRepository cartRepository;
+    @Autowired
+    SectionRepository sectionRepository;
+    @Autowired
+    SubSectionRepository subSectionRepository;
 
     public CommonResponse<List<PurchasedCourse>> savePurchasedCourse(PurchasedCourseDto purchasedCourseDto) {
         List<PurchasedCourse> purchasedCourseDetail = null;
@@ -178,14 +177,105 @@ public class PurchasedCourseService {
         }
     }
 
-//    public CommonResponse<String> saveCompletedSubSection(SaveSubSectionDto saveSubSectionDto) {
-//
-//        try {
-//            Long userId = saveSubSectionDto.getUserId();
-//            Boolean isThere = userRe
-//        }catch (Exception ex){
-//
-//        }
-//
-//    }
+    public CommonResponse<String> saveCompletedSubSection(SaveSubSectionDto saveSubSectionDto) {
+        try {
+            Long userId = saveSubSectionDto.getUserId();
+
+            // Check if the user has a purchased course
+            PurchasedCourse purchasedCourse = purchasedCourseRepository.findByUserIdAndCourseId(userId, saveSubSectionDto.getCourseId());
+            if (purchasedCourse == null) {
+                return CommonResponse.<String>builder()
+                        .status(false)
+                        .statusCode(404)
+                        .message("Course not found for the user")
+                        .build();
+            }
+
+            // Save the completed subsection
+            PurchasedCourseSubSection purchasedCourseSubSection = PurchasedCourseSubSection.builder()
+                    .purchasedCourseId(purchasedCourse.getPurchasedId())
+                    .subSectionId(saveSubSectionDto.getSubSectionId())
+                    .isCompleted(true)
+                    .userId(userId)
+                    .build();
+
+            purchasedCourseSubSectionRepository.save(purchasedCourseSubSection);
+
+            return CommonResponse.<String>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .data("Subsection Completed")
+                    .message("Successful")
+                    .build();
+
+        } catch (Exception ex) {
+            return CommonResponse.<String>builder()
+                    .status(false)
+                    .statusCode(500)
+                    .message("Failed to complete subsection")
+                    .error(ex.getMessage())
+                    .build();
+        }
+    }
+
+    public CommonResponse<ProgressBarResponseDto> getCourseProgress(Long userId, String courseId) {
+        try {
+            // Fetch section IDs using courseId
+            List<String> sectionIds = sectionRepository.findSectionIdsByCourseId(courseId);
+
+            // Fetch subsection IDs using section IDs
+            List<String> subSectionIds = subSectionRepository.findSubSectionIdsBySectionIds(sectionIds);
+
+            // Count of all subsections in the course
+            int courseSubSectionsCount = subSectionIds.size();
+
+            // Fetch the purchased course ID based on userId and courseId
+            Optional<Long> pCourseId = purchasedCourseRepository.findPurchasedIdByUserIdAndCourseId(userId, courseId);
+            if (pCourseId.isEmpty()) {
+                return CommonResponse.<ProgressBarResponseDto>builder()
+                        .status(false)
+                        .statusCode(Constant.NO_CONTENT)
+                        .message("Purchased course not found for the given user and course")
+                        .build();
+            }
+            Long purchasedCourseId = pCourseId.get();
+
+            // Fetch completed subsection IDs for the user and the purchased course
+            List<String> completedSubSectionIds = purchasedCourseSubSectionRepository.findSubSectionIdsByUserIdAndPurchasedCourseId(userId, purchasedCourseId);
+
+            // Calculate incomplete subsection IDs
+            List<String> incompleteSubSectionIds = new ArrayList<>(subSectionIds);
+            incompleteSubSectionIds.removeAll(completedSubSectionIds);
+
+            // Calculate the progress percentage
+            int completedSubSectionsCount = completedSubSectionIds.size();
+            Integer incompleteSubSectionsCount = incompleteSubSectionIds.size();
+
+            // Calculate the completion percentage
+            Integer completionPercentage = (int) ((double) completedSubSectionsCount / courseSubSectionsCount * 100);
+
+            ProgressBarResponseDto progressBarResponseDto = ProgressBarResponseDto.builder()
+                    .courseId(courseId)
+                    .userId(userId)
+                    .percentage(completionPercentage)
+                    .build();
+
+            return CommonResponse.<ProgressBarResponseDto>builder()
+                    .status(true)
+                    .statusCode(Constant.SUCCESS)
+                    .message("Course progress fetched successfully")
+                    .data(progressBarResponseDto)
+                    .build();
+
+        } catch (Exception e) {
+            // Handle exceptions gracefully
+            return CommonResponse.<ProgressBarResponseDto>builder()
+                    .status(false)
+                    .statusCode(Constant.INTERNAL_SERVER_ERROR)
+                    .message("An error occurred while fetching course progress")
+                    .build();
+        }
+    }
+
+
 }

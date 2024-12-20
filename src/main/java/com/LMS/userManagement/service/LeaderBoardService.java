@@ -3,10 +3,7 @@ package com.LMS.userManagement.service;
 
 import com.LMS.userManagement.dto.LeaderBoardDto;
 import com.LMS.userManagement.model.User;
-import com.LMS.userManagement.repository.ClassroomDataRepository;
-import com.LMS.userManagement.repository.PurchasedCourseRepository;
-import com.LMS.userManagement.repository.QuizRankRepository;
-import com.LMS.userManagement.repository.UserRepository;
+import com.LMS.userManagement.repository.*;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.util.Constant;
 import org.slf4j.Logger;
@@ -31,18 +28,18 @@ public class LeaderBoardService {
     UserRepository userRepository;
 
     @Autowired
-    QuizService quizService;
-
-    @Autowired
     QuizRankRepository quizRankRepository;
 
+    @Autowired
+    SectionRepository sectionRepository;
 
-    public CommonResponse<List<LeaderBoardDto>> getLeaderBoard(String classRoomId, long userId) {
+
+    public CommonResponse<List<LeaderBoardDto>> getLeaderBoard(Integer standard, long userId, Integer daysCount) {
         Logger logger = LoggerFactory.getLogger(LeaderBoardService.class);
         try {
             // Check if the user is part of the class
-            Boolean isUserInClassRoom = classroomDataRepository.existsByUserId(userId);
-            if (!isUserInClassRoom) {
+            boolean isUser = userRepository.existsById(userId);
+            if (!isUser) {
                 return CommonResponse.<List<LeaderBoardDto>>builder()
                         .status(false)
                         .statusCode(Constant.NO_CONTENT)
@@ -50,14 +47,14 @@ public class LeaderBoardService {
                         .build();
             }
 
-            // Get all user IDs in the classroom
-            List<Long> userIds = classroomDataRepository.findUserIdsByClassroomId(classRoomId);
+            // Get all user IDs in the standard
+            List<Long> userIds = userRepository.findUserIdsByStandard(standard);
             List<LeaderBoardDto> leaderBoard = new ArrayList<>();
 
             // Fetch leaderboard data for all users
             for (Long id : userIds) {
-                // Get completed courses for each user
-                List<String> completedCourses = purchasedCourseRepository.findCompletedCoursesByUserIds(List.of(id));
+                // Get completed courses and sections
+                List<String> completedCourses = purchasedCourseRepository.findCompletedCoursesByUserIdsAndDays(List.of(id), daysCount);
                 int completedCourseCount = completedCourses.size();
 
                 // Fetch user details
@@ -65,11 +62,19 @@ public class LeaderBoardService {
                 String username = user.getName();
                 String profileImage = user.getProfileImage();
 
-                // Fetch energy points and badge counts
-                Integer energyPoints = quizRankRepository.sumOfEnergyPoints(id);
-                int goldCount = quizRankRepository.countByUserIdAndBadge(id, 1);
-                int silverCount = quizRankRepository.countByUserIdAndBadge(id, 2);
-                int bronzeCount = quizRankRepository.countByUserIdAndBadge(id, 3);
+                // Loop through each course to calculate total points and badges
+                int totalEnergyPoints = 0, totalGold = 0, totalSilver = 0, totalBronze = 0;
+
+                for (String courseId : completedCourses) {
+                    List<String> sectionIds = sectionRepository.findSectionIdsByCourseId(courseId);
+
+                    for (String sectionId : sectionIds) {
+                        totalEnergyPoints += quizRankRepository.sumOfEnergyPointsByUserIdAndSectionId(id, sectionId);
+                        totalGold += quizRankRepository.countByUserIdSectionIdAndBadge(id, sectionId, 1);
+                        totalSilver += quizRankRepository.countByUserIdSectionIdAndBadge(id, sectionId, 2);
+                        totalBronze += quizRankRepository.countByUserIdSectionIdAndBadge(id, sectionId, 3);
+                    }
+                }
 
                 // Create LeaderBoardDto object for the user
                 LeaderBoardDto leaderBoardDto = LeaderBoardDto.builder()
@@ -77,13 +82,12 @@ public class LeaderBoardService {
                         .username(username)
                         .profileImage(profileImage)
                         .completedCourseCount(completedCourseCount)
-                        .goldCount(goldCount)
-                        .silverCount(silverCount)
-                        .bronzeCount(bronzeCount)
-                        .energyPoints(energyPoints)
+                        .goldCount(totalGold)
+                        .silverCount(totalSilver)
+                        .bronzeCount(totalBronze)
+                        .energyPoints(totalEnergyPoints)
                         .build();
 
-                // Add to leaderboard list
                 leaderBoard.add(leaderBoardDto);
             }
 
@@ -92,8 +96,7 @@ public class LeaderBoardService {
 
             // Assign ranks based on sorted leaderboard
             for (int i = 0; i < leaderBoard.size(); i++) {
-                LeaderBoardDto leaderBoardDto = leaderBoard.get(i);
-                leaderBoardDto.setRank(i + 1);  // Rank starts from 1
+                leaderBoard.get(i).setRank(i + 1);  // Rank starts from 1
             }
 
             return CommonResponse.<List<LeaderBoardDto>>builder()
@@ -104,9 +107,8 @@ public class LeaderBoardService {
                     .build();
 
         } catch (Exception e) {
-            logger.error("Error fetching leaderboard for Classroom ID: {}. Error: {}", classRoomId, e.getMessage(), e);
+            logger.error("Error fetching leaderboard for User ID: {}. Error: {}", userId, e.getMessage(), e);
 
-            // Return an error response
             return CommonResponse.<List<LeaderBoardDto>>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
@@ -114,5 +116,4 @@ public class LeaderBoardService {
                     .build();
         }
     }
-
 }

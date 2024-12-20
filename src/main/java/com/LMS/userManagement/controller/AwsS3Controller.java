@@ -10,7 +10,9 @@
 //import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.multipart.MultipartFile;
 //import software.amazon.awssdk.services.s3.S3Client;
+//import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 //
+//import java.io.File;
 //import java.io.IOException;
 //import java.util.UUID;
 //
@@ -21,9 +23,9 @@
 //
 //public class AwsS3Controller {
 //
-//
-//    @Autowired
-//    AWSS3Service awss3Service;
+////
+////    @Autowired
+////    AWSS3Service awss3Service;
 //
 //    @Autowired
 //    S3Client s3Client;
@@ -89,25 +91,25 @@
 //        }
 //    }
 //
-////
-////    @PostMapping("/saveFileToS3")
-////    public  String saveFileToS3(@RequestPart MultipartFile file,@RequestHeader String key) throws IOException {
-////        // Convert MultipartFile to File
-////        File convertedFile = awsUtil.convertMultiPartToFile(file);
-////
-////        ObjectMetadata meta = new ObjectMetadata();
-////        meta.setContentType("video/mp4");
-////        meta.setContentLength(file.getSize())
-////
-////        s3Client.putObject(PutObjectRequest.builder()
-////                .bucket("krays-lms-s3")
-////                .key(key)
-////                .build(), convertedFile.toPath());
-////
-////        // Cleanup: Delete the temporary file
-////        convertedFile.delete();
-////        return "file successfully uploaded Key ::"+key;
-////    }
+//
+//    @PostMapping("/saveFileToS3")
+//    public  String saveFileToS3(@RequestPart MultipartFile file,@RequestHeader String key) throws IOException {
+//        // Convert MultipartFile to File
+//        File convertedFile = awsUtil.convertMultiPartToFile(file);
+//
+//        ObjectMetadata meta = new ObjectMetadata();
+//        meta.setContentType("video/mp4");
+//        meta.setContentLength(file.getSize())
+//
+//        s3Client.putObject(PutObjectRequest.builder()
+//                .bucket("krays-lms-s3")
+//                .key(key)
+//                .build(), convertedFile.toPath());
+//
+//        // Cleanup: Delete the temporary file
+//        convertedFile.delete();
+//        return "file successfully uploaded Key ::"+key;
+//    }
 //
 //
 //

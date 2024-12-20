@@ -26,4 +26,12 @@ public interface QuizRankRepository extends JpaRepository<QuizRank, String> {
     @Query(value = "SELECT CASE WHEN SUM(energy_points) IS NULL THEN 0 ELSE SUM(energy_points) END AS E_POINTS  FROM quiz_rank where user_id=?1",nativeQuery = true)
     Integer sumOfEnergyPoints(@Param("userId") Long userId);
 
+    @Query(value = "SELECT COALESCE(SUM(energy_points), 0) FROM quiz_rank WHERE user_id = :userId AND section_id = :sectionId", nativeQuery = true)
+    Integer sumOfEnergyPointsByUserIdAndSectionId(@Param("userId") Long userId, @Param("sectionId") String sectionId);
+
+    @Query(value = "SELECT COUNT(*) FROM quiz_rank WHERE user_id = :userId AND section_id = :sectionId AND badge = :badge", nativeQuery = true)
+    int countByUserIdSectionIdAndBadge(@Param("userId") Long userId, @Param("sectionId") String sectionId, @Param("badge") int badge);
+
+
+
 }

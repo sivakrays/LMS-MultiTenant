@@ -229,5 +229,15 @@ CREATE TABLE IF NOT EXISTS classroom_data
     CONSTRAINT classroom_data_pkey PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS purchased_course_sub_section
+(
+    purchased_course_sub_section_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    purchased_course_id bigint,
+    sub_section_id character varying(255),
+    is_completed boolean,
+    CONSTRAINT purchased_course_sub_section_pkey PRIMARY KEY (purchased_course_sub_section_id)
+);
+
 
 

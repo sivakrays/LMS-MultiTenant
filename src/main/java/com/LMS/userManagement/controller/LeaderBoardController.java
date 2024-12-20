@@ -17,8 +17,8 @@ public class LeaderBoardController {
     LeaderBoardService leaderBoardService;
 
     @GetMapping("/getLeaderBoard")
-    public CommonResponse<List<LeaderBoardDto>> getLeaderBoard(@RequestParam String classRoomId, @RequestParam long userId){
-        return leaderBoardService.getLeaderBoard(classRoomId,userId);
+    public CommonResponse<List<LeaderBoardDto>> getLeaderBoard(@RequestParam Integer standard, @RequestParam long userId, @RequestParam Integer daysCount){
+        return leaderBoardService.getLeaderBoard(standard,userId, daysCount);
     }
 
 }

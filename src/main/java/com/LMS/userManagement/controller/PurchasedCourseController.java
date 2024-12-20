@@ -1,9 +1,6 @@
 package com.LMS.userManagement.controller;
 
-import com.LMS.userManagement.dto.CourseDetailDto;
-import com.LMS.userManagement.dto.PurchasedCompletedCourseDto;
-import com.LMS.userManagement.dto.PurchasedCourseDto;
-import com.LMS.userManagement.dto.SaveSubSectionDto;
+import com.LMS.userManagement.dto.*;
 import com.LMS.userManagement.model.PurchasedCourse;
 import com.LMS.userManagement.response.CommonResponse;
 import com.LMS.userManagement.service.PurchasedCourseService;
@@ -42,9 +39,14 @@ public class PurchasedCourseController {
         return purchasedCourseService.courseComplete(courseId, userId);
     }
 
-//    @PostMapping("saveCompletedSubSection")
-//    public CommonResponse<String> saveCompletedSubSection(@RequestBody SaveSubSectionDto saveSubSectionDto){
-//        return purchasedCourseService.saveCompletedSubSection(saveSubSectionDto);
-//    }
+    @PostMapping("/saveCompletedSubSection")
+    public CommonResponse<String> saveCompletedSubSection(@RequestBody SaveSubSectionDto saveSubSectionDto){
+        return purchasedCourseService.saveCompletedSubSection(saveSubSectionDto);
+    }
+
+    @PostMapping("/getCourseProgress")
+    public CommonResponse<ProgressBarResponseDto> getCourseProgress(@RequestParam Long userId, @RequestParam String courseid){
+        return purchasedCourseService.getCourseProgress(userId, courseid);
+    }
 
 }
