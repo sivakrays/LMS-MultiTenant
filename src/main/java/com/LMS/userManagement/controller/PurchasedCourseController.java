@@ -40,8 +40,8 @@ public class PurchasedCourseController {
     }
 
     @PostMapping("/saveCompletedSubSection")
-    public CommonResponse<String> saveCompletedSubSection(@RequestBody SaveSubSectionDto saveSubSectionDto){
-        return purchasedCourseService.saveCompletedSubSection(saveSubSectionDto);
+    public CommonResponse<String> saveCompletedSubSection(@RequestBody SaveSectionDto saveSectionDto){
+        return purchasedCourseService.saveCompletedSubSection(saveSectionDto);
     }
 
     @PostMapping("/getCourseProgress")

@@ -22,7 +22,7 @@ public class PurchasedCourseService {
     @Autowired
     private PurchasedCourseRepository purchasedCourseRepository;
     @Autowired
-    private PurchasedCourseSubSectionRepository purchasedCourseSubSectionRepository;
+    private PurchasedCourseSectionRepository purchasedCourseSectionRepository;
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -177,12 +177,12 @@ public class PurchasedCourseService {
         }
     }
 
-    public CommonResponse<String> saveCompletedSubSection(SaveSubSectionDto saveSubSectionDto) {
+    public CommonResponse<String> saveCompletedSubSection(SaveSectionDto saveSectionDto) {
         try {
-            Long userId = saveSubSectionDto.getUserId();
+            Long userId = saveSectionDto.getUserId();
 
             // Check if the user has a purchased course
-            PurchasedCourse purchasedCourse = purchasedCourseRepository.findByUserIdAndCourseId(userId, saveSubSectionDto.getCourseId());
+            PurchasedCourse purchasedCourse = purchasedCourseRepository.findByUserIdAndCourseId(userId, saveSectionDto.getCourseId());
             if (purchasedCourse == null) {
                 return CommonResponse.<String>builder()
                         .status(false)
@@ -192,14 +192,14 @@ public class PurchasedCourseService {
             }
 
             // Save the completed subsection
-            PurchasedCourseSubSection purchasedCourseSubSection = PurchasedCourseSubSection.builder()
+            PurchasedCourseSection purchasedCourseSection = PurchasedCourseSection.builder()
                     .purchasedCourseId(purchasedCourse.getPurchasedId())
-                    .subSectionId(saveSubSectionDto.getSubSectionId())
+                    .sectionId(saveSectionDto.getSectionId())
                     .isCompleted(true)
                     .userId(userId)
                     .build();
 
-            purchasedCourseSubSectionRepository.save(purchasedCourseSubSection);
+            purchasedCourseSectionRepository.save(purchasedCourseSection);
 
             return CommonResponse.<String>builder()
                     .status(true)
@@ -224,10 +224,10 @@ public class PurchasedCourseService {
             List<String> sectionIds = sectionRepository.findSectionIdsByCourseId(courseId);
 
             // Fetch subsection IDs using section IDs
-            List<String> subSectionIds = subSectionRepository.findSubSectionIdsBySectionIds(sectionIds);
+//            List<String> subSectionIds = subSectionRepository.findSubSectionIdsBySectionIds(sectionIds);
 
             // Count of all subsections in the course
-            int courseSubSectionsCount = subSectionIds.size();
+            int courseSectionsCount = sectionIds.size();
 
             // Fetch the purchased course ID based on userId and courseId
             Optional<Long> pCourseId = purchasedCourseRepository.findPurchasedIdByUserIdAndCourseId(userId, courseId);
@@ -241,18 +241,18 @@ public class PurchasedCourseService {
             Long purchasedCourseId = pCourseId.get();
 
             // Fetch completed subsection IDs for the user and the purchased course
-            List<String> completedSubSectionIds = purchasedCourseSubSectionRepository.findSubSectionIdsByUserIdAndPurchasedCourseId(userId, purchasedCourseId);
+            List<String> completedSectionIds = purchasedCourseSectionRepository.findSectionIdsByUserIdAndPurchasedCourseId(userId, purchasedCourseId);
 
             // Calculate incomplete subsection IDs
-            List<String> incompleteSubSectionIds = new ArrayList<>(subSectionIds);
-            incompleteSubSectionIds.removeAll(completedSubSectionIds);
+            List<String> incompleteSectionIds = new ArrayList<>(sectionIds);
+            incompleteSectionIds.removeAll(completedSectionIds);
 
             // Calculate the progress percentage
-            int completedSubSectionsCount = completedSubSectionIds.size();
-            Integer incompleteSubSectionsCount = incompleteSubSectionIds.size();
+            int completedSectionsCount = completedSectionIds.size();
+            Integer incompleteSectionsCount = incompleteSectionIds.size();
 
             // Calculate the completion percentage
-            Integer completionPercentage = (int) ((double) completedSubSectionsCount / courseSubSectionsCount * 100);
+            Integer completionPercentage = (int) ((double) completedSectionsCount / courseSectionsCount * 100);
 
             ProgressBarResponseDto progressBarResponseDto = ProgressBarResponseDto.builder()
                     .courseId(courseId)

@@ -12,17 +12,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Table(name = "purchased_course_sub_section")
-public class PurchasedCourseSubSection {
+public class PurchasedCourseSection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long purchasedCourseSubSectionId;
+    private Long purchasedCourseSectionId;
 
     private long userId;
 
     private Long purchasedCourseId;
 
-    private String subSectionId;
+    private String sectionId;
 
     private Boolean isCompleted;
 

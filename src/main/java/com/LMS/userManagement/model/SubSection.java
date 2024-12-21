@@ -19,10 +19,6 @@ public class SubSection {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String subSectionId;
 
-    @ManyToOne
-    @JoinColumn(name = "section_id", referencedColumnName = "section_id")
-    private Section section;
-
     private Integer key;
 
     private String title;
