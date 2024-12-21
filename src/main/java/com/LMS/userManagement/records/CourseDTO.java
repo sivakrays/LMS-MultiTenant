@@ -30,7 +30,9 @@ public record CourseDTO(
         boolean isHtmlCourse,
         boolean isPurchased,
         List<Section> sections,
-        List<Chapter> chapters
+        List<Chapter> chapters,
+
+        Long purchasedCourseId
 
 ) {
 }

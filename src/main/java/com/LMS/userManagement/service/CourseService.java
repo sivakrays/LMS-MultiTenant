@@ -250,7 +250,9 @@ public class CourseService {
             if (purchased == null) {
                 purchased = false;
             }
-            CourseDTO courseDTO = mapper.CourseToCourseDtoMapper(courseDetails, profileImage, purchased);
+            Optional<Long> pCourseId = purchasedCourseRepository.findPurchasedIdByUserIdAndCourseId(userId, courseId);
+            Long purCourseId = pCourseId.get();
+            CourseDTO courseDTO = mapper.CourseToCourseDtoMapper(courseDetails, profileImage, purchased, purCourseId);
 
             return CommonResponse.<CourseDTO>builder()
                     .status(true)
