@@ -22,7 +22,7 @@ public class PurchasedCourseService {
     @Autowired
     private PurchasedCourseRepository purchasedCourseRepository;
     @Autowired
-    private PurchasedCourseSectionRepository purchasedCourseSectionRepository;
+    private PurchasedCourseSubSectionRepository purchasedCourseSubSectionRepository;
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -177,12 +177,13 @@ public class PurchasedCourseService {
         }
     }
 
-    public CommonResponse<String> saveCompletedSubSection(SaveSectionDto saveSectionDto) {
+    public CommonResponse<String> saveCompletedSubSection(SaveSubSectionDto saveSubSectionDto) {
         try {
-            Long userId = saveSectionDto.getUserId();
+            Long userId = saveSubSectionDto.getUserId();
+            Long purchasedCoursedId = saveSubSectionDto.getPurchasedCourseId();
 
             // Check if the user has a purchased course
-            PurchasedCourse purchasedCourse = purchasedCourseRepository.findByUserIdAndCourseId(userId, saveSectionDto.getCourseId());
+            Optional<PurchasedCourse> purchasedCourse = purchasedCourseRepository.findByUserIdAndPurchasedId(userId, purchasedCoursedId);
             if (purchasedCourse == null) {
                 return CommonResponse.<String>builder()
                         .status(false)
@@ -190,16 +191,17 @@ public class PurchasedCourseService {
                         .message("Course not found for the user")
                         .build();
             }
+            PurchasedCourse confirmedPurchasedCourse = purchasedCourse.get();
 
             // Save the completed subsection
-            PurchasedCourseSection purchasedCourseSection = PurchasedCourseSection.builder()
-                    .purchasedCourseId(purchasedCourse.getPurchasedId())
-                    .sectionId(saveSectionDto.getSectionId())
+            PurchasedCourseSubSection purchasedCourseSubSection = PurchasedCourseSubSection.builder()
+                    .purchasedCourseId(confirmedPurchasedCourse.getPurchasedId())
+                    .subSectionId(saveSubSectionDto.getSubSectionId())
                     .isCompleted(true)
                     .userId(userId)
                     .build();
 
-            purchasedCourseSectionRepository.save(purchasedCourseSection);
+            purchasedCourseSubSectionRepository.save(purchasedCourseSubSection);
 
             return CommonResponse.<String>builder()
                     .status(true)
@@ -218,16 +220,14 @@ public class PurchasedCourseService {
         }
     }
 
-    public CommonResponse<ProgressBarResponseDto> getCourseProgress(Long userId, String courseId) {
+    public CommonResponse<ProgressBarResponseDto> getCourseProgress(Long userId, String courseId, long purchasedCourseId) {
         try {
-            // Fetch section IDs using courseId
-            List<String> sectionIds = sectionRepository.findSectionIdsByCourseId(courseId);
 
-            // Fetch subsection IDs using section IDs
-//            List<String> subSectionIds = subSectionRepository.findSubSectionIdsBySectionIds(sectionIds);
+            // Fetch subsection IDs using courseId
+            List<String> subSectionIds = subSectionRepository.findSubSectionIdsByCourseId(courseId);
 
             // Count of all subsections in the course
-            int courseSectionsCount = sectionIds.size();
+            int courseSubSectionsCount = subSectionIds.size();
 
             // Fetch the purchased course ID based on userId and courseId
             Optional<Long> pCourseId = purchasedCourseRepository.findPurchasedIdByUserIdAndCourseId(userId, courseId);
@@ -238,21 +238,20 @@ public class PurchasedCourseService {
                         .message("Purchased course not found for the given user and course")
                         .build();
             }
-            Long purchasedCourseId = pCourseId.get();
 
             // Fetch completed subsection IDs for the user and the purchased course
-            List<String> completedSectionIds = purchasedCourseSectionRepository.findSectionIdsByUserIdAndPurchasedCourseId(userId, purchasedCourseId);
+            List<String> completedSubSectionIds = purchasedCourseSubSectionRepository.findSectionIdsByUserIdAndPurchasedCourseId(userId, purchasedCourseId);
 
             // Calculate incomplete subsection IDs
-            List<String> incompleteSectionIds = new ArrayList<>(sectionIds);
-            incompleteSectionIds.removeAll(completedSectionIds);
+            List<String> incompleteSubSectionIds = new ArrayList<>(subSectionIds);
+            incompleteSubSectionIds.removeAll(completedSubSectionIds);
 
             // Calculate the progress percentage
-            int completedSectionsCount = completedSectionIds.size();
-            Integer incompleteSectionsCount = incompleteSectionIds.size();
+            int completedSubSectionsCount = completedSubSectionIds.size();
+            Integer incompleteSubSectionsCount = incompleteSubSectionIds.size();
 
             // Calculate the completion percentage
-            Integer completionPercentage = (int) ((double) completedSectionsCount / courseSectionsCount * 100);
+            Integer completionPercentage = (int) ((double) completedSubSectionsCount / courseSubSectionsCount * 100);
 
             ProgressBarResponseDto progressBarResponseDto = ProgressBarResponseDto.builder()
                     .courseId(courseId)

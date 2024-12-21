@@ -27,6 +27,10 @@ public interface PurchasedCourseRepository extends JpaRepository<PurchasedCourse
 
     PurchasedCourse findByUserIdAndCourseId(Long userId,String courseId);
 
+    @Query("SELECT p FROM PurchasedCourse p WHERE p.userId = :userId AND p.purchasedId = :purchasedId")
+    Optional<PurchasedCourse> findByUserIdAndPurchasedId(@Param("userId") long userId, @Param("purchasedId") Long purchasedId);
+
+
     Boolean existsByUserId(Long userId);
 
     @Query(value = "SELECT course_id FROM purchased_course WHERE user_id IN :userIds AND is_completed = true", nativeQuery = true)

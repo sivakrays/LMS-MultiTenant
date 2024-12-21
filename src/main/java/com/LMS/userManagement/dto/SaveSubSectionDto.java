@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaveSectionDto {
+public class SaveSubSectionDto {
 
     private long userId;
 
-    private String courseId;
+    private long purchasedCourseId;
 
-    private String sectionId;
+    private String subSectionId;
 
 }

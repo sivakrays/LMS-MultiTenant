@@ -17,8 +17,8 @@ public interface SubSectionRepository extends JpaRepository<SubSection, String> 
     @Query(value = "SELECT * FROM sub_section WHERE section_id = ?1 AND sub_section_id = ?2", nativeQuery = true)
     Optional<SubSection> findById(@Param("sectionId") String sectionId, @Param("subSectionId") String subSectionId);
 
-//    @Query("SELECT ss.subSectionId FROM SubSection ss WHERE ss.section.sectionId IN :sectionIds")
-//    List<String> findSubSectionIdsBySectionIds(@Param("sectionIds") List<String> sectionIds);
+    @Query("SELECT s.subSectionId FROM SubSection s WHERE s.courseId = :courseId")
+    List<String> findSubSectionIdsByCourseId(@Param("courseId") String courseId);
 
 
 }

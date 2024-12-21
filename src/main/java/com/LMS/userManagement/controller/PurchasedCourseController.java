@@ -40,13 +40,13 @@ public class PurchasedCourseController {
     }
 
     @PostMapping("/saveCompletedSubSection")
-    public CommonResponse<String> saveCompletedSubSection(@RequestBody SaveSectionDto saveSectionDto){
-        return purchasedCourseService.saveCompletedSubSection(saveSectionDto);
+    public CommonResponse<String> saveCompletedSection(@RequestBody SaveSubSectionDto saveSubSectionDto){
+        return purchasedCourseService.saveCompletedSubSection(saveSubSectionDto);
     }
 
-    @PostMapping("/getCourseProgress")
-    public CommonResponse<ProgressBarResponseDto> getCourseProgress(@RequestParam Long userId, @RequestParam String courseid){
-        return purchasedCourseService.getCourseProgress(userId, courseid);
+    @GetMapping("/getCourseProgress")
+    public CommonResponse<ProgressBarResponseDto> getCourseProgress(@RequestParam Long userId, @RequestParam String courseid, @RequestParam Long purchasedCourseId){
+        return purchasedCourseService.getCourseProgress(userId, courseid, purchasedCourseId);
     }
 
 }

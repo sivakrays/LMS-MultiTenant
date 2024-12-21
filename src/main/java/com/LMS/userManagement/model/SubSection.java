@@ -23,6 +23,8 @@ public class SubSection {
 
     private String title;
 
+    private String courseId;
+
     @Column(columnDefinition = "text")
     private String description;
 

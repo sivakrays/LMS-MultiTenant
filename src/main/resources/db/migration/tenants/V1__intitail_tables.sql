@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS sub_section
         description text,
         link text,
         section_id character varying(255),
+        course_id character varying(255),
         sub_section_id character varying(255),
         title character varying(255),
         CONSTRAINT sub_section_pkey PRIMARY KEY (sub_section_id),
