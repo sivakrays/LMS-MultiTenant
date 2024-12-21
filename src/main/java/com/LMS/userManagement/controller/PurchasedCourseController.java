@@ -45,8 +45,8 @@ public class PurchasedCourseController {
     }
 
     @GetMapping("/getCourseProgress")
-    public CommonResponse<ProgressBarResponseDto> getCourseProgress(@RequestParam Long userId, @RequestParam String courseid, @RequestParam Long purchasedCourseId){
-        return purchasedCourseService.getCourseProgress(userId, courseid, purchasedCourseId);
+    public CommonResponse<ProgressBarResponseDto> getCourseProgress(@RequestParam Long userId, @RequestParam String courseid){
+        return purchasedCourseService.getCourseProgress(userId, courseid);
     }
 
 }

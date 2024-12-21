@@ -220,7 +220,7 @@ public class PurchasedCourseService {
         }
     }
 
-    public CommonResponse<ProgressBarResponseDto> getCourseProgress(Long userId, String courseId, long purchasedCourseId) {
+    public CommonResponse<ProgressBarResponseDto> getCourseProgress(Long userId, String courseId) {
         try {
 
             // Fetch subsection IDs using courseId
@@ -238,9 +238,10 @@ public class PurchasedCourseService {
                         .message("Purchased course not found for the given user and course")
                         .build();
             }
+            Long purCourseId = pCourseId.get();
 
             // Fetch completed subsection IDs for the user and the purchased course
-            List<String> completedSubSectionIds = purchasedCourseSubSectionRepository.findSectionIdsByUserIdAndPurchasedCourseId(userId, purchasedCourseId);
+            List<String> completedSubSectionIds = purchasedCourseSubSectionRepository.findSectionIdsByUserIdAndPurchasedCourseId(userId, purCourseId);
 
             // Calculate incomplete subsection IDs
             List<String> incompleteSubSectionIds = new ArrayList<>(subSectionIds);
