@@ -222,12 +222,19 @@ public class PurchasedCourseService {
 
     public CommonResponse<ProgressBarResponseDto> getCourseProgress(Long userId, String courseId) {
         try {
-
             // Fetch subsection IDs using courseId
             List<String> subSectionIds = subSectionRepository.findSubSectionIdsByCourseId(courseId);
 
             // Count of all subsections in the course
-            int courseSubSectionsCount = subSectionIds.size();
+            int courseSubSectionsCount = subSectionIds != null ? subSectionIds.size() : 0;
+
+            if (courseSubSectionsCount == 0) {
+                return CommonResponse.<ProgressBarResponseDto>builder()
+                        .status(false)
+                        .statusCode(Constant.NO_CONTENT)
+                        .message("No subsections found for the given course")
+                        .build();
+            }
 
             // Fetch the purchased course ID based on userId and courseId
             Optional<Long> pCourseId = purchasedCourseRepository.findPurchasedIdByUserIdAndCourseId(userId, courseId);
@@ -243,16 +250,21 @@ public class PurchasedCourseService {
             // Fetch completed subsection IDs for the user and the purchased course
             List<String> completedSubSectionIds = purchasedCourseSubSectionRepository.findSectionIdsByUserIdAndPurchasedCourseId(userId, purCourseId);
 
+            // Ensure the completedSubSectionIds list is not null
+            if (completedSubSectionIds == null) {
+                completedSubSectionIds = new ArrayList<>();
+            }
+
             // Calculate incomplete subsection IDs
             List<String> incompleteSubSectionIds = new ArrayList<>(subSectionIds);
             incompleteSubSectionIds.removeAll(completedSubSectionIds);
 
             // Calculate the progress percentage
             int completedSubSectionsCount = completedSubSectionIds.size();
-            Integer incompleteSubSectionsCount = incompleteSubSectionIds.size();
-
-            // Calculate the completion percentage
             Integer completionPercentage = (int) ((double) completedSubSectionsCount / courseSubSectionsCount * 100);
+
+            // Ensure completionPercentage is between 0 and 100
+            completionPercentage = Math.max(0, Math.min(completionPercentage, 100));
 
             ProgressBarResponseDto progressBarResponseDto = ProgressBarResponseDto.builder()
                     .courseId(courseId)
@@ -268,7 +280,6 @@ public class PurchasedCourseService {
                     .build();
 
         } catch (Exception e) {
-            // Handle exceptions gracefully
             return CommonResponse.<ProgressBarResponseDto>builder()
                     .status(false)
                     .statusCode(Constant.INTERNAL_SERVER_ERROR)
@@ -276,6 +287,7 @@ public class PurchasedCourseService {
                     .build();
         }
     }
+
 
 
 }
